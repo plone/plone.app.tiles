@@ -1,0 +1,62 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="plone.app.tiles">
+
+    <!-- Traversers -->
+    <adapter factory=".traversal.TileAddViewTraverser" name="addtile" />
+    <adapter factory=".traversal.TileEditViewTraverser" name="edittile" />
+
+    <!-- Standard add view and form - invoked from ++addtile++ traverser -->
+    
+    <adapter
+        for="zope.annotation.interfaces.IAnnotatable
+             zope.publisher.interfaces.browser.IDefaultBrowserLayer
+             plone.tiles.interfaces.ITileType"
+        provides="..interfaces.ITileAddView"
+        factory=".add.DefaultAddView"
+        />
+    
+    <class class=".add.DefaultAddView">
+        <require
+            permission="zope2.View"
+            interface="zope.publisher.interfaces.browser.IBrowserPage"
+            />
+    </class>
+    
+    <!-- Standard edit view and form - invoked from ++edittile++ traverser -->
+    
+    <adapter
+        for="zope.annotation.interfaces.IAnnotatable
+             zope.publisher.interfaces.browser.IDefaultBrowserLayer
+             plone.tiles.interfaces.ITileType"
+        provides="..interfaces.ITileEditView"
+        factory=".edit.DefaultEditView"
+        />
+    
+    <class class=".edit.DefaultEditView">
+        <require
+            permission="zope2.View"
+            interface="zope.publisher.interfaces.browser.IBrowserPage"
+            />
+    </class>
+    
+    <!-- Delete view -->
+    <browser:page
+        name="delete-tile"
+        for="zope.annotation.interfaces.IAnnotatable"
+        class=".delete.TileDelete"
+        template="delete.pt"
+        permission="cmf.ModifyPortalContent"
+        />
+    
+    <!-- Factories view -->
+    <browser:page
+        name="available-tiles"
+        for="zope.annotation.interfaces.IAnnotatable"
+        class=".factories.TileFactories"
+        template="factories.pt"
+        permission="cmf.ModifyPortalContent"
+        />
+
+</configure>

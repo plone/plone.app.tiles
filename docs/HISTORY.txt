@@ -1,0 +1,8 @@
+Changelog for plone.app.tiles
+
+    (name of developer listed in brackets)
+
+plone.app.tiles - 1.0a1 Unreleased
+
+    - Initial package structure.
+      [zopeskel]

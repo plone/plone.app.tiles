@@ -1,0 +1,33 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="plone.app.tiles">
+    
+    <!-- Two sample tiles -->
+    
+    <include package="plone.app.tiles" />
+    
+    <plone:tile
+        name="plone.app.tiles.demo.transient"
+        title="Transient demo"
+        description="A test tile that is transient"
+        add_permission="cmf.ModifyPortalContent"
+        schema=".demo.ITransientTileData"
+        class=".demo.TransientTile"
+        permission="zope2.View"
+        for="*"
+        />
+
+    <plone:tile
+        name="plone.app.tiles.demo.persistent"
+        title="Persistent demo"
+        description="A test tile that is persistent"
+        add_permission="cmf.ModifyPortalContent"
+        schema=".demo.IPersistentTileData"
+        class=".demo.PersistentTile"
+        permission="zope2.View"
+        for="*"
+        />
+
+</configure>
