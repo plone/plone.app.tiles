@@ -38,7 +38,7 @@ setup(name='plone.app.tiles',
           'Zope2',
       ],
       extras_require={
-        'tests': ['collective.testcaselayer', 'Products.PloneTestCase'],
+        'test': ['collective.testcaselayer', 'Products.PloneTestCase'],
       },
       entry_points="""
       """,
