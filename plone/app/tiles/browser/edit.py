@@ -13,6 +13,8 @@ from plone.app.tiles import MessageFactory as _
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.event import notify
 
+from Products.statusmessages.interfaces import IStatusMessage
+
 class DefaultEditForm(TileForm, form.Form):
     """Standard tile edit form, which is wrapped by DefaultEditView (see below).
     
@@ -75,7 +77,11 @@ class DefaultEditForm(TileForm, form.Form):
         # Get the tile URL, possibly with encoded data
         self.tileURL = absoluteURL(tile, tile.request)
         
-        self.request.response.redirect(self.nextURL()) 
+        IStatusMessage(self.request).addStatusMessage(_(u"Tile saved to ${url}", mapping={'url': self.tileURL}))
+        
+        url = "%s/++edittile++%s?id=%s" % (self.context.absolute_url(), typeName, tile.id)
+        self.request.response.redirect(url)
+
         
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
