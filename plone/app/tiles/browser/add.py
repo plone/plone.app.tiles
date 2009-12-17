@@ -15,6 +15,8 @@ from zope.event import notify
 
 from Products.statusmessages.interfaces import IStatusMessage
 
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
 class DefaultAddForm(TileForm, form.Form):
     """Standard tile add form, which is wrapped by DefaultAddView (see below).
     
@@ -98,6 +100,7 @@ class DefaultAddView(layout.FormWrapper):
     """
     
     form = DefaultAddForm
+    index = ViewPageTemplateFile('decoFormLayer.pt')
     
     def __init__(self, context, request, tileType):
         super(DefaultAddView, self).__init__(context, request)

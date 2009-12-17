@@ -15,6 +15,9 @@ from zope.event import notify
 
 from Products.statusmessages.interfaces import IStatusMessage
 
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
+
 class DefaultEditForm(TileForm, form.Form):
     """Standard tile edit form, which is wrapped by DefaultEditView (see below).
     
@@ -102,6 +105,8 @@ class DefaultEditView(layout.FormWrapper):
     """
     
     form = DefaultEditForm
+    index = ViewPageTemplateFile('decoFormLayer.pt')
+
     
     def __init__(self, context, request, tileType):
         super(DefaultEditView, self).__init__(context, request)
