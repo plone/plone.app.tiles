@@ -105,7 +105,7 @@ class DefaultEditView(layout.FormWrapper):
     """
     
     form = DefaultEditForm
-    index = ViewPageTemplateFile('decoFormLayer.pt')
+    index = ViewPageTemplateFile('addedit.pt')
 
     
     def __init__(self, context, request, tileType):
