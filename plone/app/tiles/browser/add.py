@@ -81,7 +81,7 @@ class DefaultAddForm(TileForm, form.Form):
         IStatusMessage(self.request).addStatusMessage(_(u"Tile Saved"))
         
         tileInfoJson = {}
-        tileInfoJson['tileURL'] = self.tileURL
+        tileInfoJson['url'] = self.tileURL
         tileInfoJson['type'] = typeName
         tileInfoJson['id'] = tile.id
         
@@ -90,6 +90,7 @@ class DefaultAddForm(TileForm, form.Form):
                                            tile.id,
                                            json.dumps(tileInfoJson))
         
+        #print self.tileURL
         # Adding the form input to the url 
         #for item in tile.request.form.keys():
             #url += "&%s=%s" % (item, tile.request.form.get(item))
