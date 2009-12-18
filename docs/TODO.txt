@@ -1,12 +1,6 @@
 plone.app.tiles todo
 ====================
 
-[ ] Maybe we can avoid the ++addtile++ and ++edittile++ namespaces by
-    implement __getitem__() in the Tile class to do the triple-adapter lookups
-    for us instead. That way, the path would be ../@@tilename/add or
-    ../@@tilename/add. Alternatively, we could have standard @@add-tile and
-    @@edit-tile views with a __getitem__ doing what traverseName() does now.
-
 [ ] Book-keeping for which tiles have been persisted in annotations, to allow
     a "delete all" or selection of tile ids to delete. This may be done using
     events.

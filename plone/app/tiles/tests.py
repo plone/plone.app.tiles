@@ -36,8 +36,8 @@ class FunctionalTest(ptc.FunctionalTestCase):
         # Log in
         self.browser.addHeader('Authorization', 'Basic %s:%s' % (ptc.default_user, ptc.default_password,))
         
-        # Add a new transient tile using the @@available-tiles view
-        self.browser.open(self.folder.absolute_url() + '/@@available-tiles')
+        # Add a new transient tile using the @@add-tile view
+        self.browser.open(self.folder.absolute_url() + '/@@add-tile')
         self.browser.getControl(name='type').value = ['plone.app.tiles.demo.transient']
         self.browser.getControl(name='id').value = "tile1"
         self.browser.getControl(name='form.button.Create').click()
@@ -47,16 +47,20 @@ class FunctionalTest(ptc.FunctionalTestCase):
         self.browser.getControl(label='Save').click()
         
         self.assertEquals(self.folder.absolute_url() + \
-                          '/@@plone.app.tiles.demo.transient?id=tile1&message=Test+message', self.browser.url)
+                          '/@@edit-tile/plone.app.tiles.demo.transient?id=tile1&message=Test+message&' +
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.transient%3Fid%3Dtile1%26message%3DTest%2Bmessage%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.transient%22%2C%20%22id%22%3A%20%22tile1%22%7D',
+                          self.browser.url)
         
         # Edit the tile
         self.browser.open(self.folder.absolute_url() + \
-                          '/++edittile++plone.app.tiles.demo.transient?id=tile1&message=Test+message')
+                          '/@@edit-tile/plone.app.tiles.demo.transient?id=tile1&message=Test+message')
         self.browser.getControl(name='message').value = 'New message'
         self.browser.getControl(label='Save').click()
         
         self.assertEquals(self.folder.absolute_url() + \
-                          '/@@plone.app.tiles.demo.transient?id=tile1&message=New+message', self.browser.url)
+                          '/@@edit-tile/plone.app.tiles.demo.transient?id=tile1&message=New+message&' +
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.transient%3Fid%3Dtile1%26message%3DNew%2Bmessage%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.transient%22%2C%20%22id%22%3A%20%22tile1%22%7D',
+                          self.browser.url)
         
         # Remove the tile (really a no-op for transient tiles)
         self.browser.open(self.folder.absolute_url() + '/@@delete-tile')
@@ -81,8 +85,8 @@ class FunctionalTest(ptc.FunctionalTestCase):
         # Log in
         self.browser.addHeader('Authorization', 'Basic %s:%s' % (ptc.default_user, ptc.default_password,))
         
-        # Add a new persistent tile using the @@available-tiles view
-        self.browser.open(self.folder.absolute_url() + '/@@available-tiles')
+        # Add a new persistent tile using the @@add-tile view
+        self.browser.open(self.folder.absolute_url() + '/@@add-tile')
         self.browser.getControl(name='type').value = ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='id').value = "tile2"
         self.browser.getControl(name='form.button.Create').click()
@@ -93,7 +97,9 @@ class FunctionalTest(ptc.FunctionalTestCase):
         self.browser.getControl(label='Save').click()
         
         self.assertEquals(self.folder.absolute_url() + \
-                          '/@@plone.app.tiles.demo.persistent?id=tile2', self.browser.url)
+                          '/@@edit-tile/plone.app.tiles.demo.persistent?id=tile2&' + \
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.persistent%3Fid%3Dtile2%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22id%22%3A%20%22tile2%22%7D',
+                          self.browser.url)
         
         # Verify annotations
         self.assertEquals('Test message', folderAnnotations[annotationsKey]['message'])
@@ -101,12 +107,14 @@ class FunctionalTest(ptc.FunctionalTestCase):
         
         # Edit the tile
         self.browser.open(self.folder.absolute_url() + \
-                          '/++edittile++plone.app.tiles.demo.persistent?id=tile2')
+                          '/@@edit-tile/plone.app.tiles.demo.persistent?id=tile2')
         self.browser.getControl(name='message').value = 'New message'
         self.browser.getControl(label='Save').click()
         
         self.assertEquals(self.folder.absolute_url() + \
-                          '/@@plone.app.tiles.demo.persistent?id=tile2', self.browser.url)
+                          '/@@edit-tile/plone.app.tiles.demo.persistent?id=tile2&' +
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.persistent%3Fid%3Dtile2%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22id%22%3A%20%22tile2%22%7D',
+                          self.browser.url)
         
         # Verify annotations
         self.assertEquals('New message', folderAnnotations[annotationsKey]['message'])

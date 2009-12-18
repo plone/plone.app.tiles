@@ -6,5 +6,7 @@
     <include package="plone.tiles" file="meta.zcml"/>
     
     <include package=".browser" />
+    
+    <include file="demo.zcml" />
 
 </configure>

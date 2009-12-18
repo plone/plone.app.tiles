@@ -3,11 +3,23 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="plone.app.tiles">
 
-    <!-- Traversers -->
-    <adapter factory=".traversal.TileAddViewTraverser" name="addtile" />
-    <adapter factory=".traversal.TileEditViewTraverser" name="edittile" />
+    <!-- Traversal views -->
+    <browser:page
+        name="add-tile"
+        for="zope.annotation.interfaces.IAnnotatable"
+        permission="zope2.View"
+        class=".traversal.AddTile"
+        template="add.pt"
+        />
 
-    <!-- Standard add view and form - invoked from ++addtile++ traverser -->
+    <browser:page
+        name="edit-tile"
+        for="zope.annotation.interfaces.IAnnotatable"
+        permission="zope2.View"
+        class=".traversal.EditTile"
+        />
+    
+    <!-- Standard add view and form - invoked from the @@add-tile traversal view -->
     
     <adapter
         for="zope.annotation.interfaces.IAnnotatable
@@ -24,7 +36,7 @@
             />
     </class>
     
-    <!-- Standard edit view and form - invoked from ++edittile++ traverser -->
+    <!-- Standard edit view and form - invoked from the @@edit-tile traversal view -->
     
     <adapter
         for="zope.annotation.interfaces.IAnnotatable
@@ -47,15 +59,6 @@
         for="zope.annotation.interfaces.IAnnotatable"
         class=".delete.TileDelete"
         template="delete.pt"
-        permission="cmf.ModifyPortalContent"
-        />
-    
-    <!-- Factories view -->
-    <browser:page
-        name="available-tiles"
-        for="zope.annotation.interfaces.IAnnotatable"
-        class=".factories.TileFactories"
-        template="factories.pt"
         permission="cmf.ModifyPortalContent"
         />
 

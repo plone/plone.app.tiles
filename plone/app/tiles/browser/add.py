@@ -1,4 +1,4 @@
-from Acquisition import aq_inner
+import urllib
 
 from zope.traversing.browser.absoluteurl import absoluteURL
 
@@ -44,13 +44,6 @@ class DefaultAddForm(TileForm, form.Form):
     def label(self):
         return _(u"Add ${name}", mapping={'name': self.tileType.title})
     
-    def nextURL(self):
-        if self.tileURL is not None:
-            return self.tileURL
-        
-        container = aq_inner(self.context)
-        return container.absolute_url()
-    
     # Buttons/actions
     
     @button.buttonAndHandler(_('Save'), name='save')
@@ -73,38 +66,34 @@ class DefaultAddForm(TileForm, form.Form):
         notify(ObjectCreatedEvent(tile))
         
         # Get the tile URL, possibly with encoded data
-        self.tileURL = absoluteURL(tile, tile.request)
+        tileURL = absoluteURL(tile, tile.request)
         
-        #IStatusMessage(self.request).addStatusMessage(
-            #_(u"Tile saved to ${url}", mapping={'url': self.tileURL}),
-            #type=u'info')
-        IStatusMessage(self.request).addStatusMessage(_(u"Tile Saved"),
-                                                      type=u'info')
+        IStatusMessage(self.request).addStatusMessage(
+                _(u"Tile created at ${url}", mapping={'url': tileURL}), type=u'info'
+            )
         
+        # Inject @@edit-tile into the URL
+        urlParts = tileURL.split('/')
+        urlParts.insert(-1, '@@edit-tile')
+        if urlParts[-1].startswith('@@'):
+            urlParts[-1] = urlParts[-1][2:]
+        
+        # Add JSON data string
         tileDataJson = {}
         tileDataJson['action'] = "save"
-        tileDataJson['url'] = self.tileURL
+        tileDataJson['url'] = tileURL
         tileDataJson['type'] = typeName
         tileDataJson['id'] = tile.id
         
-        url = self.tileURL.replace('@@', '++edittile++', 1)
-        
-        url += "&tiledata=%s" % (json.dumps(tileDataJson));
-        
-        # Adding the form input to the url 
-        #for item in tile.request.form.keys():
-            #url += "&%s=%s" % (item, tile.request.form.get(item))
-        
+        url = '/'.join(urlParts) + "&tiledata=%s" % (urllib.quote(json.dumps(tileDataJson)),)
         self.request.response.redirect(url)
-        
         
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
-        
         tileDataJson = {}
         tileDataJson['action'] = "cancel"
         url = self.request.getURL()
-        url += "?tiledata=%s" % (json.dumps(tileDataJson))
+        url += "?tiledata=%s" % (urllib.quote(json.dumps(tileDataJson)))
         self.request.response.redirect(url)
 
     def updateActions(self):
@@ -113,9 +102,8 @@ class DefaultAddForm(TileForm, form.Form):
         self.actions["cancel"].addClass("standalone")
     
 class DefaultAddView(layout.FormWrapper):
-    """This is the default add view as looked up by the ++addtile++ traversal
-    namespace adapter from plone.tiles. It is an unnamed adapter on 
-    (context, request, tileType).
+    """This is the default add view as looked up by the @@add-tile traversal
+    view. It is an unnamed adapter on  (context, request, tileType).
     
     Note that this is registered in ZCML as a simple <adapter />, but we
     also use the <class /> directive to set up security.
