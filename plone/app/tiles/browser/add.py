@@ -78,7 +78,8 @@ class DefaultAddForm(TileForm, form.Form):
         #IStatusMessage(self.request).addStatusMessage(
             #_(u"Tile saved to ${url}", mapping={'url': self.tileURL}),
             #type=u'info')
-        IStatusMessage(self.request).addStatusMessage(_(u"Tile Saved"))
+        IStatusMessage(self.request).addStatusMessage(_(u"Tile Saved"),
+                                                      type=u'info')
         
         tileDataJson = {}
         tileDataJson['action'] = "save"

@@ -80,9 +80,12 @@ class DefaultEditForm(TileForm, form.Form):
         # Get the tile URL, possibly with encoded data
         self.tileURL = absoluteURL(tile, tile.request)
         
-        IStatusMessage(self.request).addStatusMessage(_(u"Tile saved to ${url}", mapping={'url': self.tileURL}), type=u'info')
+        IStatusMessage(self.request).addStatusMessage(_(u"Tile saved to ${url}",
+                                                        mapping={'url': self.tileURL}),
+                                                      type=u'info')
         
-        url = "%s/++edittile++%s?id=%s" % (self.context.absolute_url(), typeName, tile.id)
+        url = "%s/++edittile++%s?id=%s" % (self.context.absolute_url(), typeName,
+                                           tile.id)
         self.request.response.redirect(url)
 
         

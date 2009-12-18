@@ -59,4 +59,3 @@ class TileForm(AutoExtensibleForm):
         return self.tileType.schema
     
     additionalSchemata = ()
-   
