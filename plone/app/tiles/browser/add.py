@@ -85,7 +85,7 @@ class DefaultAddForm(TileForm, form.Form):
         tileInfoJson['type'] = typeName
         tileInfoJson['id'] = tile.id
         
-        url = "%s/++edittile++%s?id=%s&ls" % (self.context.absolute_url(),
+        url = "%s/++edittile++%s?id=%s&tiledata=%s" % (self.context.absolute_url(),
                                            typeName,
                                            tile.id,
                                            json.dumps(tileInfoJson))
