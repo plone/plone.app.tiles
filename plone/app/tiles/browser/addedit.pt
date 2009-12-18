@@ -19,7 +19,7 @@
             $(document).ready(function () {
                 if (typeof(tiledata) !== 'undefined') {
                     if (typeof(tiledata.url) !== 'undefined') {
-                        window.parent.jQuery.deco.addAppTile(tiledata.type, tiledata.url);
+                        window.parent.jQuery.deco.addAppTile(tiledata.type, tiledata.url, tiledata.id);
                     }
                 }
             })
