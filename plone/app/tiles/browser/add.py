@@ -80,14 +80,15 @@ class DefaultAddForm(TileForm, form.Form):
             #type=u'info')
         IStatusMessage(self.request).addStatusMessage(_(u"Tile Saved"))
         
-        tileInfoJson = {}
-        tileInfoJson['url'] = self.tileURL
-        tileInfoJson['type'] = typeName
-        tileInfoJson['id'] = tile.id
+        tileDataJson = {}
+        tileDataJson['action'] = "submit"
+        tileDataJson['url'] = self.tileURL
+        tileDataJson['type'] = typeName
+        tileDataJson['id'] = tile.id
         
         url = self.tileURL.replace('@@', '++edittile++', 1)
         
-        url += "&tiledata=%s" % (json.dumps(tileInfoJson));
+        url += "&tiledata=%s" % (json.dumps(tileDataJson));
         
         # Adding the form input to the url 
         #for item in tile.request.form.keys():
@@ -98,7 +99,11 @@ class DefaultAddForm(TileForm, form.Form):
         
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
-        self.request.response.redirect(self.nextURL()) 
+        
+        tileDataJson = {}
+        tileDataJson['action'] = "cancel"
+        #self.request.response.redirect(self.nextURL())
+        print ("kijken wat ie doet")
 
     def updateActions(self):
         super(DefaultAddForm, self).updateActions()
@@ -122,5 +127,6 @@ class DefaultAddView(layout.FormWrapper):
         self.tileType = tileType
 
         # Set portal_type name on newly created form instance
-        if self.form_instance is not None and getattr(self.form_instance, 'tileType', None) is None: 
+        if self.form_instance is not None and getattr(self.form_instance,
+                                                      'tileType', None) is None: 
             self.form_instance.tileType = tileType
