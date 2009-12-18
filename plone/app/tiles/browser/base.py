@@ -55,5 +55,6 @@ class TileForm(AutoExtensibleForm):
     @property
     def schema(self):
         return self.tileType.schema
+
     
     additionalSchemata = ()

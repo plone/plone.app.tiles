@@ -1,26 +1,19 @@
-import urllib
-
 from zope.traversing.browser.absoluteurl import absoluteURL
 
 from z3c.form import form, button
 from plone.z3cform import layout
 
-from plone.tiles.interfaces import ITileDataManager
-
-from plone.app.tiles.browser.base import TileForm
-from plone.app.tiles import MessageFactory as _
-
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.event import notify
 
 from Products.statusmessages.interfaces import IStatusMessage
-
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-try:
-    import json
-except:
-    import simplejson as json
+from plone.tiles.interfaces import ITileDataManager
+
+from plone.app.tiles.browser.base import TileForm
+from plone.app.tiles.utils import appendJSONData, getEditTileURL
+from plone.app.tiles import MessageFactory as _
 
 class DefaultEditForm(TileForm, form.Form):
     """Standard tile edit form, which is wrapped by DefaultEditView (see below).
@@ -30,7 +23,6 @@ class DefaultEditForm(TileForm, form.Form):
     """
     
     tileType = None
-    tileURL = None
     
     ignoreContext = False
     
@@ -82,10 +74,7 @@ class DefaultEditForm(TileForm, form.Form):
             )
         
         # Inject @@edit-tile into the URL
-        urlParts = tileURL.split('/')
-        urlParts.insert(-1, '@@edit-tile')
-        if urlParts[-1].startswith('@@'):
-            urlParts[-1] = urlParts[-1][2:]
+        url = getEditTileURL(tileURL)
         
         # Add JSON data string
         tileDataJson = {}
@@ -94,7 +83,7 @@ class DefaultEditForm(TileForm, form.Form):
         tileDataJson['type'] = typeName
         tileDataJson['id'] = tile.id
         
-        url = '/'.join(urlParts) + "&tiledata=%s" % (urllib.quote(json.dumps(tileDataJson)),)
+        url = appendJSONData(url, 'tiledata', tileDataJson)
         self.request.response.redirect(url)
         
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
@@ -102,7 +91,7 @@ class DefaultEditForm(TileForm, form.Form):
         tileDataJson = {}
         tileDataJson['action'] = "cancel"
         url = self.request.getURL()
-        url += "?tiledata=%s" % (urllib.quote(json.dumps(tileDataJson)))
+        url = appendJSONData(url, 'tiledata', tileDataJson)
         self.request.response.redirect(url)
 
     def updateActions(self):
