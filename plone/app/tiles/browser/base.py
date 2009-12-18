@@ -9,6 +9,8 @@ from z3c.form.interfaces import IWidgets
 from plone.tiles.interfaces import IBasicTile
 from plone.autoform.form import AutoExtensibleForm
 
+
+
 class TileForm(AutoExtensibleForm):
     """Mixin class for tile add/edit forms, which will load the tile schema
     """
@@ -57,3 +59,4 @@ class TileForm(AutoExtensibleForm):
         return self.tileType.schema
     
     additionalSchemata = ()
+   

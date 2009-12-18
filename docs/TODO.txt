@@ -11,3 +11,5 @@ plone.app.tiles todo
     a "delete all" or selection of tile ids to delete. This may be done using
     events.
 
+[ ] Taking the handleCancel method to the tileForm class so as the code is the same
+    This can also be done with other code in the add and edit forms
