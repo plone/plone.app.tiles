@@ -110,7 +110,7 @@ class DefaultAddView(layout.FormWrapper):
     """
     
     form = DefaultAddForm
-    index = ViewPageTemplateFile('addedit.pt')
+    index = ViewPageTemplateFile('tileformlayout.pt')
     
     def __init__(self, context, request, tileType):
         super(DefaultAddView, self).__init__(context, request)

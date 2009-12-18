@@ -119,7 +119,7 @@ class DefaultEditView(layout.FormWrapper):
     """
     
     form = DefaultEditForm
-    index = ViewPageTemplateFile('addedit.pt')
+    index = ViewPageTemplateFile('tileformlayout.pt')
 
     
     def __init__(self, context, request, tileType):
