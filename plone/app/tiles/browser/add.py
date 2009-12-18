@@ -17,6 +17,11 @@ from Products.statusmessages.interfaces import IStatusMessage
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
+try:
+    import json
+except:
+    import simplejson as json
+
 class DefaultAddForm(TileForm, form.Form):
     """Standard tile add form, which is wrapped by DefaultAddView (see below).
     
@@ -70,13 +75,24 @@ class DefaultAddForm(TileForm, form.Form):
         # Get the tile URL, possibly with encoded data
         self.tileURL = absoluteURL(tile, tile.request)
         
-        IStatusMessage(self.request).addStatusMessage(_(u"Tile saved to ${url}", mapping={'url': self.tileURL}), type=u'info')
+        #IStatusMessage(self.request).addStatusMessage(
+            #_(u"Tile saved to ${url}", mapping={'url': self.tileURL}),
+            #type=u'info')
+        IStatusMessage(self.request).addStatusMessage(_(u"Tile Saved"))
         
-        url = "%s/++edittile++%s?id=%s" % (self.context.absolute_url(), typeName, tile.id)
-
+        tileInfoJson = {}
+        tileInfoJson['tileURL'] = self.tileURL
+        tileInfoJson['type'] = typeName
+        tileInfoJson['id'] = tile.id
+        
+        url = "%s/++edittile++%s?id=%s&ls" % (self.context.absolute_url(),
+                                           typeName,
+                                           tile.id,
+                                           json.dumps(tileInfoJson))
+        
         # Adding the form input to the url 
         #for item in tile.request.form.keys():
-        #    url += "&%s=%s" % (item, tile.request.form.get(item))
+            #url += "&%s=%s" % (item, tile.request.form.get(item))
         
         self.request.response.redirect(url)
         
