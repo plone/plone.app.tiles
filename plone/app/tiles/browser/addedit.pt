@@ -8,18 +8,20 @@
         lang portal_state/language;
         view nocall:view | nocall: plone_view;
         dummy python: plone_view.mark_view(view);
-        portal_url portal_state/portal_url;
-        checkPermission nocall: context/portal_membership/checkPermission;
-        site_properties context/portal_properties/site_properties;"
+        tiledata context/REQUEST/tiledata | string:{};
+        portal_url portal_state/portal_url;"
     tal:attributes="lang lang;">
 <head>
     <div tal:replace="structure provider:plone.htmlhead" />
+    <script type="text/javascript" tal:content="python:'var tiledata = eval(\'(%s)\');' % (tiledata)"></script>
     <script type="text/javascript">
       (function($) {
-            $(document).ready(function (){
-                  $(".portalMessage.info:visible").each(function (){
-                        alert("Custom inclusion code");
-                  })
+            $(document).ready(function () {
+                if (typeof(tiledata) !== 'undefined') {
+                    if (typeof(tiledata.url) !== 'undefined') {
+                        window.parent.jQuery.deco.addAppTile(tiledata.type, tiledata.url);
+                    }
+                }
             })
       })(jQuery)
       </script>
