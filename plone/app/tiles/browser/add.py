@@ -81,7 +81,7 @@ class DefaultAddForm(TileForm, form.Form):
         IStatusMessage(self.request).addStatusMessage(_(u"Tile Saved"))
         
         tileDataJson = {}
-        tileDataJson['action'] = "submit"
+        tileDataJson['action'] = "save"
         tileDataJson['url'] = self.tileURL
         tileDataJson['type'] = typeName
         tileDataJson['id'] = tile.id
@@ -102,8 +102,9 @@ class DefaultAddForm(TileForm, form.Form):
         
         tileDataJson = {}
         tileDataJson['action'] = "cancel"
-        #self.request.response.redirect(self.nextURL())
-        print ("kijken wat ie doet")
+        url = self.request.getURL()
+        url += "?tiledata=%s" % (json.dumps(tileDataJson))
+        self.request.response.redirect(url)
 
     def updateActions(self):
         super(DefaultAddForm, self).updateActions()
