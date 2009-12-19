@@ -55,8 +55,7 @@ class TileDelete(BrowserView):
             if not checkPermission(tileType.add_permission, self.context):
                 raise Unauthorized("You are not allowed to modify this tile type")
             
-            tile = self.context.restrictedTraverse('@@' + self.tileTypeName)
-            tile.id = self.tileId
+            tile = self.context.restrictedTraverse('@@%s/%s' % (self.tileTypeName, self.tileId,))
             
             dm = ITileDataManager(tile)
             dm.delete()

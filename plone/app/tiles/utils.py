@@ -10,9 +10,9 @@ def getEditTileURL(tileURL):
     """
     
     urlParts = tileURL.split('/')
-    urlParts.insert(-1, '@@edit-tile')
-    if urlParts[-1].startswith('@@'):
-        urlParts[-1] = urlParts[-1][2:]
+    urlParts.insert(-2, '@@edit-tile')
+    if urlParts[-2].startswith('@@'):
+        urlParts[-2] = urlParts[-2][2:]
     
     return '/'.join(urlParts)
 

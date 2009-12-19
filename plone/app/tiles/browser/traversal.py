@@ -17,39 +17,60 @@ from Products.Five.browser import BrowserView
 class TileTraverser(BrowserView):
     """Base class for tile add/edit view traversers.
     
-    In effect, the add and edit view traversers do the same thing, they are
-    just conceptually different. It is important to realise that you need to
-    pass at least the `id` query string parameter to the traverser, and,
-    in the case of the edit traverser for transient tiles, you'll also need
-    to pass the existing tile query string.
+    This is responsible for fetching the tile name and tile id out of a URL
+    like ``.../@@traversal-view/my.tile.name/tile-id``.
+    
+    We then look up an adapter from ``(context, request, tileType)`` to an
+    appropriate interface. The default is to use the unnamed adapter, but this
+    can be overridden by registering a named adapter with the name of the
+    tile type. This way, a custom add/edit view can be reigstered for a
+    particular type of tile.
+    
+    The tile id is set onto the view that was looked up, as the ``tileId``
+    attribute.
+    
+    Below, we register two traversal views: ``@@add-tile`` and
+    ``@@edit-tile``.
     """
 
     targetInterface = Interface
     implements(IPublishTraverse)
-
+    
+    view = None
+    
     def __init__(self, context, request):
         self.context = context
         self.request = request
     
     def publishTraverse(self, request, name):
-        """Allow traveral to @@<view>/tilename
+        """Allow traveral to @@<view>/tilename/tileid
         """
         
-        tile_info = queryUtility(ITileType, name=name)
-        if tile_info is None:
-            raise KeyError(name)
+        # 1. Look up the view, but keep this view as the traveral context in
+        # anticipation of an id
+        if self.view is None:
+            tile_info = queryUtility(ITileType, name=name)
+            if tile_info is None:
+                raise KeyError(name)
         
-        view = queryMultiAdapter((self.context, self.request, tile_info), self.targetInterface, name=name)
-        if view is None:
-            view = queryMultiAdapter((self.context, self.request, tile_info), self.targetInterface)
+            self.view = queryMultiAdapter((self.context, self.request, tile_info), self.targetInterface, name=name)
+            if self.view is None:
+                self.view = queryMultiAdapter((self.context, self.request, tile_info), self.targetInterface)
         
-        if view is None:
-            raise KeyError(name)
+            if self.view is None:
+                raise KeyError(name)
         
-        view.__name__ = name
-        view.__parent__ = self.context
+            self.view.__name__ = name
+            self.view.__parent__ = self.context
+            
+            return self
+        # 2. Set the id and return the view we looked up in the previous
+        # traversal step.
+        elif getattr(self.view, 'tileId', None) is None:
+            self.view.tileId = name
+            return self.view
         
-        return view
+        raise KeyError(name)
 
 class AddTile(TileTraverser):
     """Implements the @@add-tile traversal view
@@ -57,12 +78,13 @@ class AddTile(TileTraverser):
     Rendering this view on its own will display a template where the user
     may choose a tile type to add.
     
-    Traversing to /path/to/obj/@@add-tile/@@tile-name?id=foo will:
+    Traversing to /path/to/obj/@@add-tile/tile-name/tile-id will:
     
         * Look up the tile info for 'tile-name' as a named utility
         * Attempt to find an adapter for (context, request, tile_info) with
             the name 'tile-name'
         * Fall back on the unnamed adapter of the same triple
+        * Set the 'tileId' property on the view to the id 'tile-id
         * Return the view for rendering
     """
 
@@ -99,7 +121,7 @@ class AddTile(TileTraverser):
                 self.errors['id'] = _(u"You must specify an id")
             
             if len(self.errors) == 0:
-                self.request.response.redirect("%s/@@add-tile/%s?id=%s" % \
+                self.request.response.redirect("%s/@@add-tile/%s/%s" % \
                         (self.context.absolute_url(), newTileType, newTileId))
                 return ''
             
@@ -108,16 +130,17 @@ class AddTile(TileTraverser):
 class EditTile(TileTraverser):
     """Implements the @@edit-tile namespace.
     
-    Traversing to /path/to/obj/@@edit-tile/@@tile-name?id=foo will:
+    Traversing to /path/to/obj/@@edit-tile/tile-name/tile-id will:
     
         * Look up the tile info for 'tile-name' as a named utility
         * Attempt to find an adapter for (context, request, tile_info) with
             the name 'tile-name'
         * Fall back on the unnamed adapter of the same triple
+        * Set the 'tileId' property on the view to the id 'tile-id
         * Return the view for rendering
     """
 
     targetInterface = ITileEditView
     
     def __call__(self):
-        raise KeyError("Please traverse to @@edit-tile/<tilename>?id=<id>")
+        raise KeyError("Please traverse to @@edit-tile/tilename/id")

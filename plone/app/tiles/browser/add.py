@@ -1,10 +1,10 @@
-from zope.traversing.browser.absoluteurl import absoluteURL
-
 from z3c.form import form, button
 from plone.z3cform import layout
 
 from zope.lifecycleevent import ObjectCreatedEvent
 from zope.event import notify
+
+from zope.traversing.browser.absoluteurl import absoluteURL
 
 from Products.statusmessages.interfaces import IStatusMessage
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -22,7 +22,9 @@ class DefaultAddForm(TileForm, form.Form):
     by an ITileType utility.
     """
     
+    # Set during traversal
     tileType = None
+    tileId = None
     
     ignoreContext = True
     
@@ -40,34 +42,35 @@ class DefaultAddForm(TileForm, form.Form):
     
     @button.buttonAndHandler(_('Save'), name='save')
     def handleAdd(self, action):
+        
         data, errors = self.extractData()
         if errors:
             self.status = self.formErrorsMessage
             return
         
         typeName = self.tileType.__name__
-        tileId = data.pop('id', None)
         
         # Traverse to a new tile in the context, with no data
-        tile = self.context.restrictedTraverse('@@' + typeName)
-        tile.id = tileId
+        tile = self.context.restrictedTraverse('@@%s/%s' % (typeName, self.tileId,))
         
         dataManager = ITileDataManager(tile)
         dataManager.set(data)
         
-        notify(ObjectCreatedEvent(tile))
+        # Look up the URL - we need to do this after we've set the data to
+        # correctly account for transient tiles
+        tileURL = absoluteURL(tile, self.request)
         
-        # Get the tile URL, possibly with encoded data
-        tileURL = absoluteURL(tile, tile.request)
+        notify(ObjectCreatedEvent(tile))
         
         IStatusMessage(self.request).addStatusMessage(
                 _(u"Tile created at ${url}", mapping={'url': tileURL}), type=u'info'
             )
         
-        # Inject @@edit-tile into the URL
+        # Calculate the edit URL and append some data in a JSON structure,
+        # to help the UI know what to do.
+
         url = getEditTileURL(tileURL)
         
-        # Add JSON data string
         tileDataJson = {}
         tileDataJson['action'] = "save"
         tileDataJson['url'] = tileURL
@@ -101,11 +104,19 @@ class DefaultAddView(layout.FormWrapper):
     form = DefaultAddForm
     index = ViewPageTemplateFile('tileformlayout.pt')
     
+    # Set by sub-path traversal in @@add-tile - we delegate to the form
+
+    def __getTileId(self):
+        return getattr(self.form_instance, 'tileId', None)
+    def __setTileId(self, value):
+        self.form_instance.tileId = value
+    tileId = property(__getTileId, __setTileId)
+    
     def __init__(self, context, request, tileType):
         super(DefaultAddView, self).__init__(context, request)
         self.tileType = tileType
 
-        # Set portal_type name on newly created form instance
-        if self.form_instance is not None and getattr(self.form_instance,
-                                                      'tileType', None) is None: 
-            self.form_instance.tileType = tileType
+        # Configure the form instance
+        if self.form_instance is not None:
+            if getattr(self.form_instance, 'tileType', None) is None:
+                self.form_instance.tileType = tileType

@@ -3,24 +3,24 @@ from zope.security import checkPermission
 
 from AccessControl import Unauthorized
 
-from z3c.form import field
 from z3c.form.interfaces import IWidgets
-
-from plone.tiles.interfaces import IBasicTile
 from plone.autoform.form import AutoExtensibleForm
 
 class TileForm(AutoExtensibleForm):
     """Mixin class for tile add/edit forms, which will load the tile schema
+    and set up an appropriate form.
     """
 
     # Must be set by subclass
     tileType = None
+    tileId = None
     
     # Get fieldets if subclass sets additional_schemata
     autoGroups = True
 
     # We don't want the tile edit screens to use a form prefix, so that we
-    # can pass simple things on the edit screen
+    # can pass simple things on the edit screen and have them be interpreted
+    # by transient tiles
     prefix = ''
     
     def update(self):
@@ -29,12 +29,6 @@ class TileForm(AutoExtensibleForm):
             raise Unauthorized("You are not allowed to add this kind of tile")
         
         super(TileForm, self).update()
-    
-    def updateFields(self):
-        # Override to add an implicit, hidden 'id' field
-        super(TileForm, self).updateFields()
-        idField = field.Field(IBasicTile['id'], name='id', prefix='', mode='hidden')
-        self.fields += field.Fields(idField)
     
     def updateWidgets(self):
         # Override to set the widgets prefix before widgets are updated
@@ -56,5 +50,4 @@ class TileForm(AutoExtensibleForm):
     def schema(self):
         return self.tileType.schema
 
-    
     additionalSchemata = ()

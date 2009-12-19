@@ -10,7 +10,7 @@ class ITransientTileData(Interface):
 class TransientTile(tiles.Tile):
     
     def __call__(self):
-        return "<b>Transient tile %s</b>" % self.data['message']
+        return "<html><body><b>Transient tile %s</b></body></html>" % self.data['message']
 
 class IPersistentTileData(Interface):
     
@@ -20,5 +20,4 @@ class IPersistentTileData(Interface):
 class PersistentTile(tiles.PersistentTile):
 
     def __call__(self):
-        return "<b>Persistent tile %s #%d</b>" % (self.data['message'], self.data['counter'],)
-
+        return "<html><body><b>Persistent tile %s #%d</b></body></html>" % (self.data['message'], self.data['counter'],)
