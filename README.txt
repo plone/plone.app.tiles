@@ -9,8 +9,10 @@ This package contains the following things:
   new tile based on the tile's schema. For transient tiles, this merely
   redirects to a URL with an appropriate query string. For persistent tiles,
   it will also save the necessary data. This will fire an 
-  ``IObjectCreatedEvent`` for the newly created tile (a transient object)
-  when successfully submitted.
+  ``IObjectCreatedEvent`` as well as an ``IObjectAddedEvent`` for the newly
+  created tile (a transient object) when successfully submitted. In the case
+  of the ``IObjectAddedEvent``, the ``newParent`` attribute will be the tile's
+  context, and the ``newName`` attribute will be the tile's id.
 
 * The ``@@add-tile`` view, when accessed directly, allows the user to choose
   from all available tiles (subject to the tile's add permission) and
@@ -27,6 +29,11 @@ This package contains the following things:
   ``IObjectRemovedEvent`` for the removed tile (a transient object). The
   ``oldParent`` attribute will be the tile's context, and the ``oldName``
   attribute will be the tile's id.
+
+* An interface ``ITileBookeeping``. Adapt a content object to this interface
+  to obtain information about the tiles which have been added in that context.
+  Event handlers for ``IObjectAddedEvent`` and ``IObjectRemovedEvent`` keep
+  the bookkeeping information in sync as tiles are added and removed.
 
 The default add and edit forms should suffice for most use cases. You can use
 `plone.autoform <http://pypi.python.org/pypi/plone.autoform>`_ to configure
