@@ -1,6 +1,8 @@
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.component import getUtility
 
+from zope.lifecycleevent import ObjectRemovedEvent
+
 from AccessControl import Unauthorized
 from Products.Five.browser import BrowserView
 
@@ -11,11 +13,6 @@ from plone.tiles.interfaces import ITileType
 from plone.tiles.interfaces import ITileDataManager
 
 from plone.memoize.view import memoize
-
-try:
-    from zope.lifecycleevent import ObjectRemovedEvent
-except ImportError:
-    from zope.app.container.contained import ObjectRemovedEvent
 
 class TileDelete(BrowserView):
     """Delete a given tile

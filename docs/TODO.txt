@@ -1,7 +1,3 @@
 plone.app.tiles todo
 ====================
 
-[ ] Book-keeping for which tiles have been persisted in annotations, to allow
-    a "delete all" or selection of tile ids to delete. This may be done using
-    events.
-

@@ -1,7 +1,7 @@
 from z3c.form import form, button
 from plone.z3cform import layout
 
-from zope.lifecycleevent import ObjectCreatedEvent
+from zope.lifecycleevent import ObjectCreatedEvent, ObjectAddedEvent
 from zope.event import notify
 
 from zope.traversing.browser.absoluteurl import absoluteURL
@@ -61,6 +61,7 @@ class DefaultAddForm(TileForm, form.Form):
         tileURL = absoluteURL(tile, self.request)
         
         notify(ObjectCreatedEvent(tile))
+        notify(ObjectAddedEvent(tile, self.context, self.tileId))
         
         IStatusMessage(self.request).addStatusMessage(
                 _(u"Tile created at ${url}", mapping={'url': tileURL}), type=u'info'

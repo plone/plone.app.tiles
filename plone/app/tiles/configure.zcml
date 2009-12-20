@@ -5,7 +5,13 @@
     <include package="plone.tiles" />
     <include package="plone.tiles" file="meta.zcml"/>
     
+    <!-- Views -->
     <include package=".browser" />
+    
+    <!-- Bookkeeping -->
+    <subscriber handler=".bookkeeping.recordTileAdded" />
+    <subscriber handler=".bookkeeping.recordTileRemoved" />
+    <adapter factory=".bookkeeping.AnnotationsTileBookkeeping" />
     
     <!-- TODO: Remove once we stop doing TTW testing -->
     <include file="demo.zcml" />
