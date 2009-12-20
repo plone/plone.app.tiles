@@ -1,10 +1,6 @@
 plone.app.tiles todo
 ====================
 
-[ ] Image widget fails to render tile. The url is like this:
-
-        http://localhost:8080/test/@@edit-tile/example.deco.image/image/++widget++image/@@download/Red+Apple.gif
-
 [ ] Book-keeping for which tiles have been persisted in annotations, to allow
     a "delete all" or selection of tile ids to delete. This may be done using
     events.
