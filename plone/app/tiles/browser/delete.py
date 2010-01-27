@@ -4,7 +4,6 @@ from zope.component import getUtility
 from zope.lifecycleevent import ObjectRemovedEvent
 
 from AccessControl import Unauthorized
-from Products.Five.browser import BrowserView
 
 from zope.security import checkPermission
 from zope.event import notify
@@ -14,9 +13,13 @@ from plone.tiles.interfaces import ITileDataManager
 
 from plone.memoize.view import memoize
 
-class TileDelete(BrowserView):
+class TileDelete(object):
     """Delete a given tile
     """
+    
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
     
     def sortKey(self, type1, type2):
         return cmp(type1.title, type2.title)

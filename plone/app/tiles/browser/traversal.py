@@ -14,9 +14,7 @@ from plone.app.tiles.interfaces import ITileAddView, ITileEditView
 
 from plone.app.tiles import MessageFactory as _
 
-from Products.Five.browser import BrowserView
-
-class TileTraverser(BrowserView):
+class TileTraverser(object):
     """Base class for tile add/edit view traversers.
     
     This is responsible for fetching the tile name and tile id out of a URL

@@ -1,76 +1,63 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal"
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      lang="en"
-      metal:use-macro="context/main_template/macros/master"
-      i18n:domain="plone.app.tiles">
+<metal:block use-macro="context/@@tile-form-layout/macros/master">
+    <metal:block fill-slot="main">
+        <h1 class="documentFirstHeading" i18n:translate="heading_add_new_tile">Create tile</h1>
 
-<body>
+        <p class="documentDescription"
+           i18n:translate="description_add_new_tile">
+            Select the type of tile you want to create
+        </p>
 
-<div metal:fill-slot="main">
+        <div metal:define-macro="addlist">
 
-    <h1 class="documentFirstHeading" i18n:translate="heading_add_new_tile">Create tile</h1>
-
-    <p class="documentDescription"
-       i18n:translate="description_add_new_tile">
-        Select the type of tile you want to create
-    </p>
-
-    <div metal:define-macro="addlist">
-
-        <form name="quickAdd" method="post" tal:attributes="action request/URL">
+            <form name="quickAdd" method="post" tal:attributes="action request/URL">
             
-            <div class="field" tal:condition="view/showId">
-                <label for="id" i18n:translate="label_tile_id">Tile id</label>
-                <div class="formHelp" i18n:translate="help_tile_id">
-                    A unique identifier for the tile. Used to key tile data.
+                <div class="field" tal:condition="view/showId">
+                    <label for="id" i18n:translate="label_tile_id">Tile id</label>
+                    <div class="formHelp" i18n:translate="help_tile_id">
+                        A unique identifier for the tile. Used to key tile data.
+                    </div>
+                    <div class="error"
+                        tal:condition="view/errors/id | nothing"
+                        tal:content="view/errors/id | nothing" />
+                    <input type="text" name="id" id="id" tal:attributes="value request/id | nothing" />
                 </div>
-                <div class="error"
-                    tal:condition="view/errors/id | nothing"
-                    tal:content="view/errors/id | nothing" />
-                <input type="text" name="id" id="id" tal:attributes="value request/id | nothing" />
-            </div>
             
-            <div class="field">
-                <label i18n:translate="label_tile_type">Tile type</label>
+                <div class="field">
+                    <label i18n:translate="label_tile_type">Tile type</label>
                 
-                <div class="error"
-                        tal:condition="view/errors/type | nothing"
-                        tal:content="view/errors/type | nothing" />
+                    <div class="error"
+                            tal:condition="view/errors/type | nothing"
+                            tal:content="view/errors/type | nothing" />
             
             
             
-                <dl>
-                    <tal:typelist repeat="type view/tileTypes">
-                        <dt tal:define="name type/__name__;
-                                        currentSelection request/type | nothing">
-                            <input type="radio" name="type"
-                                   tal:attributes="value name;
-                                                   id string:form-field-${name};
-                                                   selected python:name == currentSelection and 'selected' or None" />
-                            <label tal:attributes="class string:tiletype-${name};
-                                                   for string:form-field-${name};">
-                                <span tal:replace="type/title">Tile type title</span>
-                            </label>                                 
-                        </dt>
-                        <dd tal:content="type/description">Type description</dd>
-                    </tal:typelist>
-                </dl>
-            </div>
+                    <dl>
+                        <tal:typelist repeat="type view/tileTypes">
+                            <dt tal:define="name type/__name__;
+                                            currentSelection request/type | nothing">
+                                <input type="radio" name="type"
+                                       tal:attributes="value name;
+                                                       id string:form-field-${name};
+                                                       selected python:name == currentSelection and 'selected' or None" />
+                                <label tal:attributes="class string:tiletype-${name};
+                                                       for string:form-field-${name};">
+                                    <span tal:replace="type/title">Tile type title</span>
+                                </label>                                 
+                            </dt>
+                            <dd tal:content="type/description">Type description</dd>
+                        </tal:typelist>
+                    </dl>
+                </div>
 
-            <div class="formControls">
-                <input class="standalone"
-                      type="submit"
-                      value="Create"
-                      name="form.button.Create"
-                      i18n:attributes="value label_create"
-                      />
-            </div>
-        </form>
-    </div>
-
-</div>
-
-</body>
-</html>
+                <div class="formControls">
+                    <input class="standalone"
+                          type="submit"
+                          value="Create"
+                          name="form.button.Create"
+                          i18n:attributes="value label_create"
+                          />
+                </div>
+            </form>
+        </div>
+    </metal:block>
+</metal:block>

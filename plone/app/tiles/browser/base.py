@@ -6,6 +6,18 @@ from AccessControl import Unauthorized
 from z3c.form.interfaces import IWidgets
 from plone.autoform.form import AutoExtensibleForm
 
+class TileFormLayout(object):
+    """Layout view giving access to macro slots
+    """
+    
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+    
+    @property
+    def macros(self):
+        return self.index.macros
+
 class TileForm(AutoExtensibleForm):
     """Mixin class for tile add/edit forms, which will load the tile schema
     and set up an appropriate form.
@@ -29,6 +41,11 @@ class TileForm(AutoExtensibleForm):
             raise Unauthorized("You are not allowed to add this kind of tile")
         
         super(TileForm, self).update()
+    
+    def render(self):
+        if self.request.response.getStatus() in (301, 302):
+            return ''
+        return super(TileForm, self).render()
     
     def updateWidgets(self):
         # Override to set the widgets prefix before widgets are updated
