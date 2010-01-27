@@ -17,6 +17,7 @@ from plone.tiles.interfaces import ITile
 from plone.app.tiles.interfaces import ITileBookkeeping
 
 ANNOTATIONS_KEY = "plone.app.tiles.bookkeeping"
+COUNTER_KEY = "plone.app.tiles.counter"
 
 @adapter(ITile, IObjectAddedEvent)
 def recordTileAdded(tile, event):
@@ -55,6 +56,9 @@ class AnnotationsTileBookkeeping(object):
     def added(self, tileType, tileId):
         tree = self.annotations.setdefault(ANNOTATIONS_KEY, OOBTree())
         tree[tileId] = tileType
+        
+        counter = self.annotations.setdefault(COUNTER_KEY, 0)
+        self.annotations[counter] += 1
     
     def removed(self, tileId):
         tree = self.annotations.get(ANNOTATIONS_KEY, {})
@@ -62,6 +66,9 @@ class AnnotationsTileBookkeeping(object):
             del tree[tileId]
             return True
         return False
+    
+    def counter(self):
+        return self.annotations.get(COUNTER_KEY, 0)
     
     def typeOf(self, tileId):
         tree = self.annotations.get(ANNOTATIONS_KEY, {})

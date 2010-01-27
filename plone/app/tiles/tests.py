@@ -88,6 +88,8 @@ class FunctionalTest(ptc.FunctionalTestCase):
         self.assertEquals('plone.app.tiles.demo.persistent', bookkeeping.typeOf('tile2'))
         self.assertEquals('plone.app.tiles.demo.transient', bookkeeping.typeOf('tile3'))
         
+        self.assertEquals(5, bookkeeping.counter())
+        
         # Let's say we found 'tile1' in the enumeration list and we realised
         # this tile was "lost" (e.g. no longer part of any valid page or site
         # layout). If we wanted to clean up its data, we could now do this:
@@ -111,7 +113,10 @@ class FunctionalTest(ptc.FunctionalTestCase):
         # Our other tiles are untouched
         bookkeeping = ITileBookkeeping(self.portal)
         self.assertEquals([('tile2', 'plone.app.tiles.demo.persistent'), ('tile4', 'plone.app.tiles.demo.persistent')], sorted(list(bookkeeping.enumerate())))
-    
+        
+        # The counter is not decremented on remove
+        self.assertEquals(5, bookkeeping.counter())
+        
     def test_transient_lifecycle(self):
         # Log in
         self.browser.addHeader('Authorization', 'Basic %s:%s' % (ptc.default_user, ptc.default_password,))

@@ -40,6 +40,11 @@ class ITileBookkeeping(Interface):
         cannot be found.
         """
     
+    def counter():
+        """Get the number of tiles that have been added. Note that the counter
+        is *not* decremented even if tiles are removed.
+        """
+    
     def enumerate(tileType=None):
         """Obtain an iterator for all tiles which have been recorded. The
         iterator returns tuples of strings ``(tileId, tileType)``. If
