@@ -59,6 +59,11 @@ class DefaultAddForm(TileForm, form.Form):
         # Look up the URL - we need to do this after we've set the data to
         # correctly account for transient tiles
         tileURL = absoluteURL(tile, self.request)
+        contextURL = absoluteURL(tile.context, self.request)
+        tileRelativeURL = tileURL
+        
+        if tileURL.startswith(contextURL):
+            tileRelativeURL = '.' + tileURL[len(contextURL):]
         
         notify(ObjectCreatedEvent(tile))
         notify(ObjectAddedEvent(tile, self.context, self.tileId))
@@ -74,7 +79,7 @@ class DefaultAddForm(TileForm, form.Form):
         
         tileDataJson = {}
         tileDataJson['action'] = "save"
-        tileDataJson['url'] = tileURL
+        tileDataJson['url'] = tileRelativeURL
         tileDataJson['type'] = typeName
         tileDataJson['id'] = tile.id
         

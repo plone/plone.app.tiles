@@ -133,7 +133,7 @@ class FunctionalTest(ptc.FunctionalTestCase):
         
         self.assertEquals(self.folder.absolute_url() + \
                           '/@@edit-tile/plone.app.tiles.demo.transient/tile-1?message=Test+message&' +
-                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.transient/tile-1%3Fmessage%3DTest%2Bmessage%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.transient%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22./%40%40plone.app.tiles.demo.transient/tile-1%3Fmessage%3DTest%2Bmessage%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.transient%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
                           self.browser.url)
         
         # Check bookkeeping information
@@ -155,7 +155,7 @@ class FunctionalTest(ptc.FunctionalTestCase):
         
         self.assertEquals(self.folder.absolute_url() + \
                           '/@@edit-tile/plone.app.tiles.demo.transient/tile-1?message=New+message&' +
-                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.transient/tile-1%3Fmessage%3DNew%2Bmessage%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.transient%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22./%40%40plone.app.tiles.demo.transient/tile-1%3Fmessage%3DNew%2Bmessage%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.transient%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
                           self.browser.url)
         
         # Check bookkeeping information
@@ -212,7 +212,7 @@ class FunctionalTest(ptc.FunctionalTestCase):
         
         self.assertEquals(self.folder.absolute_url() + \
                           '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1?' + \
-                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.persistent/tile-1%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22./%40%40plone.app.tiles.demo.persistent/tile-1%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
                           self.browser.url)
         
         # Verify annotations
@@ -238,7 +238,7 @@ class FunctionalTest(ptc.FunctionalTestCase):
         
         self.assertEquals(self.folder.absolute_url() + \
                           '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1?' +
-                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.persistent/tile-1%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22./%40%40plone.app.tiles.demo.persistent/tile-1%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
                           self.browser.url)
         
         # Verify annotations
