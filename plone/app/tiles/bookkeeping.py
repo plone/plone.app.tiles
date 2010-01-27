@@ -57,8 +57,8 @@ class AnnotationsTileBookkeeping(object):
         tree = self.annotations.setdefault(ANNOTATIONS_KEY, OOBTree())
         tree[tileId] = tileType
         
-        counter = self.annotations.setdefault(COUNTER_KEY, 0)
-        self.annotations[counter] += 1
+        counter = self.counter()
+        self.annotations[COUNTER_KEY] = counter + 1
     
     def removed(self, tileId):
         tree = self.annotations.get(ANNOTATIONS_KEY, {})

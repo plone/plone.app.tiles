@@ -44,10 +44,10 @@ class FunctionalTest(ptc.FunctionalTestCase):
         
         # The easiest way to look up a tile in Zope 2 is to use traversal:
         
-        traversed = self.portal.restrictedTraverse('@@plone.app.tiles.demo.transient/tile1')
+        traversed = self.portal.restrictedTraverse('@@plone.app.tiles.demo.transient/tile-1')
         self.failUnless(isinstance(traversed, TransientTile))
         self.assertEquals('plone.app.tiles.demo.transient', traversed.__name__)
-        self.assertEquals('tile1', traversed.id)
+        self.assertEquals('tile-1', traversed.id)
 
     def test_forensic_bookkeeping(self):
         
@@ -88,7 +88,7 @@ class FunctionalTest(ptc.FunctionalTestCase):
         self.assertEquals('plone.app.tiles.demo.persistent', bookkeeping.typeOf('tile2'))
         self.assertEquals('plone.app.tiles.demo.transient', bookkeeping.typeOf('tile3'))
         
-        self.assertEquals(5, bookkeeping.counter())
+        self.assertEquals(3, bookkeeping.counter())
         
         # Let's say we found 'tile1' in the enumeration list and we realised
         # this tile was "lost" (e.g. no longer part of any valid page or site
@@ -115,7 +115,7 @@ class FunctionalTest(ptc.FunctionalTestCase):
         self.assertEquals([('tile2', 'plone.app.tiles.demo.persistent'), ('tile4', 'plone.app.tiles.demo.persistent')], sorted(list(bookkeeping.enumerate())))
         
         # The counter is not decremented on remove
-        self.assertEquals(5, bookkeeping.counter())
+        self.assertEquals(2, bookkeeping.counter())
         
     def test_transient_lifecycle(self):
         # Log in
@@ -124,7 +124,7 @@ class FunctionalTest(ptc.FunctionalTestCase):
         # Add a new transient tile using the @@add-tile view
         self.browser.open(self.folder.absolute_url() + '/@@add-tile')
         self.browser.getControl(name='type').value = ['plone.app.tiles.demo.transient']
-        self.browser.getControl(name='id').value = "tile1"
+        # self.browser.getControl(name='id').value = "tile1"
         self.browser.getControl(name='form.button.Create').click()
         
         # Fill in the data and save
@@ -132,55 +132,58 @@ class FunctionalTest(ptc.FunctionalTestCase):
         self.browser.getControl(label='Save').click()
         
         self.assertEquals(self.folder.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.transient/tile1?message=Test+message&' +
-                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.transient/tile1%3Fmessage%3DTest%2Bmessage%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.transient%22%2C%20%22id%22%3A%20%22tile1%22%7D',
+                          '/@@edit-tile/plone.app.tiles.demo.transient/tile-1?message=Test+message&' +
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.transient/tile-1%3Fmessage%3DTest%2Bmessage%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.transient%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
                           self.browser.url)
         
         # Check bookkeeping information
         bookkeeping = ITileBookkeeping(self.folder)
-        self.assertEquals([('tile1', 'plone.app.tiles.demo.transient')], list(bookkeeping.enumerate()))
-        self.assertEquals([('tile1', 'plone.app.tiles.demo.transient')], list(bookkeeping.enumerate('plone.app.tiles.demo.transient')))
-        self.assertEquals('plone.app.tiles.demo.transient', bookkeeping.typeOf('tile1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.transient')], list(bookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.transient')], list(bookkeeping.enumerate('plone.app.tiles.demo.transient')))
+        self.assertEquals('plone.app.tiles.demo.transient', bookkeeping.typeOf('tile-1'))
+        self.assertEquals(1, bookkeeping.counter())
         
         # View the tile
-        self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.transient/tile1?message=Test+message')
+        self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.transient/tile-11?message=Test+message')
         self.assertEquals("<html><body><b>Transient tile Test message</b></body></html>", self.browser.contents)
         
         # Edit the tile
         self.browser.open(self.folder.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.transient/tile1?message=Test+message')
+                          '/@@edit-tile/plone.app.tiles.demo.transient/tile-1?message=Test+message')
         self.browser.getControl(name='message').value = 'New message'
         self.browser.getControl(label='Save').click()
         
         self.assertEquals(self.folder.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.transient/tile1?message=New+message&' +
-                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.transient/tile1%3Fmessage%3DNew%2Bmessage%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.transient%22%2C%20%22id%22%3A%20%22tile1%22%7D',
+                          '/@@edit-tile/plone.app.tiles.demo.transient/tile-1?message=New+message&' +
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.transient/tile-1%3Fmessage%3DNew%2Bmessage%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.transient%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
                           self.browser.url)
         
         # Check bookkeeping information
         bookkeeping = ITileBookkeeping(self.folder)
-        self.assertEquals([('tile1', 'plone.app.tiles.demo.transient')], list(bookkeeping.enumerate()))
-        self.assertEquals([('tile1', 'plone.app.tiles.demo.transient')], list(bookkeeping.enumerate('plone.app.tiles.demo.transient')))
-        self.assertEquals('plone.app.tiles.demo.transient', bookkeeping.typeOf('tile1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.transient')], list(bookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.transient')], list(bookkeeping.enumerate('plone.app.tiles.demo.transient')))
+        self.assertEquals('plone.app.tiles.demo.transient', bookkeeping.typeOf('tile-1'))
+        self.assertEquals(1, bookkeeping.counter())
         
         # View the tile
-        self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.transient/tile1?message=New+message')
+        self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.transient/tile-1?message=New+message')
         self.assertEquals("<html><body><b>Transient tile New message</b></body></html>", self.browser.contents)
         
         # Remove the tile
         self.browser.open(self.folder.absolute_url() + '/@@delete-tile')
-        self.browser.getControl(name='id').value = 'tile1'
+        self.browser.getControl(name='id').value = 'tile-1'
         self.browser.getControl(name='type').value = ['plone.app.tiles.demo.transient']
         self.browser.getControl(name='confirm').click()
         
-        self.assertEquals('tile1', self.browser.getControl(name='deleted.id').value)
+        self.assertEquals('tile-1', self.browser.getControl(name='deleted.id').value)
         self.assertEquals('plone.app.tiles.demo.transient', self.browser.getControl(name='deleted.type').value)
         
         # Check bookkeeping information
         bookkeeping = ITileBookkeeping(self.folder)
         self.assertEquals([], list(bookkeeping.enumerate()))
         self.assertEquals([], list(bookkeeping.enumerate('plone.app.tiles.demo.transient')))
-        self.assertEquals(None, bookkeeping.typeOf('tile1'))
+        self.assertEquals(None, bookkeeping.typeOf('tile-1'))
+        self.assertEquals(1, bookkeeping.counter())
         
         # Return to the content object
         self.browser.getControl(label='OK').click()
@@ -189,7 +192,7 @@ class FunctionalTest(ptc.FunctionalTestCase):
     def test_persistent_lifecycle(self):
         
         folderAnnotations = IAnnotations(self.folder)
-        annotationsKey = "%s.tile2" % ANNOTATIONS_KEY_PREFIX
+        annotationsKey = "%s.tile-1" % ANNOTATIONS_KEY_PREFIX
         
         self.assertEquals(None, folderAnnotations.get(annotationsKey))
         
@@ -199,7 +202,7 @@ class FunctionalTest(ptc.FunctionalTestCase):
         # Add a new persistent tile using the @@add-tile view
         self.browser.open(self.folder.absolute_url() + '/@@add-tile')
         self.browser.getControl(name='type').value = ['plone.app.tiles.demo.persistent']
-        self.browser.getControl(name='id').value = "tile2"
+        # self.browser.getControl(name='id').value = "tile-1"
         self.browser.getControl(name='form.button.Create').click()
         
         # Fill in the data and save
@@ -208,8 +211,8 @@ class FunctionalTest(ptc.FunctionalTestCase):
         self.browser.getControl(label='Save').click()
         
         self.assertEquals(self.folder.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.persistent/tile2?' + \
-                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.persistent/tile2%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22id%22%3A%20%22tile2%22%7D',
+                          '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1?' + \
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.persistent/tile-1%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
                           self.browser.url)
         
         # Verify annotations
@@ -218,23 +221,24 @@ class FunctionalTest(ptc.FunctionalTestCase):
         
         # Check bookkeeping information
         bookkeeping = ITileBookkeeping(self.folder)
-        self.assertEquals([('tile2', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate()))
-        self.assertEquals([('tile2', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', bookkeeping.typeOf('tile2'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent', bookkeeping.typeOf('tile-1'))
+        self.assertEquals(1, bookkeeping.counter())
         
         # View the tile
-        self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.persistent/tile2')
+        self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.persistent/tile-1')
         self.assertEquals("<html><body><b>Persistent tile Test message #1</b></body></html>", self.browser.contents)
         
         # Edit the tile
         self.browser.open(self.folder.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.persistent/tile2')
+                          '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
         self.browser.getControl(name='message').value = 'New message'
         self.browser.getControl(label='Save').click()
         
         self.assertEquals(self.folder.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.persistent/tile2?' +
-                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.persistent/tile2%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22id%22%3A%20%22tile2%22%7D',
+                          '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1?' +
+                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22http%3A//nohost/plone/Members/test_user_1_/%40%40plone.app.tiles.demo.persistent/tile-1%22%2C%20%22type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
                           self.browser.url)
         
         # Verify annotations
@@ -243,21 +247,22 @@ class FunctionalTest(ptc.FunctionalTestCase):
         
         # Check bookkeeping information
         bookkeeping = ITileBookkeeping(self.folder)
-        self.assertEquals([('tile2', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate()))
-        self.assertEquals([('tile2', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', bookkeeping.typeOf('tile2'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent', bookkeeping.typeOf('tile-1'))
+        self.assertEquals(1, bookkeeping.counter())
         
         # View the tile
-        self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.persistent/tile2')
+        self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.persistent/tile-1')
         self.assertEquals("<html><body><b>Persistent tile New message #1</b></body></html>", self.browser.contents)
         
         # Remove the tile
         self.browser.open(self.folder.absolute_url() + '/@@delete-tile')
-        self.browser.getControl(name='id').value = 'tile2'
+        self.browser.getControl(name='id').value = 'tile-1'
         self.browser.getControl(name='type').value = ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
         
-        self.assertEquals('tile2', self.browser.getControl(name='deleted.id').value)
+        self.assertEquals('tile-1', self.browser.getControl(name='deleted.id').value)
         self.assertEquals('plone.app.tiles.demo.persistent', self.browser.getControl(name='deleted.type').value)
         
         # Verify annotations
@@ -267,7 +272,8 @@ class FunctionalTest(ptc.FunctionalTestCase):
         bookkeeping = ITileBookkeeping(self.folder)
         self.assertEquals([], list(bookkeeping.enumerate()))
         self.assertEquals([], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals(None, bookkeeping.typeOf('tile2'))
+        self.assertEquals(None, bookkeeping.typeOf('tile-1'))
+        self.assertEquals(1, bookkeeping.counter())
         
         # Return to the content object
         self.browser.getControl(label='OK').click()
