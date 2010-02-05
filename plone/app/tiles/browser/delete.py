@@ -13,6 +13,8 @@ from plone.tiles.interfaces import ITileDataManager
 
 from plone.memoize.view import memoize
 
+from plone.app.drafts.interfaces import ICurrentDraftManagement
+
 class TileDelete(object):
     """Delete a given tile
     """
@@ -39,6 +41,11 @@ class TileDelete(object):
         return types
     
     def __call__(self):
+        
+        # Set up draft information if required
+        currentDraft = ICurrentDraftManagement(self.request)
+        currentDraft.mark()
+        
         self.request['disable_border'] = True
         
         confirm = self.request.form.get('confirm', False)

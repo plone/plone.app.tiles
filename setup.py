@@ -26,6 +26,7 @@ setup(name='plone.app.tiles',
       install_requires=[
           'setuptools',
           'plone.tiles',
+          'plone.app.drafts',
           'plone.autoform',
           'plone.memoize',
           'z3c.form',
@@ -38,7 +39,7 @@ setup(name='plone.app.tiles',
           'Zope2',
       ],
       extras_require={
-        'test': ['collective.testcaselayer', 'Products.PloneTestCase'],
+        'tests': ['collective.testcaselayer', 'Products.PloneTestCase'],
       },
       entry_points="""
       """,

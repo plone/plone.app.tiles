@@ -6,6 +6,8 @@ from AccessControl import Unauthorized
 from z3c.form.interfaces import IWidgets
 from plone.autoform.form import AutoExtensibleForm
 
+from plone.app.drafts.interfaces import ICurrentDraftManagement
+
 class TileFormLayout(object):
     """Layout view giving access to macro slots
     """
@@ -36,6 +38,11 @@ class TileForm(AutoExtensibleForm):
     prefix = ''
     
     def update(self):
+        
+        # Set up draft information if required
+        currentDraft = ICurrentDraftManagement(self.request)
+        currentDraft.mark()
+        
         # Override to check the tile add/edit permission
         if not checkPermission(self.tileType.add_permission, self.context):
             raise Unauthorized("You are not allowed to add this kind of tile")

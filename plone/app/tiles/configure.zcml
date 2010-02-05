@@ -1,9 +1,12 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="plone.app.tiles">
     
     <include package="plone.tiles" />
     <include package="plone.tiles" file="meta.zcml"/>
+    
+    <include package="plone.app.drafts" />
     
     <!-- Views -->
     <include package=".browser" />
@@ -12,6 +15,19 @@
     <subscriber handler=".bookkeeping.recordTileAdded" />
     <subscriber handler=".bookkeeping.recordTileRemoved" />
     <adapter factory=".bookkeeping.AnnotationsTileBookkeeping" />
+    
+    <!-- Drafting -->
+    <adapter factory=".drafting.draftingTileDataContext" />
+    <adapter factory=".drafting.TileDataDraftSyncer" name="plone.app.tiles.tiledata" />
+    
+    <!-- Installation -->
+    <genericsetup:registerProfile
+        name="default"
+        title="Tiles support"
+        directory="profiles/default"
+        description="Basic support for managing tiles"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
     
     <!-- TODO: Remove once we stop doing TTW testing -->
     <include file="demo.zcml" />
