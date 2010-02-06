@@ -25,8 +25,6 @@ from plone.app.drafts.interfaces import IDraftStorage
 from plone.app.tiles.interfaces import ITileBookkeeping
 from plone.app.tiles.demo import TransientTile
 
-ptc.setupPloneSite()
-
 optionflags = (doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
 
 class IntegrationTestLayer(collective.testcaselayer.ptc.BasePTCLayer):
