@@ -79,6 +79,7 @@ class DefaultAddForm(TileForm, form.Form):
         
         tileDataJson = {}
         tileDataJson['action'] = "save"
+        tileDataJson['mode'] = "add"
         tileDataJson['url'] = tileRelativeURL
         tileDataJson['type'] = typeName
         tileDataJson['id'] = tile.id
