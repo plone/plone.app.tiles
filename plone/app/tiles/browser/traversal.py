@@ -43,10 +43,10 @@ class TileTraverser(object):
         self.request = request
     
     def publishTraverse(self, request, name):
-        """Allow traveral to @@<view>/tilename/tileid
+        """Allow traversal to @@<view>/tilename/tileid
         """
         
-        # 1. Look up the view, but keep this view as the traveral context in
+        # 1. Look up the view, but keep this view as the traversal context in
         # anticipation of an id
         if self.view is None:
             tile_info = queryUtility(ITileType, name=name)
