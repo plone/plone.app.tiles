@@ -5,6 +5,7 @@ from AccessControl import Unauthorized
 
 from z3c.form.interfaces import IWidgets
 from plone.autoform.form import AutoExtensibleForm
+from plone.z3cform.interfaces import IDeferSecurityCheck
 
 from plone.app.drafts.interfaces import ICurrentDraftManagement
 
@@ -44,8 +45,9 @@ class TileForm(AutoExtensibleForm):
         currentDraft.mark()
         
         # Override to check the tile add/edit permission
-        if not checkPermission(self.tileType.add_permission, self.context):
-            raise Unauthorized("You are not allowed to add this kind of tile")
+        if not IDeferSecurityCheck.providedBy(self.request):
+            if not checkPermission(self.tileType.add_permission, self.context):
+                raise Unauthorized("You are not allowed to add this kind of tile")
         
         super(TileForm, self).update()
     
