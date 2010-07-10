@@ -38,7 +38,7 @@ class DefaultEditForm(TileForm, form.Form):
         self.request['disable_border'] = True
 
     def update(self):
-        if 'buttons.save' or 'buttons.cancel' in self.request.form:
+        if 'buttons.save' in self.request.form or 'buttons.cancel' in self.request.form:
             self.ignoreRequest = False
 
         super(DefaultEditForm, self).update()
