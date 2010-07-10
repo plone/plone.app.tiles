@@ -29,6 +29,10 @@ class DefaultEditForm(TileForm, form.Form):
     
     ignoreContext = False
     
+    # Avoid the data to be extracted from the request directly by the form instead
+    # of using the tile data manager.
+    ignoreRequest = True
+        
     def __init__(self, context, request):
         super(DefaultEditForm, self).__init__(context, request)
         self.request['disable_border'] = True
@@ -54,6 +58,7 @@ class DefaultEditForm(TileForm, form.Form):
     
     @button.buttonAndHandler(_('Save'), name='save')
     def handleSave(self, action):
+        self.ignoreRequest = False
         data, errors = self.extractData()
         if errors:
             self.status = self.formErrorsMessage
