@@ -36,6 +36,12 @@ class DefaultEditForm(TileForm, form.Form):
     def __init__(self, context, request):
         super(DefaultEditForm, self).__init__(context, request)
         self.request['disable_border'] = True
+
+    def update(self):
+        if 'buttons.save' or 'buttons.cancel' in self.request.form:
+            self.ignoreRequest = False
+
+        super(DefaultEditForm, self).update()
     
     def getContent(self):
         typeName = self.tileType.__name__
@@ -58,7 +64,6 @@ class DefaultEditForm(TileForm, form.Form):
     
     @button.buttonAndHandler(_('Save'), name='save')
     def handleSave(self, action):
-        self.ignoreRequest = False
         data, errors = self.extractData()
         if errors:
             self.status = self.formErrorsMessage
