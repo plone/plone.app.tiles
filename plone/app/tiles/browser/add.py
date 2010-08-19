@@ -75,7 +75,7 @@ class DefaultAddForm(TileForm, form.Form):
         # Calculate the edit URL and append some data in a JSON structure,
         # to help the UI know what to do.
 
-        url = getEditTileURL(tileURL)
+        url = getEditTileURL(tile, self.request)
         
         tileDataJson = {}
         tileDataJson['action'] = "save"
