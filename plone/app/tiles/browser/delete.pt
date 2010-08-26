@@ -43,7 +43,8 @@
                         tal:content="view/errors/type | nothing" />
                     <select name="type" size="1" id="type">
                         <option tal:repeat="type view/tileTypes"
-                                tal:attributes="value type/__name__"
+                                tal:attributes="value type/__name__;
+                                selected python: type.__name__ == request.get('type', None) and 'selected' or ''"
                                 tal:content="type/title" />
                     </select>
                 </div>
