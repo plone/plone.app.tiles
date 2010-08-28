@@ -153,7 +153,7 @@ class FunctionalTest(ptc.FunctionalTestCase):
         
         # View the tile
         self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.transient/tile-11?message=Test+message')
-        self.assertEquals("<html><body><b>Transient tile Test message</b></body></html>", self.browser.contents)
+        self.failUnless("<b>Transient tile Test message</b>" in self.browser.contents)
         
         # Edit the tile
         self.browser.open(self.folder.absolute_url() + \
