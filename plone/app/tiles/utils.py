@@ -11,8 +11,8 @@ from zope.traversing.browser.interfaces import IAbsoluteURL
 
 from plone.tiles.interfaces import ITileType, ITileDataManager, IPersistentTile
 
-
 _safe = '@+'
+
 
 def getEditTileURL(tile, request):
     """Get the edit URL for the given tile.
@@ -46,15 +46,16 @@ def getEditTileURL(tile, request):
                     url += '&' + '_tiledata=' + json.dumps(data)
                 else:
                     url += '?' + '_tiledata=' + json.dumps(data)
-    return url    
+    return url
+
 
 def appendJSONData(url, key, data):
     """Append JSON data (e.g a dict) to the given URL and return the new
     URL. ``key`` is the url parameter key.
     """
-    
+
     toAppend = "%s=%s" % (key, urllib.quote(json.dumps(data)),)
-    
+
     if '?' in url:
         return url + '&' + toAppend
     else:
