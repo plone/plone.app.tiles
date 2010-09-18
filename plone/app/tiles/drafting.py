@@ -22,6 +22,7 @@ from plone.app.drafts.utils import getCurrentDraft
 from plone.app.tiles.bookkeeping import ANNOTATIONS_KEY
 from plone.app.tiles.bookkeeping import COUNTER_KEY
 
+
 @implementer(ITileDataContext)
 @adapter(Interface, IDrafting, ITile)
 def draftingTileDataContext(context, request, tile):
@@ -29,39 +30,39 @@ def draftingTileDataContext(context, request, tile):
     information to the draft, but read existing data from the underlying
     object.
     """
-    
+
     draft = getCurrentDraft(request, create=True)
     if draft is None:
         return context
-    
+
     return DraftProxy(draft, context)
+
 
 class TileDataDraftSyncer(object):
     """Copy draft persistent tile data and book-keeping information to the
     real object on save
     """
-    
+
     implements(IDraftSyncer)
     adapts(IDraft, Interface)
-    
+
     def __init__(self, draft, target):
         self.draft = draft
         self.target = target
-    
+
     def __call__(self):
-        
+
         draftAnnotations = IAnnotations(self.draft)
         targetAnnotations = IAnnotations(self.target)
-        
+
         for key, value in draftAnnotations.iteritems():
             if (key.startswith(ANNOTATIONS_KEY_PREFIX) or
-                key in (ANNOTATIONS_KEY, COUNTER_KEY)
-            ):
+                key in (ANNOTATIONS_KEY, COUNTER_KEY)):
                 targetAnnotations[key] = value
-        
-        annotationsDeleted = getattr(self.draft, '_proxyAnnotationsDeleted', set())
+
+        annotationsDeleted = getattr(self.draft,
+                                     '_proxyAnnotationsDeleted', set())
         for key in annotationsDeleted:
             if (key.startswith(ANNOTATIONS_KEY_PREFIX) or
-                key in (ANNOTATIONS_KEY, COUNTER_KEY)
-            ):
+                key in (ANNOTATIONS_KEY, COUNTER_KEY)):
                 del targetAnnotations[key]

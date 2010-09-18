@@ -226,28 +226,36 @@ class FunctionalTest(ptc.FunctionalTestCase):
         self.assertEquals(1, bookkeeping.counter())
 
         # View the tile
-        self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.transient/tile-1?message=New+message')
-        self.assertEquals("<html><body><b>Transient tile New message</b></body></html>", self.browser.contents)
+        self.browser.open(self.folder.absolute_url() + \
+            '/@@plone.app.tiles.demo.transient/tile-1?message=New+message')
+        self.assertEquals(
+            "<html><body><b>Transient tile New message</b></body></html>",
+            self.browser.contents)
 
         # Remove the tile
         self.browser.open(self.folder.absolute_url() + '/@@delete-tile')
         self.browser.getControl(name='id').value = 'tile-1'
-        self.browser.getControl(name='type').value = ['plone.app.tiles.demo.transient']
+        self.browser.getControl(name='type').value = [
+            'plone.app.tiles.demo.transient']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEquals('tile-1', self.browser.getControl(name='deleted.id').value)
-        self.assertEquals('plone.app.tiles.demo.transient', self.browser.getControl(name='deleted.type').value)
+        self.assertEquals('tile-1',
+                          self.browser.getControl(name='deleted.id').value)
+        self.assertEquals('plone.app.tiles.demo.transient',
+                          self.browser.getControl(name='deleted.type').value)
 
         # Check bookkeeping information
         bookkeeping = ITileBookkeeping(self.folder)
         self.assertEquals([], list(bookkeeping.enumerate()))
-        self.assertEquals([], list(bookkeeping.enumerate('plone.app.tiles.demo.transient')))
+        self.assertEquals([], list(bookkeeping.enumerate(
+            'plone.app.tiles.demo.transient')))
         self.assertEquals(None, bookkeeping.typeOf('tile-1'))
         self.assertEquals(1, bookkeeping.counter())
 
         # Return to the content object
         self.browser.getControl(label='OK').click()
-        self.assertEquals(self.folder.absolute_url() + '/view', self.browser.url)
+        self.assertEquals(self.folder.absolute_url() + '/view',
+                          self.browser.url)
 
     def test_persistent_lifecycle(self):
 
@@ -257,11 +265,14 @@ class FunctionalTest(ptc.FunctionalTestCase):
         self.assertEquals(None, folderAnnotations.get(annotationsKey))
 
         # Log in
-        self.browser.addHeader('Authorization', 'Basic %s:%s' % (ptc.default_user, ptc.default_password,))
+        self.browser.addHeader('Authorization',
+                               'Basic %s:%s' % (ptc.default_user,
+                                                ptc.default_password,))
 
         # Add a new persistent tile using the @@add-tile view
         self.browser.open(self.folder.absolute_url() + '/@@add-tile')
-        self.browser.getControl(name='type').value = ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='type').value = [
+            'plone.app.tiles.demo.persistent']
         # self.browser.getControl(name='id').value = "tile-1"
         self.browser.getControl(name='form.button.Create').click()
 
@@ -271,59 +282,87 @@ class FunctionalTest(ptc.FunctionalTestCase):
         self.browser.getControl(label='Save').click()
 
         self.assertEquals(self.folder.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1?' + \
-                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22./%40%40plone.app.tiles.demo.persistent/tile-1%22%2C%20%22tile_type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22mode%22%3A%20%22add%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
+                          '/@@edit-tile/plone.app.tiles.demo.persistent/' + \
+                          'tile-1?tiledata=%7B%22action%22%3A%20%22save' + \
+                          '%22%2C%20%22url%22%3A%20%22./%40%40plone.app.' + \
+                          'tiles.demo.persistent/tile-1%22%2C%20%22tile_' + \
+                          'type%22%3A%20%22plone.app.tiles.demo.persistent' + \
+                          '%22%2C%20%22mode%22%3A%20%22add%22%2C%20%22id' + \
+                          '%22%3A%20%22tile-1%22%7D',
                           self.browser.url)
 
         # Verify annotations
-        self.assertEquals('Test message', folderAnnotations[annotationsKey]['message'])
+        self.assertEquals('Test message',
+                          folderAnnotations[annotationsKey]['message'])
         self.assertEquals(1, folderAnnotations[annotationsKey]['counter'])
 
         # Check bookkeeping information
         bookkeeping = ITileBookkeeping(self.folder)
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', bookkeeping.typeOf('tile-1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+                          list(bookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+                          list(bookkeeping.enumerate(
+                            'plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          bookkeeping.typeOf('tile-1'))
         self.assertEquals(1, bookkeeping.counter())
 
         # View the tile
-        self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.persistent/tile-1')
-        self.assertEquals("<html><body><b>Persistent tile Test message #1</b></body></html>", self.browser.contents)
+        self.browser.open(self.folder.absolute_url() + \
+                          '/@@plone.app.tiles.demo.persistent/tile-1')
+        self.assertEquals(
+            "<html><body><b>Persistent tile Test message #1</b></body></html>",
+            self.browser.contents)
 
         # Edit the tile
         self.browser.open(self.folder.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
+            '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
         self.browser.getControl(name='message').value = 'New message'
         self.browser.getControl(label='Save').click()
 
         self.assertEquals(self.folder.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1?' +
-                          'tiledata=%7B%22action%22%3A%20%22save%22%2C%20%22url%22%3A%20%22./%40%40plone.app.tiles.demo.persistent/tile-1%22%2C%20%22tile_type%22%3A%20%22plone.app.tiles.demo.persistent%22%2C%20%22mode%22%3A%20%22edit%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
+                          '/@@edit-tile/plone.app.tiles.demo.persistent/' + \
+                          'tile-1?tiledata=%7B%22action%22%3A%20%22save' + \
+                          '%22%2C%20%22url%22%3A%20%22./%40%40plone.app.' + \
+                          'tiles.demo.persistent/tile-1%22%2C%20%22' + \
+                          'tile_type%22%3A%20%22plone.app.tiles.demo.' + \
+                          'persistent%22%2C%20%22mode%22%3A%20%22edit' + \
+                          '%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
                           self.browser.url)
 
         # Verify annotations
-        self.assertEquals('New message', folderAnnotations[annotationsKey]['message'])
+        self.assertEquals('New message',
+                          folderAnnotations[annotationsKey]['message'])
         self.assertEquals(1, folderAnnotations[annotationsKey]['counter'])
 
         # Check bookkeeping information
         bookkeeping = ITileBookkeeping(self.folder)
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', bookkeeping.typeOf('tile-1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(bookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          bookkeeping.typeOf('tile-1'))
         self.assertEquals(1, bookkeeping.counter())
 
         # View the tile
-        self.browser.open(self.folder.absolute_url() + '/@@plone.app.tiles.demo.persistent/tile-1')
-        self.assertEquals("<html><body><b>Persistent tile New message #1</b></body></html>", self.browser.contents)
+        self.browser.open(self.folder.absolute_url() + \
+                          '/@@plone.app.tiles.demo.persistent/tile-1')
+        self.assertEquals(
+            "<html><body><b>Persistent tile New message #1</b></body></html>",
+            self.browser.contents)
 
         # Remove the tile
         self.browser.open(self.folder.absolute_url() + '/@@delete-tile')
         self.browser.getControl(name='id').value = 'tile-1'
-        self.browser.getControl(name='type').value = ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='type').value = \
+            ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEquals('tile-1', self.browser.getControl(name='deleted.id').value)
-        self.assertEquals('plone.app.tiles.demo.persistent', self.browser.getControl(name='deleted.type').value)
+        self.assertEquals('tile-1',
+                          self.browser.getControl(name='deleted.id').value)
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          self.browser.getControl(name='deleted.type').value)
 
         # Verify annotations
         self.assertEquals(None, folderAnnotations.get(annotationsKey))
@@ -331,13 +370,15 @@ class FunctionalTest(ptc.FunctionalTestCase):
         # Check bookkeeping information
         bookkeeping = ITileBookkeeping(self.folder)
         self.assertEquals([], list(bookkeeping.enumerate()))
-        self.assertEquals([], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
+        self.assertEquals([],
+            list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
         self.assertEquals(None, bookkeeping.typeOf('tile-1'))
         self.assertEquals(1, bookkeeping.counter())
 
         # Return to the content object
         self.browser.getControl(label='OK').click()
-        self.assertEquals(self.folder.absolute_url() + '/view', self.browser.url)
+        self.assertEquals(self.folder.absolute_url() + '/view',
+                          self.browser.url)
 
     def test_persistent_drafting(self):
 
@@ -351,7 +392,9 @@ class FunctionalTest(ptc.FunctionalTestCase):
         #
 
         # Log in
-        self.browser.addHeader('Authorization', 'Basic %s:%s' % (ptc.default_user, ptc.default_password,))
+        self.browser.addHeader('Authorization',
+                               'Basic %s:%s' % (ptc.default_user,
+                                                ptc.default_password,))
 
         #
         # Step 1 - Create a new document and add, edit, remove and re-add tiles
@@ -359,7 +402,8 @@ class FunctionalTest(ptc.FunctionalTestCase):
 
         # Open the add form for a Document
 
-        self.browser.open(self.folder.absolute_url() + '/createObject?type_name=Document')
+        self.browser.open(self.folder.absolute_url() + \
+                          '/createObject?type_name=Document')
 
         editFormURL = self.browser.url
         baseURL = '/'.join(editFormURL.split('/')[:-1])
@@ -368,8 +412,10 @@ class FunctionalTest(ptc.FunctionalTestCase):
 
         cookies = self.browser.cookies.forURL(baseURL)
 
-        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'].replace('"', ''))
+        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'] \
+                        .replace('"', ''))
+        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'] \
+                        .replace('"', ''))
         draftName = None
 
         self.assertEquals(baseURL, 'http://nohost' + cookiePath)
@@ -378,7 +424,8 @@ class FunctionalTest(ptc.FunctionalTestCase):
         # an AJAX request for the same e.g. in a pop-up dialogue box
 
         self.browser.open(baseURL + '/@@add-tile')
-        self.browser.getControl(name='type').value = ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='type').value = \
+            ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='form.button.Create').click()
 
         # Fill in the data and save
@@ -389,7 +436,8 @@ class FunctionalTest(ptc.FunctionalTestCase):
         # We should now have a draft for this item with the relevant
         # annotations and book-keeping info
 
-        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'].replace('"', ''))
+        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
+                        .replace('"', ''))
 
         draft = drafts.getDraft(ptc.default_user, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
@@ -399,63 +447,80 @@ class FunctionalTest(ptc.FunctionalTestCase):
         self.failIf(annotationsKey in folderAnnotations)
         self.failUnless(annotationsKey in draftAnnotations)
 
-        self.assertEquals('Test message', draftAnnotations[annotationsKey]['message'])
+        self.assertEquals('Test message',
+                          draftAnnotations[annotationsKey]['message'])
         self.assertEquals(1, draftAnnotations[annotationsKey]['counter'])
 
         # Check bookkeeping information, also on the draft
         bookkeeping = ITileBookkeeping(draft)
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', bookkeeping.typeOf('tile-1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(bookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          bookkeeping.typeOf('tile-1'))
         self.assertEquals(1, bookkeeping.counter())
 
         # Edit the tile, still on the add form
-        self.browser.open(baseURL + '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
+        self.browser.open(baseURL + \
+            '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
         self.browser.getControl(name='message').value = 'New message'
         self.browser.getControl(label='Save').click()
 
         # Verify annotations
-        self.assertEquals('New message', draftAnnotations[annotationsKey]['message'])
+        self.assertEquals('New message',
+                          draftAnnotations[annotationsKey]['message'])
         self.assertEquals(1, draftAnnotations[annotationsKey]['counter'])
 
         # Check bookkeeping information
         bookkeeping = ITileBookkeeping(draft)
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', bookkeeping.typeOf('tile-1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(bookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          bookkeeping.typeOf('tile-1'))
         self.assertEquals(1, bookkeeping.counter())
 
         # Remove the tile
         self.browser.open(baseURL + '/@@delete-tile')
         self.browser.getControl(name='id').value = 'tile-1'
-        self.browser.getControl(name='type').value = ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='type').value = \
+            ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEquals('tile-1', self.browser.getControl(name='deleted.id').value)
-        self.assertEquals('plone.app.tiles.demo.persistent', self.browser.getControl(name='deleted.type').value)
+        self.assertEquals('tile-1',
+                          self.browser.getControl(name='deleted.id').value)
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          self.browser.getControl(name='deleted.type').value)
 
         # Verify annotations
         self.assertEquals(None, draftAnnotations.get(annotationsKey))
 
         # Check bookkeeping information
         self.assertEquals([], list(bookkeeping.enumerate()))
-        self.assertEquals([], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
+        self.assertEquals([],
+            list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
         self.assertEquals(None, bookkeeping.typeOf('tile-1'))
         self.assertEquals(1, bookkeeping.counter())
 
         # Add a new tile
         self.browser.open(baseURL + '/@@add-tile')
-        self.browser.getControl(name='type').value = ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='type').value = \
+            ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='form.button.Create').click()
 
         self.browser.getControl(name='message').value = 'Test message'
         self.browser.getControl(name='counter').value = '1'
         self.browser.getControl(label='Save').click()
 
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', bookkeeping.typeOf('tile-1'))
-        self.assertEquals(2, bookkeeping.counter()) # counter always increments
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(bookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(bookkeeping.enumerate('plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          bookkeeping.typeOf('tile-1'))
+        self.assertEquals(2, bookkeeping.counter())
 
         # Save the edit form
 
@@ -472,21 +537,27 @@ class FunctionalTest(ptc.FunctionalTestCase):
         contextAnnotations = IAnnotations(context)
         contextBookkeeping = ITileBookkeeping(context)
 
-        self.assertEquals('Test message', contextAnnotations[annotationsKey]['message'])
+        self.assertEquals('Test message',
+                          contextAnnotations[annotationsKey]['message'])
         self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
 
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', contextBookkeeping.typeOf('tile-1'))
-        self.assertEquals(2, contextBookkeeping.counter()) # counter always increments
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate(
+                'plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          contextBookkeeping.typeOf('tile-1'))
+        self.assertEquals(2, contextBookkeeping.counter())
 
         # The draft should have disappeared as well
 
-        self.assertEquals(None, drafts.getDraft(ptc.default_user, targetKey, draftName))
+        self.assertEquals(None, drafts.getDraft(ptc.default_user, targetKey,
+                                                draftName))
 
         #
         # Step 2 - Edit the content object and a tile, but cancel
-        # 
+        #
 
         baseURL = self.browser.url
         editFormURL = baseURL + '/edit'
@@ -500,37 +571,48 @@ class FunctionalTest(ptc.FunctionalTestCase):
         # Get the values of the drafting cookies
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'].replace('"', ''))
+        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'] \
+                        .replace('"', ''))
+        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'] \
+                        .replace('"', ''))
         draftName = None
 
         self.assertEquals(baseURL, 'http://nohost' + cookiePath)
 
-        self.assertEquals(0, len(drafts.getDrafts(ptc.default_user, targetKey)))
+        self.assertEquals(0,
+                          len(drafts.getDrafts(ptc.default_user, targetKey)))
 
         # Edit the tile
-        self.browser.open(baseURL + '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
+        self.browser.open(baseURL + \
+            '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
         self.browser.getControl(name='message').value = 'Third message'
         self.browser.getControl(label='Save').click()
 
         # A draft should now have been created
 
-        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'].replace('"', ''))
+        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
+                        .replace('"', ''))
         draft = drafts.getDraft(ptc.default_user, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
 
         # The data should have been updated on the draft, but not the context
 
-        self.assertEquals('Third message', draftAnnotations[annotationsKey]['message'])
+        self.assertEquals('Third message',
+                          draftAnnotations[annotationsKey]['message'])
         self.assertEquals(1, draftAnnotations[annotationsKey]['counter'])
         # The draft book-keeping information is not re-saved since we didn't
         # add or remove any tiles
 
-        self.assertEquals('Test message', contextAnnotations[annotationsKey]['message'])
+        self.assertEquals('Test message',
+                          contextAnnotations[annotationsKey]['message'])
         self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', contextBookkeeping.typeOf('tile-1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate(
+                'plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          contextBookkeeping.typeOf('tile-1'))
         self.assertEquals(2, contextBookkeeping.counter())
 
         # Cancel editing
@@ -546,22 +628,28 @@ class FunctionalTest(ptc.FunctionalTestCase):
         contextAnnotations = IAnnotations(context)
         contextBookkeeping = ITileBookkeeping(context)
 
-        self.assertEquals('Test message', contextAnnotations[annotationsKey]['message'])
+        self.assertEquals('Test message',
+                          contextAnnotations[annotationsKey]['message'])
         self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', contextBookkeeping.typeOf('tile-1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate(
+                'plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          contextBookkeeping.typeOf('tile-1'))
         self.assertEquals(2, contextBookkeeping.counter())
 
         # The draft should be discarded, too
 
         cookies = self.browser.cookies.forURL(baseURL)
         self.assertEquals(0, len(cookies))
-        self.assertEquals(0, len(drafts.getDrafts(ptc.default_user, targetKey)))
+        self.assertEquals(0,
+                          len(drafts.getDrafts(ptc.default_user, targetKey)))
 
         #
         # Step 3 - Edit the content object and save
-        # 
+        #
 
         self.browser.getLink('Edit').click()
 
@@ -570,29 +658,39 @@ class FunctionalTest(ptc.FunctionalTestCase):
         contextBookkeeping = ITileBookkeeping(context)
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'].replace('"', ''))
+        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'] \
+                        .replace('"', ''))
+        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'] \
+                        .replace('"', ''))
         draftName = None
 
         # Edit the tile
-        self.browser.open(baseURL + '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
+        self.browser.open(baseURL + \
+            '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
         self.browser.getControl(name='message').value = 'Third message'
         self.browser.getControl(label='Save').click()
 
         # A draft should now have been created
-        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'].replace('"', ''))
+        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
+                        .replace('"', ''))
         draft = drafts.getDraft(ptc.default_user, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
 
         # The data should have been updated on the draft, but not the context
-        self.assertEquals('Third message', draftAnnotations[annotationsKey]['message'])
+        self.assertEquals('Third message',
+                          draftAnnotations[annotationsKey]['message'])
         self.assertEquals(1, draftAnnotations[annotationsKey]['counter'])
 
-        self.assertEquals('Test message', contextAnnotations[annotationsKey]['message'])
+        self.assertEquals('Test message',
+                          contextAnnotations[annotationsKey]['message'])
         self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', contextBookkeeping.typeOf('tile-1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate(
+                'plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          contextBookkeeping.typeOf('tile-1'))
         self.assertEquals(2, contextBookkeeping.counter())
 
         # Save the edit form
@@ -604,21 +702,27 @@ class FunctionalTest(ptc.FunctionalTestCase):
         contextAnnotations = IAnnotations(context)
         contextBookkeeping = ITileBookkeeping(context)
 
-        self.assertEquals('Third message', contextAnnotations[annotationsKey]['message'])
+        self.assertEquals('Third message',
+                          contextAnnotations[annotationsKey]['message'])
         self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', contextBookkeeping.typeOf('tile-1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate(
+                'plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          contextBookkeeping.typeOf('tile-1'))
         self.assertEquals(2, contextBookkeeping.counter())
 
         # The draft should have been discarded as well
         cookies = self.browser.cookies.forURL(baseURL)
         self.assertEquals(0, len(cookies))
-        self.assertEquals(0, len(drafts.getDrafts(ptc.default_user, targetKey)))
+        self.assertEquals(0,
+                          len(drafts.getDrafts(ptc.default_user, targetKey)))
 
         #
         # Step 4 - Edit the content object, remove the tile, but cancel
-        # 
+        #
 
         self.browser.getLink('Edit').click()
 
@@ -627,22 +731,28 @@ class FunctionalTest(ptc.FunctionalTestCase):
         contextBookkeeping = ITileBookkeeping(context)
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'].replace('"', ''))
+        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'] \
+                        .replace('"', ''))
+        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'] \
+                        .replace('"', ''))
         draftName = None
 
         # Remove the tile
 
         self.browser.open(baseURL + '/@@delete-tile')
         self.browser.getControl(name='id').value = 'tile-1'
-        self.browser.getControl(name='type').value = ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='type').value = \
+            ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEquals('tile-1', self.browser.getControl(name='deleted.id').value)
-        self.assertEquals('plone.app.tiles.demo.persistent', self.browser.getControl(name='deleted.type').value)
+        self.assertEquals('tile-1',
+                          self.browser.getControl(name='deleted.id').value)
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          self.browser.getControl(name='deleted.type').value)
 
         # Draft should have been created
-        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'].replace('"', ''))
+        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
+                        .replace('"', ''))
         draft = drafts.getDraft(ptc.default_user, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
         draftBookkeeping = ITileBookkeeping(draft)
@@ -651,16 +761,24 @@ class FunctionalTest(ptc.FunctionalTestCase):
 
         self.assertEquals(None, draftAnnotations.get(annotationsKey))
         self.assertEquals([], list(draftBookkeeping.enumerate()))
-        self.assertEquals([], list(draftBookkeeping.enumerate('plone.app.tiles.demo.persistent')))
+        self.assertEquals([],
+            list(draftBookkeeping.enumerate(
+                'plone.app.tiles.demo.persistent')))
         self.assertEquals(None, draftBookkeeping.typeOf('tile-1'))
 
-        self.assertEquals(set([u'plone.tiles.data.tile-1']), draft._proxyAnnotationsDeleted)
+        self.assertEquals(set([u'plone.tiles.data.tile-1']),
+                          draft._proxyAnnotationsDeleted)
 
-        self.assertEquals('Third message', contextAnnotations[annotationsKey]['message'])
+        self.assertEquals('Third message',
+                          contextAnnotations[annotationsKey]['message'])
         self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', contextBookkeeping.typeOf('tile-1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate(
+                'plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          contextBookkeeping.typeOf('tile-1'))
         self.assertEquals(2, contextBookkeeping.counter())
 
         # Cancel editing
@@ -675,21 +793,27 @@ class FunctionalTest(ptc.FunctionalTestCase):
         contextAnnotations = IAnnotations(context)
         contextBookkeeping = ITileBookkeeping(context)
 
-        self.assertEquals('Third message', contextAnnotations[annotationsKey]['message'])
+        self.assertEquals('Third message',
+                          contextAnnotations[annotationsKey]['message'])
         self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', contextBookkeeping.typeOf('tile-1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate(
+                'plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          contextBookkeeping.typeOf('tile-1'))
         self.assertEquals(2, contextBookkeeping.counter())
 
         # The draft should have been discarded as well
         cookies = self.browser.cookies.forURL(baseURL)
         self.assertEquals(0, len(cookies))
-        self.assertEquals(0, len(drafts.getDrafts(ptc.default_user, targetKey)))
+        self.assertEquals(0,
+                          len(drafts.getDrafts(ptc.default_user, targetKey)))
 
         #
         # Step 5 - Edit the content object, remove the tile, and save
-        # 
+        #
 
         self.browser.getLink('Edit').click()
 
@@ -698,22 +822,28 @@ class FunctionalTest(ptc.FunctionalTestCase):
         contextBookkeeping = ITileBookkeeping(context)
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'].replace('"', ''))
+        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'] \
+                        .replace('"', ''))
+        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'] \
+                        .replace('"', ''))
         draftName = None
 
         # Remove the tile
 
         self.browser.open(baseURL + '/@@delete-tile')
         self.browser.getControl(name='id').value = 'tile-1'
-        self.browser.getControl(name='type').value = ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='type').value = \
+            ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEquals('tile-1', self.browser.getControl(name='deleted.id').value)
-        self.assertEquals('plone.app.tiles.demo.persistent', self.browser.getControl(name='deleted.type').value)
+        self.assertEquals('tile-1',
+                          self.browser.getControl(name='deleted.id').value)
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          self.browser.getControl(name='deleted.type').value)
 
         # Draft should have been created
-        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'].replace('"', ''))
+        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
+                        .replace('"', ''))
         draft = drafts.getDraft(ptc.default_user, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
         draftBookkeeping = ITileBookkeeping(draft)
@@ -722,16 +852,24 @@ class FunctionalTest(ptc.FunctionalTestCase):
 
         self.assertEquals(None, draftAnnotations.get(annotationsKey))
         self.assertEquals([], list(draftBookkeeping.enumerate()))
-        self.assertEquals([], list(draftBookkeeping.enumerate('plone.app.tiles.demo.persistent')))
+        self.assertEquals([],
+            list(draftBookkeeping.enumerate(
+                'plone.app.tiles.demo.persistent')))
         self.assertEquals(None, draftBookkeeping.typeOf('tile-1'))
 
-        self.assertEquals(set([u'plone.tiles.data.tile-1']), draft._proxyAnnotationsDeleted)
+        self.assertEquals(set([u'plone.tiles.data.tile-1']),
+                          draft._proxyAnnotationsDeleted)
 
-        self.assertEquals('Third message', contextAnnotations[annotationsKey]['message'])
+        self.assertEquals('Third message',
+                          contextAnnotations[annotationsKey]['message'])
         self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate()))
-        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')], list(contextBookkeeping.enumerate('plone.app.tiles.demo.persistent')))
-        self.assertEquals('plone.app.tiles.demo.persistent', contextBookkeeping.typeOf('tile-1'))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate()))
+        self.assertEquals([('tile-1', 'plone.app.tiles.demo.persistent')],
+            list(contextBookkeeping.enumerate(
+                'plone.app.tiles.demo.persistent')))
+        self.assertEquals('plone.app.tiles.demo.persistent',
+                          contextBookkeeping.typeOf('tile-1'))
         self.assertEquals(2, contextBookkeeping.counter())
 
         # Save the edit form
@@ -745,14 +883,17 @@ class FunctionalTest(ptc.FunctionalTestCase):
 
         self.assertEquals(None, contextAnnotations.get(annotationsKey))
         self.assertEquals([], list(contextBookkeeping.enumerate()))
-        self.assertEquals([], list(contextBookkeeping.enumerate('plone.app.tiles.demo.persistent')))
+        self.assertEquals([],
+            list(contextBookkeeping.enumerate(
+                'plone.app.tiles.demo.persistent')))
         self.assertEquals(None, contextBookkeeping.typeOf('tile-1'))
         self.assertEquals(2, contextBookkeeping.counter())
 
         # The draft should have been discarded as well
         cookies = self.browser.cookies.forURL(baseURL)
         self.assertEquals(0, len(cookies))
-        self.assertEquals(0, len(drafts.getDrafts(ptc.default_user, targetKey)))
+        self.assertEquals(0,
+                          len(drafts.getDrafts(ptc.default_user, targetKey)))
 
 
 def test_suite():
