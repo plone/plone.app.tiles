@@ -15,11 +15,11 @@
         <div metal:define-macro="addlist">
 
             <form name="ok" method="post" tal:attributes="action request/URL" tal:condition="view/deleted">
-            
+
                 <!-- For JavaScript code that want to read this information -->
-                <input type="hidden" name="deleted.type" tal:attributes="value view/tileTypeName">
-                <input type="hidden" name="deleted.id" tal:attributes="value view/tileId">
-            
+                <input type="hidden" name="deleted.type" tal:attributes="value view/tileTypeName" />
+                <input type="hidden" name="deleted.id" tal:attributes="value view/tileId" />
+
                 <div class="formControls">
                     <input class="standalone"
                           type="submit"
