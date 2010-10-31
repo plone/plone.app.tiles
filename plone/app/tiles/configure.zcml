@@ -6,15 +6,13 @@
     <include package="plone.tiles" />
     <include package="plone.tiles" file="meta.zcml"/>
     
+    <include package="plone.uuid" />
+    
     <include package="plone.app.drafts" />
+    <include package="plone.app.z3cform" />
     
     <!-- Views -->
     <include package=".browser" />
-    
-    <!-- Bookkeeping -->
-    <subscriber handler=".bookkeeping.recordTileAdded" />
-    <subscriber handler=".bookkeeping.recordTileRemoved" />
-    <adapter factory=".bookkeeping.AnnotationsTileBookkeeping" />
     
     <!-- Drafting -->
     <adapter factory=".drafting.draftingTileDataContext" />

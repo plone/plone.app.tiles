@@ -1,15 +1,15 @@
 from zope.interface import Interface, implements
-from zope.component import queryMultiAdapter, queryUtility
+from zope.component import queryMultiAdapter, getUtility, queryUtility
 from zope.component import getAllUtilitiesRegisteredFor
 
 from zope.security import checkPermission
 from zope.publisher.interfaces import IPublishTraverse
 
 from plone.memoize.view import memoize
+from plone.uuid.interfaces import IUUIDGenerator
 
 from plone.tiles.interfaces import ITileType
 
-from plone.app.tiles.interfaces import ITileBookkeeping
 from plone.app.tiles.interfaces import ITileAddView, ITileEditView
 
 from plone.app.tiles import MessageFactory as _
@@ -113,26 +113,18 @@ class AddTile(TileTraverser):
         types.sort(self.tileSortKey)
         return types
 
-    @memoize
-    def showId(self):
-        return ITileBookkeeping(self.context, None) is None
-
     def __call__(self):
         self.errors = {}
         self.request['disable_border'] = True
 
         if 'form.button.Create' in self.request:
             newTileType = self.request.get('type', None)
-            newTileId = self.request.get('id', None)
             if newTileType is None:
                 self.errors['type'] = _(u"You must select the type of " + \
                                         u"tile to create")
-
-            if newTileId is None:
-                bookkeeping = ITileBookkeeping(self.context, None)
-                if bookkeeping is not None:
-                    # XXX: This is not very concurrency-safe, but oh well
-                    newTileId = "tile-%d" % (bookkeeping.counter() + 1)
+            
+            generator = getUtility(IUUIDGenerator)
+            newTileId = generator()
 
             if newTileId is None:
                 self.errors['id'] = _(u"You must specify an id")

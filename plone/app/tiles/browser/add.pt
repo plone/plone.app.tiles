@@ -11,17 +11,6 @@
 
             <form name="quickAdd" method="post" tal:attributes="action request/URL">
             
-                <div class="field" tal:condition="view/showId">
-                    <label for="id" i18n:translate="label_tile_id">Tile id</label>
-                    <div class="formHelp" i18n:translate="help_tile_id">
-                        A unique identifier for the tile. Used to key tile data.
-                    </div>
-                    <div class="error"
-                        tal:condition="view/errors/id | nothing"
-                        tal:content="view/errors/id | nothing" />
-                    <input type="text" name="id" id="id" tal:attributes="value request/id | nothing" />
-                </div>
-            
                 <div class="field">
                     <label i18n:translate="label_tile_type">Tile type</label>
                 

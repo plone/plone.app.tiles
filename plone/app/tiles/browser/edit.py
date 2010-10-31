@@ -74,8 +74,7 @@ class DefaultEditForm(TileForm, form.Form):
         typeName = self.tileType.__name__
 
         # Traverse to a new tile in the context, with no data
-        tile = self.context.restrictedTraverse('@@%s/%s' % (typeName,
-                                                            self.tileId,))
+        tile = self.context.restrictedTraverse('@@%s/%s' % (typeName, self.tileId,))
 
         dataManager = ITileDataManager(tile)
         dataManager.set(data)
@@ -92,10 +91,7 @@ class DefaultEditForm(TileForm, form.Form):
         notify(ObjectModifiedEvent(tile))
 
         # Get the tile URL, possibly with encoded data
-        IStatusMessage(self.request).addStatusMessage(
-                _(u"Tile saved to ${url}", mapping={'url': tileURL}),
-                type=u'info',
-            )
+        IStatusMessage(self.request).addStatusMessage(_(u"Tile saved",), type=u'info')
 
         # Calculate the edit URL and append some data in a JSON structure,
         # to help the UI know what to do.

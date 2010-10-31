@@ -19,10 +19,6 @@ from plone.app.drafts.interfaces import IDraft
 from plone.app.drafts.proxy import DraftProxy
 from plone.app.drafts.utils import getCurrentDraft
 
-from plone.app.tiles.bookkeeping import ANNOTATIONS_KEY
-from plone.app.tiles.bookkeeping import COUNTER_KEY
-
-
 @implementer(ITileDataContext)
 @adapter(Interface, IDrafting, ITile)
 def draftingTileDataContext(context, request, tile):
@@ -56,13 +52,10 @@ class TileDataDraftSyncer(object):
         targetAnnotations = IAnnotations(self.target)
 
         for key, value in draftAnnotations.iteritems():
-            if (key.startswith(ANNOTATIONS_KEY_PREFIX) or
-                key in (ANNOTATIONS_KEY, COUNTER_KEY)):
+            if key.startswith(ANNOTATIONS_KEY_PREFIX):
                 targetAnnotations[key] = value
 
-        annotationsDeleted = getattr(self.draft,
-                                     '_proxyAnnotationsDeleted', set())
+        annotationsDeleted = getattr(self.draft, '_proxyAnnotationsDeleted', set())
         for key in annotationsDeleted:
-            if (key.startswith(ANNOTATIONS_KEY_PREFIX) or
-                key in (ANNOTATIONS_KEY, COUNTER_KEY)):
+            if key.startswith(ANNOTATIONS_KEY_PREFIX) and key in targetAnnotations:
                 del targetAnnotations[key]
