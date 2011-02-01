@@ -39,7 +39,7 @@ setup(name='plone.app.tiles',
           'Zope2',
       ],
       extras_require={
-        'tests': ['plone.app.testing'],
+        'test': ['plone.app.testing'],
       },
       entry_points="""
       """,
