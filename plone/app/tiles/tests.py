@@ -216,6 +216,13 @@ class FunctionalTest(unittest.TestCase):
         self.assertEquals(portal.absolute_url() + '/view',
                           browser.url)
 
+    # XXX: This test is failing. The cookies part of the headers read
+    # by the browser is broken. The cookies are not extracted correctly
+    # from the response.
+    # The cookie reading works in the zope.testbrowser tests, but there
+    # the response is a zope.publiser httpresponse, while ours is a
+    # ZPublisher.HTTPResponse (older). So this might be a testbrowser
+    # zope 2 integration bug.
     def test_persistent_drafting(self):
         portal = self.layer['portal']
         app = self.layer['app']
