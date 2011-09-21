@@ -39,7 +39,7 @@ class FunctionalTest(unittest.TestCase):
         app = self.layer['app']
         browser = Browser(app)
         browser.handleErrors = False
-        
+
         browser.addHeader('Authorization',
                                'Basic %s:%s' % \
                                (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,))
@@ -228,7 +228,7 @@ class FunctionalTest(unittest.TestCase):
         app = self.layer['app']
         browser = Browser(app)
         browser.handleErrors = False
-        
+
         folderAnnotations = IAnnotations(portal)
         annotationsKey = "%s.tile-1" % ANNOTATIONS_KEY_PREFIX
 
@@ -281,7 +281,7 @@ class FunctionalTest(unittest.TestCase):
         browser.getControl(label='Save').click()
 
         # We should now have a draft for this item with the relevant
-        # annotations and book-keeping info
+        # annotations
 
         draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
                         .replace('"', ''))
@@ -342,11 +342,11 @@ class FunctionalTest(unittest.TestCase):
 
         # The cookies should now have all expired
         cookies = browser.cookies.forURL(baseURL)
-        
+
         self.assertFalse(TARGET_KEY in cookies)
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
-        
+
         # The draft should have disappeared
 
         self.assertEquals(None, drafts.getDraft(SITE_OWNER_NAME, targetKey,
@@ -355,7 +355,7 @@ class FunctionalTest(unittest.TestCase):
         #
         # Step 2 - Edit the content object and a tile, but cancel
         #
-        
+
         baseURL = browser.url
         editFormURL = baseURL + '/edit'
 
@@ -398,13 +398,11 @@ class FunctionalTest(unittest.TestCase):
         self.assertEquals('Third message',
                           draftAnnotations[annotationsKey]['message'])
         self.assertEquals(1, draftAnnotations[annotationsKey]['counter'])
-        # The draft book-keeping information is not re-saved since we didn't
-        # add or remove any tiles
 
         self.assertEquals('Test message',
                           contextAnnotations[annotationsKey]['message'])
         self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
-        
+
         # Cancel editing
 
         # XXX: works around testbrowser/AT cancel button integration bug
@@ -420,14 +418,14 @@ class FunctionalTest(unittest.TestCase):
         self.assertEquals('Test message',
                           contextAnnotations[annotationsKey]['message'])
         self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
-        
+
         # The draft should be discarded, too
 
         cookies = browser.cookies.forURL(baseURL)
         self.assertFalse(TARGET_KEY in cookies)
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
-        
+
         self.assertEquals(0,
                           len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
@@ -482,11 +480,11 @@ class FunctionalTest(unittest.TestCase):
 
         # The draft should have been discarded as well
         cookies = browser.cookies.forURL(baseURL)
-        
+
         self.assertFalse(TARGET_KEY in cookies)
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
-        
+
         self.assertEquals(0,
                           len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
@@ -552,11 +550,11 @@ class FunctionalTest(unittest.TestCase):
 
         # The draft should have been discarded as well
         cookies = browser.cookies.forURL(baseURL)
-        
+
         self.assertFalse(TARGET_KEY in cookies)
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
-        
+
         self.assertEquals(0,
                           len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
@@ -618,11 +616,11 @@ class FunctionalTest(unittest.TestCase):
 
         # The draft should have been discarded as well
         cookies = browser.cookies.forURL(baseURL)
-        
+
         self.assertFalse(TARGET_KEY in cookies)
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
-        
+
         self.assertEquals(0,
                           len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 

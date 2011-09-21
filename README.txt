@@ -30,11 +30,6 @@ This package contains the following things:
   ``oldParent`` attribute will be the tile's context, and the ``oldName``
   attribute will be the tile's id.
 
-* An interface ``ITileBookeeping``. Adapt a content object to this interface
-  to obtain information about the tiles which have been added in that context.
-  Event handlers for ``IObjectAddedEvent`` and ``IObjectRemovedEvent`` keep
-  the bookkeeping information in sync as tiles are added and removed.
-
 The default add and edit forms should suffice for most use cases. You can use
 `plone.autoform <http://pypi.python.org/pypi/plone.autoform>`_ to configure
 alternative widgets, either by hand or via `plone.directives.form
