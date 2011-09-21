@@ -281,7 +281,7 @@ class FunctionalTest(unittest.TestCase):
         browser.getControl(label='Save').click()
 
         # We should now have a draft for this item with the relevant
-        # annotations and book-keeping info
+        # annotations
 
         draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
                         .replace('"', ''))
@@ -398,8 +398,6 @@ class FunctionalTest(unittest.TestCase):
         self.assertEquals('Third message',
                           draftAnnotations[annotationsKey]['message'])
         self.assertEquals(1, draftAnnotations[annotationsKey]['counter'])
-        # The draft book-keeping information is not re-saved since we didn't
-        # add or remove any tiles
 
         self.assertEquals('Test message',
                           contextAnnotations[annotationsKey]['message'])

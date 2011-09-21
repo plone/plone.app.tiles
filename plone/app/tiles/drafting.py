@@ -22,9 +22,8 @@ from plone.app.drafts.utils import getCurrentDraft
 @implementer(ITileDataContext)
 @adapter(Interface, IDrafting, ITile)
 def draftingTileDataContext(context, request, tile):
-    """If we are drafting a content item, record tile data and book-keeping
-    information to the draft, but read existing data from the underlying
-    object.
+    """If we are drafting a content item, record tile data information
+    to the draft, but read existing data from the underlying object.
     """
 
     draft = getCurrentDraft(request, create=True)
@@ -35,8 +34,7 @@ def draftingTileDataContext(context, request, tile):
 
 
 class TileDataDraftSyncer(object):
-    """Copy draft persistent tile data and book-keeping information to the
-    real object on save
+    """Copy draft persistent tile data to the real object on save
     """
 
     implements(IDraftSyncer)
