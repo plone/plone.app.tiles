@@ -4,12 +4,15 @@ from plone.z3cform import layout
 from zope.lifecycleevent import ObjectCreatedEvent, ObjectAddedEvent
 from zope.event import notify
 
+from zope.component import getMultiAdapter
 from zope.traversing.browser.absoluteurl import absoluteURL
 
 from Products.statusmessages.interfaces import IStatusMessage
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from plone.tiles.interfaces import ITileDataManager
+
+from plone.app.blocks.layoutbehavior import ILayoutAware
 
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.utils import getEditTileURL, appendJSONData
@@ -51,8 +54,19 @@ class DefaultAddForm(TileForm, form.Form):
 
         typeName = self.tileType.__name__
 
+        context = self.context
+
+        # Look up if our context supports tiles, if not
+        # pick default view instead
+        if not ILayoutAware(context, None):
+            default_page_view = getMultiAdapter((context, self.request),
+                                                name='default_page')
+            default_page = default_page_view.getDefaultPage()
+            context = default_page and context[default_page] or context
+            context = ILayoutAware(context, None)
+
         # Traverse to a new tile in the context, with no data
-        tile = self.context.restrictedTraverse(
+        tile = context.restrictedTraverse(
             '@@%s/%s' % (typeName, self.tileId,))
 
         dataManager = ITileDataManager(tile)
