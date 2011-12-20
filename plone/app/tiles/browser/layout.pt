@@ -15,6 +15,7 @@
         portal_url portal_state/portal_url;"
     tal:attributes="lang lang;">
 <head>
+    <base tal:attributes="href plone_view/renderBase" /><!--[if lt IE 7]></base><![endif]-->
     <div tal:replace="structure provider:plone.htmlhead" />
     <metal:headslot define-slot="head_slot" />
     <metal:block define-slot="style_slot" />
