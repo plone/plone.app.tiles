@@ -7,8 +7,5 @@ plone.app.tiles - 1.0a1 Unreleased
     - Add missing base tag from layout.
       [davisagli]
 
-    - Check if the context supports tiles prior to writing annotations to it
-      [erico_andrei]
-
     - Initial package structure.
       [zopeskel]
