@@ -25,7 +25,7 @@
     <browser:page
         name="add-tile"
         for="zope.annotation.interfaces.IAnnotatable"
-        permission="cmf.ModifyPortalContent"
+        permission="zope2.View"
         class=".traversal.AddTile"
         template="add.pt"
         />
@@ -33,7 +33,7 @@
     <browser:page
         name="edit-tile"
         for="zope.annotation.interfaces.IAnnotatable"
-        permission="cmf.ModifyPortalContent"
+        permission="zope2.View"
         class=".traversal.EditTile"
         />
 
