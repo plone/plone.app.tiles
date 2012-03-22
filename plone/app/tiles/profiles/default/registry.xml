@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<registry>
+
+    <!-- Tiles list -->
+    <record name="plone.app.tiles">
+        <field type="plone.registry.field.List">
+            <title>Tiles</title>
+            <value_type type="plone.registry.field.TextLine" />
+        </field>
+        <value purge="false"></value>
+    </record>
+
+</registry>
