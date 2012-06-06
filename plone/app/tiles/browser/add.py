@@ -1,5 +1,4 @@
-from z3c.form import form, button
-from plone.z3cform import layout
+from zope.component import getUtility
 
 from zope.lifecycleevent import ObjectCreatedEvent, ObjectAddedEvent
 from zope.event import notify
@@ -9,6 +8,9 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 from Products.statusmessages.interfaces import IStatusMessage
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
+from z3c.form import form, button
+from plone.z3cform import layout
+from plone.uuid.interfaces import IUUIDGenerator
 from plone.tiles.interfaces import ITileDataManager
 
 from plone.app.tiles.browser.base import TileForm
@@ -51,9 +53,12 @@ class DefaultAddForm(TileForm, form.Form):
 
         typeName = self.tileType.__name__
 
+        generator = getUtility(IUUIDGenerator)
+        tileId = generator()
+
         # Traverse to a new tile in the context, with no data
         tile = self.context.restrictedTraverse(
-            '@@%s/%s' % (typeName, self.tileId,))
+            '@@%s/%s' % (typeName, tileId,))
 
         dataManager = ITileDataManager(tile)
         dataManager.set(data)
@@ -68,7 +73,7 @@ class DefaultAddForm(TileForm, form.Form):
             tileRelativeURL = '.' + tileURL[len(contextURL):]
 
         notify(ObjectCreatedEvent(tile))
-        notify(ObjectAddedEvent(tile, self.context, self.tileId))
+        notify(ObjectAddedEvent(tile, self.context, tileId))
 
         IStatusMessage(self.request).addStatusMessage(
                 _(u"Tile created at ${url}",

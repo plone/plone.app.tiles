@@ -1,12 +1,11 @@
 from zope.interface import Interface, implements
-from zope.component import queryMultiAdapter, getUtility, queryUtility
+from zope.component import queryMultiAdapter, queryUtility
 from zope.component import getAllUtilitiesRegisteredFor
 
 from zope.security import checkPermission
 from zope.publisher.interfaces import IPublishTraverse
 
 from plone.memoize.view import memoize
-from plone.uuid.interfaces import IUUIDGenerator
 
 from plone.tiles.interfaces import ITileType
 
@@ -43,40 +42,25 @@ class TileTraverser(object):
         self.context = context
         self.request = request
 
-    def publishTraverse(self, request, name):
-        """Allow traversal to @@<view>/tilename/tileid
-        """
+    def getTileViewByName(self, tile_name):
+        tile_info = queryUtility(ITileType, name=tile_name)
+        if tile_info is None:
+            raise KeyError(tile_name)
 
-        # 1. Look up the view, but keep this view as the traversal context in
-        # anticipation of an id
-        if self.view is None:
-            tile_info = queryUtility(ITileType, name=name)
-            if tile_info is None:
-                raise KeyError(name)
+        view = queryMultiAdapter((self.context, self.request, tile_info),
+                self.targetInterface, name=tile_name)
 
-            self.view = queryMultiAdapter((self.context, self.request,
-                                           tile_info), self.targetInterface,
-                name=name)
-            if self.view is None:
-                self.view = queryMultiAdapter((self.context, self.request,
-                                               tile_info),
+        if view is None:
+            view = queryMultiAdapter((self.context, self.request, tile_info),
                     self.targetInterface)
 
-            if self.view is None:
-                raise KeyError(name)
+        if view is None:
+            raise KeyError(tile_name)
 
-            self.view.__name__ = name
-            self.view.__parent__ = self.context
+        view.__name__ = name
+        view.__parent__ = self.context
 
-            return self
-        # 2. Set the id and return the view we looked up in the previous
-        # traversal step.
-        elif getattr(self.view, 'tileId', None) is None:
-            self.view.tileId = name
-            return self.view
-
-        raise KeyError(name)
-
+        return view
 
 class AddTile(TileTraverser):
     """Implements the @@add-tile traversal view
@@ -84,14 +68,13 @@ class AddTile(TileTraverser):
     Rendering this view on its own will display a template where the user
     may choose a tile type to add.
 
-    Traversing to /path/to/obj/@@add-tile/tile-name/tile-id will:
+    Traversing to /path/to/obj/@@add-tile/tile-name will:
 
         * Look up the tile info for 'tile-name' as a named utility
-        * Attempt to find an adapter for (context, request, tile_info) with
-            the name 'tile-name'
+        * Attempt to find view which is an adapter for (context, request,
+            tile_info) with the name 'tile-name'
         * Fall back on the unnamed adapter of the same triple
-        * Set the 'tileId' property on the view to the id 'tile-id
-        * Return the view for rendering
+        * Return above found view for rendering
     """
 
     targetInterface = ITileAddView
@@ -105,7 +88,6 @@ class AddTile(TileTraverser):
         which are addable in the current context
         """
         types = []
-
         for type_ in getAllUtilitiesRegisteredFor(ITileType):
             if checkPermission(type_.add_permission, self.context):
                 types.append(type_)
@@ -122,19 +104,24 @@ class AddTile(TileTraverser):
             if newTileType is None:
                 self.errors['type'] = _(u"You must select the type of " + \
                                         u"tile to create")
-            
-            generator = getUtility(IUUIDGenerator)
-            newTileId = generator()
-
-            if newTileId is None:
-                self.errors['id'] = _(u"You must specify an id")
 
             if len(self.errors) == 0:
-                self.request.response.redirect("%s/@@add-tile/%s/%s" % \
-                        (self.context.absolute_url(), newTileType, newTileId))
+                self.request.response.redirect("%s/@@add-tile/%s" % \
+                        (self.context.absolute_url(), newTileType))
                 return ''
 
         return self.index()
+
+    def publishTraverse(self, request, name):
+        """Allow traversal to @@<view>/tilename
+        """
+
+        # 1. Look up the view, but keep this view as the traversal context
+        if self.view is None:
+            self.view = self.getTileViewByName(name)
+            return self.view
+
+        raise KeyError(name)
 
 
 class EditTile(TileTraverser):
@@ -154,3 +141,23 @@ class EditTile(TileTraverser):
 
     def __call__(self):
         raise KeyError("Please traverse to @@edit-tile/tilename/id")
+
+    def publishTraverse(self, request, name):
+        """Allow traversal to @@<view>/tilename/tileid
+        """
+
+        # 1. Look up the view, but keep this view as the traversal context in
+        # anticipation of an id
+        if self.view is None:
+            self.view = self.getTileViewByName(name)
+            return self
+
+        # 2. Set the id and return the view we looked up in the previous
+        # traversal step.
+        elif getattr(self.view, 'tileId', None) is None:
+            self.view.tileId = name
+            return self.view
+
+        raise KeyError(name)
+
+

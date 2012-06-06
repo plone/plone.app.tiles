@@ -8,7 +8,7 @@ This package contains the following things:
 * A view ``@@add-tile``, and an associated form, which can be used to create a
   new tile based on the tile's schema. For transient tiles, this merely
   redirects to a URL with an appropriate query string. For persistent tiles,
-  it will also save the necessary data. This will fire an 
+  it will also save the necessary data. This will fire an
   ``IObjectCreatedEvent`` as well as an ``IObjectAddedEvent`` for the newly
   created tile (a transient object) when successfully submitted. In the case
   of the ``IObjectAddedEvent``, the ``newParent`` attribute will be the tile's
