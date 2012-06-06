@@ -22,15 +22,16 @@
               <li tal:repeat="tiletype view/tileTypes">
 
                 <div class="tiletype"
-                  tal:attributes="id string:tiletype-${name}; data-tiletype name"
                   tal:define="name tiletype/__name__;
-                              currentSelection request/tiletype | nothing">
+                              id python:name.replace('.', '-');
+                              currentSelection request/tiletype | nothing"
+                  tal:attributes="id string:tiletype-${id}; data-tiletype name">
 
                   <input type="radio" name="tiletype"
                     tal:attributes="value name;
-                                    id string:form-field-${name};
+                                    id string:form-field-${id};
                                     selected python:name == currentSelection and 'selected' or None" />
-                  <label tal:attributes="for string:form-field-${name};">
+                  <label tal:attributes="for string:form-field-${id};">
                     <span tal:replace="tiletype/title">Tile type title</span>
                   </label>
 
