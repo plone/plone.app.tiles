@@ -17,18 +17,6 @@ from plone.app.tiles import MessageFactory as _
 class TileTraverser(object):
     """Base class for tile add/edit view traversers.
 
-    This is responsible for fetching the tile name and tile id out of a URL
-    like ``.../@@traversal-view/my.tile.name/tile-id``.
-
-    We then look up an adapter from ``(context, request, tileType)`` to an
-    appropriate interface. The default is to use the unnamed adapter, but this
-    can be overridden by registering a named adapter with the name of the
-    tile type. This way, a custom add/edit view can be reigstered for a
-    particular type of tile.
-
-    The tile id is set onto the view that was looked up, as the ``tileId``
-    attribute.
-
     Below, we register two traversal views: ``@@add-tile`` and
     ``@@edit-tile``.
     """
@@ -43,6 +31,13 @@ class TileTraverser(object):
         self.request = request
 
     def getTileViewByName(self, tile_name):
+        """We look up for adapter from ``(context, request, tileType)`` to an
+        appropriate interface. The default is to use the unnamed adapter, but
+        this can be overridden by registering a named adapter with the name of
+        the tile type. This way, a custom add/edit view can be reigstered for
+        a particular type of tile.
+        """
+
         tile_info = queryUtility(ITileType, name=tile_name)
         if tile_info is None:
             raise KeyError(tile_name)
@@ -61,6 +56,7 @@ class TileTraverser(object):
         view.__parent__ = self.context
 
         return view
+
 
 class AddTile(TileTraverser):
     """Implements the @@add-tile traversal view
