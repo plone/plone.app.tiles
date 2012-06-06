@@ -1,16 +1,15 @@
 from zope.interface import Interface, implements
 from zope.component import queryMultiAdapter, queryUtility
-from zope.component import getAllUtilitiesRegisteredFor
+from zope.component import getUtility
 
 from zope.security import checkPermission
 from zope.publisher.interfaces import IPublishTraverse
 
 from plone.memoize.view import memoize
-
+from plone.registry.interfaces import IRegistry
 from plone.tiles.interfaces import ITileType
 
 from plone.app.tiles.interfaces import ITileAddView, ITileEditView
-
 from plone.app.tiles import MessageFactory as _
 
 
@@ -52,7 +51,7 @@ class TileTraverser(object):
         if view is None:
             raise KeyError(tile_name)
 
-        view.__name__ = name
+        view.__name__ = tile_name
         view.__parent__ = self.context
 
         return view
@@ -83,23 +82,26 @@ class AddTile(TileTraverser):
         """Get a list of addable ITileType objects representing tiles
         which are addable in the current context
         """
-        types = []
-        for type_ in getAllUtilitiesRegisteredFor(ITileType):
-            if checkPermission(type_.add_permission, self.context):
-                types.append(type_)
+        tiles = []
 
-        types.sort(self.tileSortKey)
-        return types
+        for tile_name in getUtility(IRegistry)['plone.app.tiles']:
+            tiletype = getUtility(ITileType, tile_name)
+            # check if we have permission to add this tile
+            if checkPermission(tiletype.add_permission, self.context):
+                tiles.append(tiletype)
+
+        tiles.sort(self.tileSortKey)
+        return tiles
 
     def __call__(self):
         self.errors = {}
         self.request['disable_border'] = True
 
         if 'form.button.Create' in self.request:
-            newTileType = self.request.get('type', None)
+            newTileType = self.request.get('tiletype', None)
             if newTileType is None:
-                self.errors['type'] = _(u"You must select the type of " + \
-                                        u"tile to create")
+                self.errors['tiletype'] = _(u"You must select the type of " + \
+                                            u"tile to create")
 
             if len(self.errors) == 0:
                 self.request.response.redirect("%s/@@add-tile/%s" % \

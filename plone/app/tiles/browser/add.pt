@@ -1,52 +1,56 @@
 <metal:block use-macro="context/@@tile-form-layout/macros/master">
-    <metal:block fill-slot="main">
-        <h1 class="documentFirstHeading" i18n:translate="heading_add_new_tile">Create tile</h1>
+  <metal:block fill-slot="main">
 
-        <p class="documentDescription"
-           i18n:translate="description_add_new_tile">
-            Select the type of tile you want to create
-        </p>
+    <h1 class="documentFirstHeading" i18n:translate="heading_add_new_tile">Create tile</h1>
 
-        <div metal:define-macro="addlist">
+    <p class="documentDescription" i18n:translate="description_add_new_tile">
+      Select the type of tile you want to create
+    </p>
 
-            <form name="quickAdd" method="post" tal:attributes="action request/URL">
-            
-                <div class="field">
-                    <label i18n:translate="label_tile_type">Tile type</label>
-                
-                    <div class="error"
-                            tal:condition="view/errors/type | nothing"
-                            tal:content="view/errors/type | nothing" />
-            
-            
-            
-                    <dl>
-                        <tal:typelist repeat="type view/tileTypes">
-                            <dt tal:define="name type/__name__;
-                                            currentSelection request/type | nothing">
-                                <input type="radio" name="type"
-                                       tal:attributes="value name;
-                                                       id string:form-field-${name};
-                                                       selected python:name == currentSelection and 'selected' or None" />
-                                <label tal:attributes="class string:tiletype-${name};
-                                                       for string:form-field-${name};">
-                                    <span tal:replace="type/title">Tile type title</span>
-                                </label>                                 
-                            </dt>
-                            <dd tal:content="type/description">Type description</dd>
-                        </tal:typelist>
-                    </dl>
+    <metal:tiletypes define-macro="tiletypes">
+
+      <form name="add-tile" method="post"
+        tal:attributes="action python:context.absolute_url() + '/@@add-tile'">
+
+          <div class="field">
+            <label i18n:translate="label_tile_type">Tile type</label>
+            <div class="error"
+              tal:condition="view/errors/type | nothing"
+              tal:content="view/errors/type | nothing">Error</div>
+
+            <ul class="nav nav-pills">
+              <li tal:repeat="tiletype view/tileTypes">
+
+                <div class="tiletype"
+                  tal:attributes="id string:tiletype-${name}; data-tiletype name"
+                  tal:define="name tiletype/__name__;
+                              currentSelection request/tiletype | nothing">
+
+                  <input type="radio" name="tiletype"
+                    tal:attributes="value name;
+                                    id string:form-field-${name};
+                                    selected python:name == currentSelection and 'selected' or None" />
+                  <label tal:attributes="for string:form-field-${name};">
+                    <span tal:replace="tiletype/title">Tile type title</span>
+                  </label>
+
+                  <p class="tiletype-description" tal:content="tiletype/description">
+                    Type description
+                  </p>
+
                 </div>
 
-                <div class="formControls">
-                    <input class="standalone"
-                          type="submit"
-                          value="Create"
-                          name="form.button.Create"
-                          i18n:attributes="value label_create"
-                          />
-                </div>
-            </form>
+              </li>
+            </ul>
         </div>
-    </metal:block>
+
+        <div class="formControls">
+          <input class="standalone" type="submit" value="Create"
+            name="form.button.Create" i18n:attributes="value label_create" />
+        </div>
+      </form>
+
+    </metal:tiletypes>
+
+  </metal:block>
 </metal:block>
