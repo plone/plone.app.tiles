@@ -1,5 +1,6 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="plone.app.tiles">
     
@@ -18,6 +19,11 @@
     <adapter factory=".drafting.draftingTileDataContext" />
     <adapter factory=".drafting.TileDataDraftSyncer" name="plone.app.tiles.tiledata" />
     
+    <!-- Static resources -->
+    <browser:resourceDirectory
+        name="plone.app.tiles"
+        directory="resources" />
+
     <!-- Installation -->
     <genericsetup:registerProfile
         name="default"
