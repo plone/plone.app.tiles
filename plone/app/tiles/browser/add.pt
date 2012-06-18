@@ -21,11 +21,11 @@
             <ul class="nav nav-pills">
               <li tal:repeat="tiletype view/tileTypes">
 
-                <div class="tiletype"
+                <div class="plone-tiletype"
                   tal:define="name tiletype/__name__;
                               id python:name.replace('.', '-');
                               currentSelection request/tiletype | nothing"
-                  tal:attributes="id string:tiletype-${id}; data-tiletype name">
+                  tal:attributes="id string:plone-tiletype-${id}; data-tiletype name;">
 
                   <input type="radio" name="tiletype"
                     tal:attributes="value name;
@@ -35,9 +35,20 @@
                     <span tal:replace="tiletype/title">Tile type title</span>
                   </label>
 
-                  <p class="tiletype-description" tal:content="tiletype/description">
+                  <p class="plone-tiletype-description" tal:content="tiletype/description">
                     Type description
                   </p>
+
+                  <ul style="display:none" class="plone-tiletype-actions">
+                    <li tal:repeat="action tiletype/actions">
+                      <a href="#"
+                        tal:attributes="href python:action.get('url','#');
+                          class python:action['name']
+                              and 'plone-tiletype-action-' + action['name']
+                              or ''"
+                        tal:content="action/title">Action</a>
+                    </li>
+                  </ul>
 
                 </div>
 

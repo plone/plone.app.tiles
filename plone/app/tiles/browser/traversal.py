@@ -88,6 +88,18 @@ class AddTile(TileTraverser):
             tiletype = getUtility(ITileType, tile_name)
             # check if we have permission to add this tile
             if checkPermission(tiletype.add_permission, self.context):
+                # tile actions
+                # TODO: read from registry
+                tiletype.actions = [
+                    { 'name': 'edit',
+                      'url': '@@edit-tile',
+                      'title': _('Edit'),
+                      },
+                    { 'name': 'remove',
+                      'url': '@@delete-tile',
+                      'title': _('Remove'),
+                      },
+                ]
                 tiles.append(tiletype)
 
         tiles.sort(self.tileSortKey)
