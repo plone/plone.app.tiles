@@ -14,7 +14,6 @@ from plone.uuid.interfaces import IUUIDGenerator
 from plone.tiles.interfaces import ITileDataManager
 
 from plone.app.tiles.browser.base import TileForm
-from plone.app.tiles.utils import getEditTileURL, appendJSONData
 from plone.app.tiles import MessageFactory as _
 
 
@@ -24,6 +23,8 @@ class DefaultAddForm(TileForm, form.Form):
     This form is capable of rendering the fields of any tile schema as defined
     by an ITileType utility.
     """
+
+    name = "add_tile"
 
     # Set during traversal
     tileType = None
@@ -81,20 +82,7 @@ class DefaultAddForm(TileForm, form.Form):
                 type=u'info',
             )
 
-        # Calculate the edit URL and append some data in a JSON structure,
-        # to help the UI know what to do.
-
-        url = getEditTileURL(tile, self.request)
-
-        tileDataJson = {}
-        tileDataJson['action'] = "save"
-        tileDataJson['mode'] = "add"
-        tileDataJson['url'] = tileRelativeURL
-        tileDataJson['tile_type'] = typeName
-        tileDataJson['id'] = tile.id
-
-        url = appendJSONData(url, 'tiledata', tileDataJson)
-        self.request.response.redirect(url)
+        self.request.response.redirect(tileURL)
 
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
