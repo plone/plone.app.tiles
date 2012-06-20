@@ -23,14 +23,14 @@
 
                 <div class="plone-tiletype"
                   tal:define="name tiletype/__name__;
-                              id python:name.replace('.', '-');
-                              currentSelection request/tiletype | nothing"
-                  tal:attributes="id string:plone-tiletype-${id}; data-tiletype name;">
+                    id python:name.replace('.', '-');
+                    currentSelection request/tiletype | nothing"
+                  tal:attributes="id string:plone-tiletype-${id};">
 
                   <input type="radio" name="tiletype"
                     tal:attributes="value name;
-                                    id string:form-field-${id};
-                                    selected python:name == currentSelection and 'selected' or None" />
+                      id string:form-field-${id};
+                      selected python:name == currentSelection and 'selected' or None" />
                   <label tal:attributes="for string:form-field-${id};">
                     <span tal:replace="tiletype/title">Tile type title</span>
                   </label>
