@@ -39,6 +39,26 @@
 $.plone = $.plone || {};
 $.plone.tile = $.plone.tile || {};
 
+  // TODO: move this to plone.tile.js
+  // ## initialize tile's editform with ploneOverlay
+  //self.overlay = new $.plone.overlay.Overlay({
+  //  url: el.attr('data-tile') || self.tiletype.createAddTileUrl(),
+  //  form: 'form#edit_tile,form#add_tile',
+  //  save: function(response) {
+  //    self.overlay.hide();
+  //  }
+  //});
+
+
+      // TODO: move this to plone.tile.js
+      // TODO:  double click should also trigger click on editButton
+      //self.el_view.off('dblclick').on('dblclick', function(e) {
+      //    self.tiletype.editButton.trigger('click');
+      //  });
+
+    // TODO: move this to plone.tile.js
+    // ## for tiles that are already in grid, show edit button on hover
+    //if (self.el.attr('data-tile') !== undefined) {
 
 // # Tile Class
 $.plone.tile.Tile = function(el, options) { this.init(el, options); };
@@ -47,15 +67,34 @@ $.plone.tile.Tile.prototype = {
     var self = this;
 
     self.el = el;
-    self.options = options;
-    self.tiletype = $.plone.tile.types[self.getTileTypeName(el)];
-    self.actions = self.tiletype.getActions();
-    self.wrapper = options.wrapper;
+    self.options = $.extend(true, {
+      overlay: {
+        form: 'form#edit_tile,form#add_tile',
+        save: function(response) {
+          var overlay = this;
+          overlay.destroy();
+          overlay._init(overlay.options);
+          self.el.html(response.html());
+          // save deco layout as well
+          var decoToolbar = $($.plone.deco.defaults.toolbar).decoToolbar();
+          decoToolbar._editformDontHideDecoToolbar = true;
+          $($.plone.deco.defaults.form_save_btn, decoToolbar._editform).click();
+        }
+      }
+    }, options || {});
+    self.name = $.plone.tiletype.getTileNameByElement(el);
+    self.type = new ($.plone.tiletype.get(self.name))();
+    self.actions = self.type.getActions();
+    self.wrapper = self.options.wrapper;
+
+  },
+  show: function() {
+    var self = this;
 
     // create tile wrapper if not passing in options
-    if (self.wrapper !== undefined) {
+    if (self.wrapper === undefined) {
       self.wrapper = $('<div/>').addClass('plone-tile');
-      el.wrap(self.wrapper);
+      self.el.wrap(self.wrapper);
     }
 
     // make sure wrapper has relative position
@@ -65,21 +104,45 @@ $.plone.tile.Tile.prototype = {
     self.wrapper.append(self.actions);
 
     // contextualize url's of actions
-    $('li > a.plone.tiletype-action', self.actions).each(function() {
-      $(this).attr('href', el.attr('data-tile').replace(/@@(.*)\//,
-          $(this).attr('href') + '/' + self.tiletype.name + '/'));
+    $('li > a', self.actions).each(function() {
+      $(this).attr('href', self.el.attr('data-tile').replace(/@@(.*)\//,
+          $(this).attr('href') + '/' + self.type.name + '/'));
     });
 
-    // save action
-    var data = $('li > a.plone-tiletype-action-edit', self.actions)
-        .ploneOverlay(options.overlay);
+    // show actions on hover
+    $('li > a', self.actions).off('hover').on('hover', function(e) {
+      if (self.actions.is(":visible")) {
+        self.actions.show();
+      } else {
+        self.actions.hide();
+      }
+    });
+    self.wrapper.off('hover').on('hover', function(e) {
+      if (self.actions.is(":visible")) {
+        self.actions.hide();
+      } else {
+        self.actions.show();
+      }
+    });
 
+    // edit action in overlay
+    $('li > a.plone-tiletype-action-edit', self.actions)
+        .ploneOverlay(self.options.overlay);
     // TODO: remove action
     // TODO: other actions
 
+
   },
-  getTileTypeName: function(el) {
-    return (/@@(.*)\//).exec(el.attr('data-tile'))[1];
+  hide: function() {
+    var self = this;
+
+    // remove wrapper if not defined in options
+    if (self.options.wrapper === undefined) {
+      self.el.unwrap();
+    }
+
+    // detach actions from dom
+    self.actions.remove();
   }
 };
 
@@ -89,7 +152,7 @@ $.fn.ploneTile = function(options) {
   var el = $(this),
       data = el.data('plone-tile');
   if (data === undefined) {
-    data = new $.plone.tiles.Tile(el, options);
+    data = new $.plone.tile.Tile(el, options);
     el.data('plone-tile', data);
   }
   return data;
