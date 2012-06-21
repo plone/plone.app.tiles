@@ -103,12 +103,6 @@ $.plone.tile.Tile.prototype = {
     // add actions to wrapper
     self.wrapper.append(self.actions);
 
-    // contextualize url's of actions
-    $('li > a', self.actions).each(function() {
-      $(this).attr('href', self.el.attr('data-tile').replace(/@@(.*)\//,
-          $(this).attr('href') + '/' + self.type.name + '/'));
-    });
-
     // show actions on hover
     $('li > a', self.actions).off('hover').on('hover', function(e) {
       if (self.actions.is(":visible")) {
@@ -127,9 +121,29 @@ $.plone.tile.Tile.prototype = {
 
     // edit action in overlay
     $('li > a.plone-tiletype-action-edit', self.actions)
-        .ploneOverlay(self.options.overlay);
-    // TODO: remove action
-    // TODO: other actions
+      .attr('href', self.el.attr('data-tile')
+          .replace(/@@(.*)\//, '@@edit-tile/' + self.type.name + '/'))
+      .ploneOverlay(self.options.overlay);
+
+    // remove action
+    $('li > a.plone-tiletype-action-remove', self.actions)
+      .attr('href', self.el.attr('data-tile')
+          .replace(/@@(.*)\//, '@@delete-tile' + '/'))
+      .on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var el = $(this);
+        el.ajaxSubmit({
+          url: el.attr('href'),
+          success: function(response) {
+            el.parents('.deco-tile').remove();
+            // save deco layout as well
+            var decoToolbar = $($.plone.deco.defaults.toolbar).decoToolbar();
+            decoToolbar._editformDontHideDecoToolbar = true;
+            $($.plone.deco.defaults.form_save_btn, decoToolbar._editform).click();
+          }
+      });
+    });
 
 
   },
