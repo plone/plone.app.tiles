@@ -4,10 +4,12 @@ from zope.component import getUtility
 
 from zope.security import checkPermission
 from zope.publisher.interfaces import IPublishTraverse
+from zope.annotation.interfaces import IAnnotations
 
 from plone.memoize.view import memoize
 from plone.registry.interfaces import IRegistry
 from plone.tiles.interfaces import ITileType
+from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 
 from plone.app.tiles.interfaces import ITileAddView, ITileEditView
 from plone.app.tiles import MessageFactory as _
@@ -90,16 +92,15 @@ class AddTile(TileTraverser):
             if checkPermission(tiletype.add_permission, self.context):
                 # tile actions
                 # TODO: read from registry
-                tiletype.actions = [
-                    { 'name': 'edit',
-                      'url': '@@edit-tile',
-                      'title': _('Edit'),
-                      },
-                    { 'name': 'remove',
-                      'url': '@@delete-tile',
-                      'title': _('Remove'),
-                      },
-                ]
+                tiletype.actions = [{
+                    'name': 'edit',
+                    'url': '@@edit-tile',
+                    'title': _('Edit'),
+                }, {
+                    'name': 'remove',
+                    'url': '@@delete-tile',
+                    'title': _('Remove'),
+                }]
                 tiles.append(tiletype)
 
         tiles.sort(self.tileSortKey)
@@ -171,3 +172,36 @@ class EditTile(TileTraverser):
         raise KeyError(name)
 
 
+class DeleteTile(TileTraverser):
+    """Implements the @@delete-tile traversal view
+
+    Traversing to /path/to/obj/@@delete-tile will list all tiles.
+    Traversing to /path/to/obj/@@delete-tile/tile-id will delete tile.
+    """
+
+    tileId = None
+
+    def __init__(self, context, request):
+        super(DeleteTile, self).__init__(context, request)
+        self.annotations = IAnnotations(self.context)
+
+    def __call__(self):
+        self.deleted = False
+        if self.tileId is not None:
+            del self.annotations['%s.%s' % (
+                ANNOTATIONS_KEY_PREFIX, self.tileId)]
+        return self.index()
+
+    def tiles(self):
+        for item in self.annotations.keys():
+            if item.startswith(ANNOTATIONS_KEY_PREFIX):
+                yield item[len(ANNOTATIONS_KEY_PREFIX) + 1:]
+
+    def publishTraverse(self, request, name):
+        """Allow traversal to @@delete-tile/tilename
+        """
+
+        if self.tileId is None:
+            self.tileId = name
+
+        return self
