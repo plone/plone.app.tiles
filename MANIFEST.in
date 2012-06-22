@@ -1,6 +1,3 @@
-include *.txt
-
-recursive-include plone *
-recursive-include docs *
-
-global-exclude *pyc
+include *.rst
+recursive-include plone/app/tiles *
+global-exclude *.pyc
