@@ -1,6 +1,5 @@
-.DS_Store
-*.py?
-*.sw?
-
-plone.app.tiles.egg-info/
+*.egg-info
+*.mo
+*.pyc
+*~
 build/

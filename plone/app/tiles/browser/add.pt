@@ -1,3 +1,9 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="plone"
+      tal:omit-tag="">
 <metal:block use-macro="context/@@tile-form-layout/macros/master">
   <metal:block fill-slot="main">
 
@@ -66,3 +72,4 @@
 
   </metal:block>
 </metal:block>
+</html>
