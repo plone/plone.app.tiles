@@ -44,7 +44,6 @@ setup(
         'plone.memoize',
         'plone.registry',
         'plone.tiles',
-
         'zope.publisher',
         'zope.security',
         'zope.component',
@@ -59,10 +58,8 @@ setup(
         'zope.event',
         'zope.lifecycleevent',
         'zope.schema',
-
-        'Products.Five',
-        'AccessControl',
         'Zope2',
+        'AccessControl',
         ] + requires,
     tests_require=tests_require,
     extras_require={'test': tests_require},
