@@ -2,4 +2,6 @@
 *.mo
 *.pyc
 *~
-build/
+
+/build/
+/dist/
