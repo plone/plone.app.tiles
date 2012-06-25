@@ -1,11 +1,14 @@
-Changelog for plone.app.tiles
+Changelog
+=========
 
-    (name of developer listed in brackets)
+1.0.1 (2012-06-25)
+------------------
 
-plone.app.tiles - 1.0a1 Unreleased
+- fixing 1.0 release which was broken (missing README.rst)
+  [garbas]
 
-    - Add missing base tag from layout.
-      [davisagli]
+1.0 (2012-06-23)
+----------------
 
-    - Initial package structure.
-      [zopeskel]
+- initial release.
+  [garbas]
