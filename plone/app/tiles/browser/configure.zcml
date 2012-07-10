@@ -11,6 +11,15 @@
         template="layout.pt"
         permission="zope2.View"
         />
+
+    <!-- tile wrapper
+        also "main_template" for tiles -->
+    <browser:page
+        name="tile-wrapper"
+        for="*"
+        permission="zope2.View"
+        template="wrapper.pt"
+        />
     
     <!-- Traversal views -->
     <browser:page
