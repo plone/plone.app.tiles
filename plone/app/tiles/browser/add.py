@@ -15,6 +15,7 @@ from plone.tiles.interfaces import ITileDataManager
 
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles import MessageFactory as _
+from plone.app.tiles.utils import appendJSONData
 
 
 class DefaultAddForm(TileForm, form.Form):
