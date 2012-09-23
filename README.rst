@@ -1,7 +1,7 @@
-plone.app.tiles
-===============
+Plone's Specific Implementation of Tiles
+----------------------------------------
 
-Plone UI integration for `plone.tiles <http://pypi.python.org/pypi/plone.tiles>`_.
+``plone.app.tiles`` is Plone's UI integration for `plone.tiles <http://pypi.python.org/pypi/plone.tiles>`_.
 
 This package contains the following things:
 
@@ -41,3 +41,4 @@ If you need a custom form, you can register an add view as an adapter from
 
 The actual integration of the various views is left up to other packages (such
 as the Deco editor).
+
