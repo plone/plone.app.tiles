@@ -4,7 +4,7 @@
 <tal:doctype tal:replace="structure string:&lt;!DOCTYPE html PUBLIC
   &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;
   &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;" />
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<html xmlns="http://www.w3.org/1999/xhtml"
     tal:define="portal_state context/@@plone_portal_state;
         context_state context/@@plone_context_state;
         plone_view context/@@plone;
@@ -27,11 +27,11 @@
 <div id="visual-portal-wrapper">
     <div id="portal-columns" class="row">
         <div id="portal-column-content" class="cell width-full position-0">
-            <div id="region-content" class="documentContent">   
+            <div id="region-content" class="documentContent">
                 <div metal:use-macro="context/global_statusmessage/macros/portal_message">
                     Portal status message
                 </div>
-                
+
                 <div id="content">
                     <metal:main define-slot="main" />
                 </div>
