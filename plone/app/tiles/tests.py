@@ -16,6 +16,7 @@ from plone.app.drafts.interfaces import IDraftStorage
 from plone.app.drafts.interfaces import PATH_KEY, DRAFT_NAME_KEY, TARGET_KEY
 from plone.app.tiles.demo import TransientTile
 
+
 class FunctionalTest(unittest.TestCase):
 
     layer = PLONE_APP_TILES_FUNCTIONAL_TESTING
@@ -40,13 +41,14 @@ class FunctionalTest(unittest.TestCase):
         browser = Browser(app)
         browser.handleErrors = False
 
-        browser.addHeader('Authorization',
-                               'Basic %s:%s' % \
-                               (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,))
+        browser.addHeader(
+            'Authorization',
+            'Basic %s:%s' %
+            (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,))
 
         # Add a new transient tile using the @@add-tile view
         browser.open(portal.absolute_url() + '/@@add-tile')
-        browser.getControl(name='type').value = \
+        browser.getControl(name='tiletype').value = \
             ['plone.app.tiles.demo.transient']
         # browser.getControl(name='id').value = "tile1"
         browser.getControl(name='form.button.Create').click()
@@ -54,10 +56,11 @@ class FunctionalTest(unittest.TestCase):
         # Fill in the data and save. Note that the URL for the edit
         # form uses a `_tiledata` JSON argument to avoid collisions
         # between raw form data and tile data.
-        browser.getControl(name='message').value = 'Test message'
+        browser.getControl(name='plone.app.tiles.demo.transient.message')\
+            .value = 'Test message'
         browser.getControl(label='Save').click()
 
-        self.assertEquals(portal.absolute_url() + \
+        self.assertEquals(portal.absolute_url() +
                           '/@@edit-tile/plone.app.tiles.demo.transient/tile' +
                           '-1?_tiledata=%7B%22message%22:%20%22Test%20messa' +
                           'ge%22%7D&tiledata=%7B%22action%22%3A%20%22save%22' +
@@ -69,33 +72,38 @@ class FunctionalTest(unittest.TestCase):
                           browser.url)
 
         # View the tile
-        browser.open(portal.absolute_url() + \
-                          '/@@plone.app.tiles.demo.transient/tile-11' + \
-                          '?message=Test+message')
-        self.failUnless("<b>Transient tile Test message</b>" in \
+        browser.open(
+            portal.absolute_url() +
+            '/@@plone.app.tiles.demo.transient/tile-11' +
+            '?message=Test+message')
+        self.failUnless("<b>Transient tile Test message</b>" in
                         browser.contents)
 
         # Edit the tile
-        browser.open(portal.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.transient/' + \
-                          'tile-1?message=Test+message')
-        browser.getControl(name='message').value = 'New message'
+        browser.open(
+            portal.absolute_url() +
+            '/@@edit-tile/plone.app.tiles.demo.transient/' +
+            'tile-1?message=Test+message')
+        browser.getControl(
+            name='plone.app.tiles.demo.transient.message').value = \
+            'New message'
         browser.getControl(label='Save').click()
 
-        self.assertEquals(portal.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.transient/' + \
-                          'tile-1?_tiledata=%7B%22message%22:%20%22New%20' + \
-                          'message%22%7D&tiledata=%7B%22action%22%3A%20%22' + \
-                          'save%22%2C%20%22url%22%3A%20%22./%40%40plone.' + \
-                          'app.tiles.demo.transient/tile-1%3Fmessage%3DNew' + \
-                          '%2Bmessage%22%2C%20%22tile_type%22%3A%20%22' + \
-                          'plone.app.tiles.demo.transient%22%2C%20%22mode' + \
-                          '%22%3A%20%22edit%22%2C%20%22id%22%3A%20%22tile' + \
+        self.assertEquals(portal.absolute_url() +
+                          '/@@edit-tile/plone.app.tiles.demo.transient/' +
+                          'tile-1?_tiledata=%7B%22message%22:%20%22New%20' +
+                          'message%22%7D&tiledata=%7B%22action%22%3A%20%22' +
+                          'save%22%2C%20%22url%22%3A%20%22./%40%40plone.' +
+                          'app.tiles.demo.transient/tile-1%3Fmessage%3DNew' +
+                          '%2Bmessage%22%2C%20%22tile_type%22%3A%20%22' +
+                          'plone.app.tiles.demo.transient%22%2C%20%22mode' +
+                          '%22%3A%20%22edit%22%2C%20%22id%22%3A%20%22tile' +
                           '-1%22%7D',
                           browser.url)
 
         # View the tile
-        browser.open(portal.absolute_url() + \
+        browser.open(
+            portal.absolute_url() +
             '/@@plone.app.tiles.demo.transient/tile-1?message=New+message')
         self.assertEquals(
             "<html><body><b>Transient tile New message</b></body></html>",
@@ -130,31 +138,35 @@ class FunctionalTest(unittest.TestCase):
         self.assertEquals(None, folderAnnotations.get(annotationsKey))
 
         # Log in
-        browser.addHeader('Authorization',
-                               'Basic %s:%s' % (SITE_OWNER_NAME,
-                                                SITE_OWNER_PASSWORD,))
+        browser.addHeader(
+            'Authorization',
+            'Basic %s:%s' % (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,))
 
         # Add a new persistent tile using the @@add-tile view
         browser.open(portal.absolute_url() + '/@@add-tile')
-        browser.getControl(name='type').value = [
+        browser.getControl(name='tiletype').value = [
             'plone.app.tiles.demo.persistent']
         # browser.getControl(name='id').value = "tile-1"
         browser.getControl(name='form.button.Create').click()
 
         # Fill in the data and save
-        browser.getControl(name='message').value = 'Test message'
-        browser.getControl(name='counter').value = '1'
+        browser.getControl(
+            name='plone.app.tiles.demo.persistent.message')\
+            .value = 'Test message'
+        browser.getControl(
+            name='plone.app.tiles.demo.persistent.counter').value = '1'
         browser.getControl(label='Save').click()
 
-        self.assertEquals(portal.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.persistent/' + \
-                          'tile-1?tiledata=%7B%22action%22%3A%20%22save' + \
-                          '%22%2C%20%22url%22%3A%20%22./%40%40plone.app.' + \
-                          'tiles.demo.persistent/tile-1%22%2C%20%22tile_' + \
-                          'type%22%3A%20%22plone.app.tiles.demo.persistent' + \
-                          '%22%2C%20%22mode%22%3A%20%22add%22%2C%20%22id' + \
-                          '%22%3A%20%22tile-1%22%7D',
-                          browser.url)
+        self.assertEquals(
+            portal.absolute_url() +
+            '/@@edit-tile/plone.app.tiles.demo.persistent/' +
+            'tile-1?tiledata=%7B%22action%22%3A%20%22save' +
+            '%22%2C%20%22url%22%3A%20%22./%40%40plone.app.' +
+            'tiles.demo.persistent/tile-1%22%2C%20%22tile_' +
+            'type%22%3A%20%22plone.app.tiles.demo.persistent' +
+            '%22%2C%20%22mode%22%3A%20%22add%22%2C%20%22id' +
+            '%22%3A%20%22tile-1%22%7D',
+            browser.url)
 
         # Verify annotations
         self.assertEquals('Test message',
@@ -162,27 +174,32 @@ class FunctionalTest(unittest.TestCase):
         self.assertEquals(1, folderAnnotations[annotationsKey]['counter'])
 
         # View the tile
-        browser.open(portal.absolute_url() + \
-                          '/@@plone.app.tiles.demo.persistent/tile-1')
+        browser.open(
+            portal.absolute_url() +
+            '/@@plone.app.tiles.demo.persistent/tile-1')
         self.assertEquals(
             "<html><body><b>Persistent tile Test message #1</b></body></html>",
             browser.contents)
 
         # Edit the tile
-        browser.open(portal.absolute_url() + \
+        browser.open(
+            portal.absolute_url() +
             '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
-        browser.getControl(name='message').value = 'New message'
+        browser.getControl(
+            name='plone.app.tiles.demo.transient.message')\
+            .value = 'New message'
         browser.getControl(label='Save').click()
 
-        self.assertEquals(portal.absolute_url() + \
-                          '/@@edit-tile/plone.app.tiles.demo.persistent/' + \
-                          'tile-1?tiledata=%7B%22action%22%3A%20%22save' + \
-                          '%22%2C%20%22url%22%3A%20%22./%40%40plone.app.' + \
-                          'tiles.demo.persistent/tile-1%22%2C%20%22' + \
-                          'tile_type%22%3A%20%22plone.app.tiles.demo.' + \
-                          'persistent%22%2C%20%22mode%22%3A%20%22edit' + \
-                          '%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
-                          browser.url)
+        self.assertEquals(
+            portal.absolute_url() +
+            '/@@edit-tile/plone.app.tiles.demo.persistent/' +
+            'tile-1?tiledata=%7B%22action%22%3A%20%22save' +
+            '%22%2C%20%22url%22%3A%20%22./%40%40plone.app.' +
+            'tiles.demo.persistent/tile-1%22%2C%20%22' +
+            'tile_type%22%3A%20%22plone.app.tiles.demo.' +
+            'persistent%22%2C%20%22mode%22%3A%20%22edit' +
+            '%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
+            browser.url)
 
         # Verify annotations
         self.assertEquals('New message',
@@ -190,8 +207,9 @@ class FunctionalTest(unittest.TestCase):
         self.assertEquals(1, folderAnnotations[annotationsKey]['counter'])
 
         # View the tile
-        browser.open(portal.absolute_url() + \
-                          '/@@plone.app.tiles.demo.persistent/tile-1')
+        browser.open(
+            portal.absolute_url() +
+            '/@@plone.app.tiles.demo.persistent/tile-1')
         self.assertEquals(
             "<html><body><b>Persistent tile New message #1</b></body></html>",
             browser.contents)
@@ -199,7 +217,7 @@ class FunctionalTest(unittest.TestCase):
         # Remove the tile
         browser.open(portal.absolute_url() + '/@@delete-tile')
         browser.getControl(name='id').value = 'tile-1'
-        browser.getControl(name='type').value = \
+        browser.getControl(name='tiletype').value = \
             ['plone.app.tiles.demo.persistent']
         browser.getControl(name='confirm').click()
 
@@ -239,9 +257,9 @@ class FunctionalTest(unittest.TestCase):
         #
 
         # Log in
-        browser.addHeader('Authorization',
-                               'Basic %s:%s' % (SITE_OWNER_NAME,
-                                                SITE_OWNER_PASSWORD,))
+        browser.addHeader(
+            'Authorization',
+            'Basic %s:%s' % (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,))
 
         #
         # Step 1 - Create a new document and add, edit, remove and re-add tiles
@@ -249,8 +267,9 @@ class FunctionalTest(unittest.TestCase):
 
         # Open the add form for a Document
 
-        browser.open(portal.absolute_url() + \
-                          '/createObject?type_name=Document')
+        browser.open(
+            portal.absolute_url() +
+            '/createObject?type_name=Document')
 
         editFormURL = browser.url
         baseURL = '/'.join(editFormURL.split('/')[:-1])
@@ -259,10 +278,10 @@ class FunctionalTest(unittest.TestCase):
 
         cookies = browser.cookies.forURL(baseURL)
 
-        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'] \
-                        .replace('"', ''))
-        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'] \
-                        .replace('"', ''))
+        targetKey = urllib.unquote(
+            cookies['plone.app.drafts.targetKey'].replace('"', ''))
+        cookiePath = urllib.unquote(
+            cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
         self.assertEquals(baseURL, 'http://nohost' + cookiePath)
@@ -271,13 +290,15 @@ class FunctionalTest(unittest.TestCase):
         # an AJAX request for the same e.g. in a pop-up dialogue box
 
         browser.open(baseURL + '/@@add-tile')
-        browser.getControl(name='type').value = \
+        browser.getControl(name='tiletype').value = \
             ['plone.app.tiles.demo.persistent']
         browser.getControl(name='form.button.Create').click()
 
         # Fill in the data and save
-        browser.getControl(name='message').value = 'Test message'
-        browser.getControl(name='counter').value = '1'
+        browser.getControl(name='plone.app.tiles.demo.persistent.message')\
+            .value = 'Test message'
+        browser.getControl(
+            name='plone.app.tiles.demo.persistent.counter').value = '1'
         browser.getControl(label='Save').click()
 
         # We should now have a draft for this item with the relevant
@@ -301,7 +322,7 @@ class FunctionalTest(unittest.TestCase):
         # Edit the tile, still on the add form
         browser.open(baseURL + \
             '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
-        browser.getControl(name='message').value = 'New message'
+        browser.getControl(name='plone.app.tiles.demo.persistent.message').value = 'New message'
         browser.getControl(label='Save').click()
 
         # Verify annotations
@@ -312,7 +333,7 @@ class FunctionalTest(unittest.TestCase):
         # Remove the tile
         browser.open(baseURL + '/@@delete-tile')
         browser.getControl(name='id').value = 'tile-1'
-        browser.getControl(name='type').value = \
+        browser.getControl(name='tiletype').value = \
             ['plone.app.tiles.demo.persistent']
         browser.getControl(name='confirm').click()
 
@@ -326,12 +347,12 @@ class FunctionalTest(unittest.TestCase):
 
         # Add a new tile
         browser.open(baseURL + '/@@add-tile')
-        browser.getControl(name='type').value = \
+        browser.getControl(name='tiletype').value = \
             ['plone.app.tiles.demo.persistent']
         browser.getControl(name='form.button.Create').click()
 
-        browser.getControl(name='message').value = 'Test message'
-        browser.getControl(name='counter').value = '1'
+        browser.getControl(name='plone.app.tiles.demo.persistent.message').value = 'Test message'
+        browser.getControl(name='plone.app.tiles.demo.persistent.counter').value = '1'
         browser.getControl(label='Save').click()
 
         # Save the edit form
@@ -383,7 +404,7 @@ class FunctionalTest(unittest.TestCase):
         # Edit the tile
         browser.open(baseURL + \
             '/@@edit-tile/plone.app.tiles.demo.persistent/tile-2')
-        browser.getControl(name='message').value = 'Third message'
+        browser.getControl(name='plone.app.tiles.demo.persisten.message').value = 'Third message'
         browser.getControl(label='Save').click()
 
         # A draft should now have been created
@@ -508,7 +529,7 @@ class FunctionalTest(unittest.TestCase):
 
         browser.open(baseURL + '/@@delete-tile')
         browser.getControl(name='id').value = 'tile-2'
-        browser.getControl(name='type').value = \
+        browser.getControl(name='tiletype').value = \
             ['plone.app.tiles.demo.persistent']
         browser.getControl(name='confirm').click()
 
@@ -578,7 +599,7 @@ class FunctionalTest(unittest.TestCase):
 
         browser.open(baseURL + '/@@delete-tile')
         browser.getControl(name='id').value = 'tile-2'
-        browser.getControl(name='type').value = \
+        browser.getControl(name='tiletype').value = \
             ['plone.app.tiles.demo.persistent']
         browser.getControl(name='confirm').click()
 
@@ -623,4 +644,3 @@ class FunctionalTest(unittest.TestCase):
 
         self.assertEquals(0,
                           len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
-

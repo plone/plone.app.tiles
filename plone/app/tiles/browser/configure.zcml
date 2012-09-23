@@ -20,7 +20,7 @@
         permission="zope2.View"
         template="wrapper.pt"
         />
-    
+
     <!-- Traversal views -->
     <browser:page
         name="add-tile"
@@ -36,9 +36,9 @@
         permission="cmf.ModifyPortalContent"
         class=".traversal.EditTile"
         />
-    
+
     <!-- Standard add view and form - invoked from the @@add-tile traversal view -->
-    
+
     <adapter
         for="zope.annotation.interfaces.IAnnotatable
              zope.publisher.interfaces.browser.IDefaultBrowserLayer
@@ -46,16 +46,16 @@
         provides="..interfaces.ITileAddView"
         factory=".add.DefaultAddView"
         />
-    
+
     <class class=".add.DefaultAddView">
         <require
             permission="cmf.ModifyPortalContent"
             interface="zope.publisher.interfaces.browser.IBrowserPage"
             />
     </class>
-    
+
     <!-- Standard edit view and form - invoked from the @@edit-tile traversal view -->
-    
+
     <adapter
         for="zope.annotation.interfaces.IAnnotatable
              zope.publisher.interfaces.browser.IDefaultBrowserLayer
@@ -63,14 +63,14 @@
         provides="..interfaces.ITileEditView"
         factory=".edit.DefaultEditView"
         />
-    
+
     <class class=".edit.DefaultEditView">
         <require
             permission="cmf.ModifyPortalContent"
             interface="zope.publisher.interfaces.browser.IBrowserPage"
             />
     </class>
-    
+
     <!-- Delete view -->
     <browser:page
         name="delete-tile"
