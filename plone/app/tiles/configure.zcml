@@ -27,6 +27,14 @@
         name="plone.app.tiles"
         directory="resources" />
 
+  <!-- Image scale support for tile images -->
+  <browser:page
+      name="images"
+      for="plone.tiles.interfaces.IPersistentTile"
+      class=".imagescaling.ImageScaling"
+      permission="zope2.View"
+      />
+
     <!-- Installation -->
     <genericsetup:registerProfile
         name="default"
