@@ -127,9 +127,7 @@ $.plone.tiletype.Base = {
 
 
 // # TileType Registry
-$.plone.tiletype.__all = {};
-$.plone.tiletype.get = function(name) { return $.plone.tiletype.__all[name]; };
-$.plone.tiletype.register = function(name, tiletype, base) {
+function createTileType(name, tiletype, base) {
   var TileType = function() {
     this.__super = base || $.plone.tiletype.Base;
     this.init(name);
@@ -137,8 +135,19 @@ $.plone.tiletype.register = function(name, tiletype, base) {
   TileType.prototype = $.extend(
     base || $.plone.tiletype.Base,
     tiletype || {});
-  $.plone.tiletype.__all[name] = TileType;
   return TileType;
+}
+$.plone.tiletype.__all = {};
+$.plone.tiletype.get = function(name) {
+  if ($.plone.tiletype.__all[name] === undefined) {
+    return createTileType(name);
+  } else {
+    return $.plone.tiletype.__all[name];
+  }
+};
+$.plone.tiletype.register = function(name, tiletype, base) {
+  $.plone.tiletype.__all[name] = createTileType(name, tiletype, base);
+  return $.plone.tiletype.__all[name];
 };
 
 
