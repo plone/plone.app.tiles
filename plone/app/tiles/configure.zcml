@@ -44,6 +44,8 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+   <subscriber handler=".handlers.notifyModified" />
+
     <!-- TODO: Remove once we stop doing TTW testing -->
     <include file="demo.zcml" />
 
