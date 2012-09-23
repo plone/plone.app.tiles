@@ -121,13 +121,13 @@ $.plone.tile.Tile.prototype = {
 
     // edit action in overlay
     $('li > a.plone-tiletype-action-edit', self.actions)
-      .attr('href', portal_url + self.el.attr('data-tile')
+      .attr('href', self.el.attr('data-tile')
           .replace(/@@(.*)\//, '@@edit-tile/' + self.type.name + '/'))
       .ploneOverlay(self.options.overlay);
 
     // remove action
     $('li > a.plone-tiletype-action-remove', self.actions)
-      .attr('href', portal_url + self.el.attr('data-tile')
+      .attr('href', self.el.attr('data-tile')
           .replace(/@@(.*)\//, '@@delete-tile' + '/'))
       .on('click', function(e) {
         e.preventDefault();
