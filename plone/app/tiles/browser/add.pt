@@ -27,7 +27,7 @@
             <ul class="nav nav-pills">
               <li tal:repeat="tiletype view/tileTypes">
 
-                <div class="plone-tiletype"
+                <div class="deco-toolbar-btn plone-tiletype"
                   tal:define="name tiletype/__name__;
                     id python:name.replace('.', '-');
                     currentSelection request/tiletype | nothing"
