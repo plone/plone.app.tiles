@@ -90,7 +90,6 @@ $.plone.tile.Tile.prototype = {
   },
   show: function() {
     var self = this;
-    var portal_url = window.parent.portal_url;
 
     // create tile wrapper if not passing in options
     if (self.wrapper === undefined) {
