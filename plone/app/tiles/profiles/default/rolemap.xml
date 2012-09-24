@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<rolemap>
+    <permissions>
+        <permission name="Add tile" acquire="True">
+            <role name="Manager"/>
+            <role name="Site Administrator"/>
+            <role name="Reviewer"/>
+        </permission>
+    </permissions>
+</rolemap>
