@@ -18,6 +18,8 @@
     <!-- Views -->
     <include package=".browser" />
 
+    <include file="permissions.zcml" />
+
     <!-- Drafting -->
     <adapter factory=".drafting.draftingTileDataContext" />
     <adapter factory=".drafting.TileDataDraftSyncer" name="plone.app.tiles.tiledata" />
