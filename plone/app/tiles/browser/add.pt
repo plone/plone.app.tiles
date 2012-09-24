@@ -33,8 +33,7 @@
                     currentSelection request/tiletype | nothing"
                   tal:attributes="id string:plone-tiletype-${id};">
 
-                  <img class="img-rounded"
-                    tal:condition="tiletype/icon"
+                  <img tal:condition="tiletype/icon"
                     tal:attributes="src string:${context/portal_url}/${tiletype/icon}" />
 
                   <input type="radio" name="tiletype"
