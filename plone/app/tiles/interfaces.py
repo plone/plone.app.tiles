@@ -2,9 +2,14 @@ from zope.schema import TextLine
 from zope.publisher.interfaces.browser import IBrowserView
 from zope.i18nmessageid import MessageFactory
 from plone.supermodel import model
+from plone.app.z3cform.interfaces import IPloneFormLayer
 
 _ = MessageFactory('plone')
 
+
+class ITilesFormLayer(IPloneFormLayer):
+    """Request layer installed via browserlayer.xml
+    """
 
 class ITileAddView(IBrowserView):
     """A tile add view as found by the @@add-tile traversal view.
