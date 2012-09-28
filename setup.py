@@ -10,13 +10,16 @@ else:
 
 tests_require = ['plone.app.testing']
 
+long_description = \
+    open("README.rst").read() + \
+    "\n" + \
+    open("CHANGELOG.rst").read()
 
 setup(
     name='plone.app.tiles',
     version=version,
     description="Plone UI integration for plone.tiles",
-    long_description=open("README.rst").read() + "\n" +
-                     open("CHANGELOG.rst").read(),
+    long_description=long_description,
     classifiers=[
         "Framework :: Plone",
         "Framework :: Plone :: 4.2",
@@ -27,7 +30,7 @@ setup(
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Topic :: Software Development :: Libraries :: Python Modules",
-        ],
+    ],
     keywords='plone tiles deco',
     author='Martin Aspeli',
     author_email='optilude@gmail.com',
@@ -41,6 +44,7 @@ setup(
         'setuptools',
         'zope.annotation',
         'zope.i18nmessageid',
+        'plone.namedfile',
         'plone.memoize',
         'plone.registry',
         'plone.tiles',
@@ -60,7 +64,7 @@ setup(
         'zope.schema',
         'Zope2',
         'AccessControl',
-        ] + requires,
+    ] + requires,
     tests_require=tests_require,
     extras_require={'test': tests_require},
-    )
+)
