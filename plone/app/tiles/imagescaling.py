@@ -2,30 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from logging import exception
-from AccessControl import Unauthorized
 from Acquisition import aq_base
 from ZODB.POSException import ConflictError
-
-from zope.component import getMultiAdapter
-from zope.component import queryUtility
-
-from zope.interface import implements
-from zope.interface import Interface
-
-from zope.schema import getFieldsInOrder
 
 from zope.annotation import IAnnotations
 from persistent.dict import PersistentDict
 from zope.publisher.interfaces import NotFound
-
-from plone import tiles
-
-from plone.app.textfield.interfaces import ITransformer
-from plone.app.textfield.value import RichTextValue
-
-from plone.tiles.interfaces import ITileType
-
-from plone.tiles.interfaces import ITileDataManager
 
 from plone.scale.scale import scaleImage
 from plone.scale.storage import AnnotationStorage as BaseAnnotationStorage
@@ -34,8 +16,6 @@ from plone.namedfile.scaling import ImageScaling as BaseImageScaling
 from plone.namedfile.utils import set_headers, stream_data
 from plone.namedfile.interfaces import INamedImage
 from plone.rfc822.interfaces import IPrimaryFieldInfo
-
-from Products.CMFCore.utils import getToolByName
 
 
 class AnnotationStorage(BaseAnnotationStorage):
@@ -161,8 +141,13 @@ class ImageScaling(BaseImageScaling):
                 return None
             width, height = available[scale]
         storage = AnnotationStorage(self.context, self.modified)
-        info = storage.scale(factory=self.create,
-                             fieldname=fieldname, height=height, width=width, **parameters)
+        info = storage.scale(
+            factory=self.create,
+            fieldname=fieldname,
+            height=height,
+            width=width,
+            **parameters
+        )
         if info is not None:
             info['fieldname'] = fieldname
             scale_view = ImageScale(self.context, self.request, **info)
