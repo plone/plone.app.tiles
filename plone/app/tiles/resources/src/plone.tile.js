@@ -84,7 +84,7 @@ $.plone.tile.Tile.prototype = {
     }, options || {});
     self.name = $.plone.tiletype.getTileNameByElement(el);
     self.type = new ($.plone.tiletype.get(self.name))();
-    self.actions = self.type.getActions();
+    self.actions = self.type.getActions(self.el);
     self.wrapper = self.options.wrapper;
 
   },
@@ -95,6 +95,7 @@ $.plone.tile.Tile.prototype = {
     if (self.wrapper === undefined) {
       self.wrapper = $('<div/>').addClass('plone-tile');
       self.el.wrap(self.wrapper);
+      self.wrapper = self.el.parent();
     }
 
     // make sure wrapper has relative position
@@ -122,7 +123,8 @@ $.plone.tile.Tile.prototype = {
     // edit action in overlay
     $('li > a.plone-tiletype-action-edit', self.actions)
       .attr('href', $('base', window.parent.document).attr('href') +
-          self.el.attr('data-tile').replace(/@@(.*)\//, '@@edit-tile/' + self.type.name + '/'))
+          self.el.attr('data-tile')
+          .replace(/@@(.*)\//, '@@edit-tile/' + self.type.name + '/'))
       .ploneOverlay(self.options.overlay);
 
     // remove action

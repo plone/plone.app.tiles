@@ -116,10 +116,9 @@ $.plone.tiletype.Base = {
       'padding': '0'
     });
   },
-  getActions: function() {
+  getActions: function(el) {
     var self = this,
-        actions = $('#plone-tiletype-' + self.id +
-            ' .plone-tiletype-actions').clone();
+        actions = $('.plone-tiletype-actions', el).clone();
     self.styleActions(actions);
     return actions;
   }
