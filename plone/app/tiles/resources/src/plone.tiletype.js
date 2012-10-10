@@ -119,6 +119,10 @@ $.plone.tiletype.Base = {
   getActions: function(el) {
     var self = this,
         actions = $('.plone-tiletype-actions', el).clone();
+    if (actions.size() === 0) {
+        actions = $('#plone-tiletype-' + self.id +
+            ' .plone-tiletype-actions').clone();
+    }
     self.styleActions(actions);
     return actions;
   }
