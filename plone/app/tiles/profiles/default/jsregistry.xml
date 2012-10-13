@@ -2,11 +2,11 @@
 <object name="portal_javascripts" meta_type="JavaScripts Registry">
 
     <javascript cacheable="False" compression="safe" cookable="False"
-        enabled="True" inline="False" bundle="deco"
+        enabled="True" inline="False" bundle="toolbar"
         id="++resource++plone.app.tiles/src/plone.tile.js" />
 
     <javascript cacheable="False" compression="safe" cookable="False"
-        enabled="True" inline="False" bundle="deco"
+        enabled="True" inline="False" bundle="toolbar"
         id="++resource++plone.app.tiles/src/plone.tiletype.js" />
 
 </object>
