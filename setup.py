@@ -52,6 +52,7 @@ setup(
         'zope.security',
         'zope.component',
         'zope.interface',
+        'plone.app.blocks',
         'plone.app.drafts',
         'plone.z3cform',
         'plone.autoform',
