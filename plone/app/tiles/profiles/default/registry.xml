@@ -10,13 +10,4 @@
         <value purge="false"></value>
     </record>
 
-<!--
-    <record name="plone.app.tiles">
-        <value purge="false">
-            <element>plone.app.tiles.demo.transient</element>
-            <element>plone.app.tiles.demo.persistent</element>
-        </value>
-    </record>
--->
-
 </registry>

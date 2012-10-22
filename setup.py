@@ -13,6 +13,8 @@ tests_require = ['plone.app.testing']
 long_description = \
     open("README.rst").read() + \
     "\n" + \
+    open("./CREDITS.rst").read() + \
+    "\n" + \
     open("CHANGELOG.rst").read()
 
 setup(
