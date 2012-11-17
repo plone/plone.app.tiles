@@ -69,16 +69,21 @@ $.plone.tile.Tile.prototype = {
     self.el = el;
     self.options = $.extend(true, {
       overlay: {
-        form: 'form#edit_tile,form#add_tile',
-        save: function(response) {
+        formButtons: {
+            '.modal-body input[name="buttons.save"]': $.fn.ploneOverlay.defaultFormButton,
+            '.modal-body input[name="buttons.cancel"]': $.fn.ploneOverlay.defaultFormButton
+          },
+        onAjaxSave: function(response, state, xhr, form, button) {
           var overlay = this;
           overlay.destroy();
-          overlay._init(overlay.options);
-          self.el.html(response.html());
-          // save deco layout as well
-          var decoToolbar = $($.plone.deco.defaults.toolbar).decoToolbar();
-          decoToolbar._editformDontHideDecoToolbar = true;
-          $($.plone.deco.defaults.form_save_btn, decoToolbar._editform).click();
+          if (button.attr('name') === 'buttons.save') {
+            overlay.init(overlay.options);
+            self.el.html(response.html());
+            // save deco layout as well
+            var decoToolbar = $($.plone.deco.defaults.toolbar).decoToolbar();
+            decoToolbar._editformDontHideDecoToolbar = true;
+            $($.plone.deco.defaults.form_save_btn, decoToolbar._editform).click();
+          }
         }
       }
     }, options || {});
