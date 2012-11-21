@@ -33,7 +33,7 @@
 /*global jQuery:false */
 
 
-(function ($) {
+(function ($, undefined) {
 "use strict";
 
 // # Namespace

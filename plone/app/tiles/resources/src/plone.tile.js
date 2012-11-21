@@ -70,20 +70,21 @@ $.plone.tile.Tile.prototype = {
     self.options = $.extend(true, {
       overlay: {
         formButtons: {
-            '.modal-body input[name="buttons.save"]': $.fn.ploneOverlay.defaultFormButton,
-            '.modal-body input[name="buttons.cancel"]': $.fn.ploneOverlay.defaultFormButton
-          },
-        onAjaxSave: function(response, state, xhr, form, button) {
-          var overlay = this;
-          overlay.destroy();
-          if (button.attr('name') === 'buttons.save') {
-            overlay.init(overlay.options);
-            self.el.html(response.html());
-            // save deco layout as well
-            var decoToolbar = $($.plone.deco.defaults.toolbar).decoToolbar();
-            decoToolbar._editformDontHideDecoToolbar = true;
-            $($.plone.deco.defaults.form_save_btn, decoToolbar._editform).click();
-          }
+          '.modal-body input[name="buttons.cancel"]': $.fn.ploneOverlay.defaultFormButton({
+              onSave: function() { this.destroy(); }
+            }),
+          '.modal-body input[name="buttons.save"]': $.fn.ploneOverlay.defaultFormButton({
+              onSave: function(response) {
+                var overlay = this;
+                overlay.destroy();
+                overlay.init(overlay.options);
+                self.el.html(response.html());
+                // save deco layout as well
+                var decoToolbar = $($.plone.deco.defaults.toolbar).decoToolbar();
+                decoToolbar._editformDontHideDecoToolbar = true;
+                $($.plone.deco.defaults.form_save_btn, decoToolbar._editform).click();
+              }
+            })
         }
       }
     }, options || {});
