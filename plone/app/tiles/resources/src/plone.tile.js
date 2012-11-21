@@ -70,10 +70,10 @@ $.plone.tile.Tile.prototype = {
     self.options = $.extend(true, {
       overlay: {
         formButtons: {
-          '.modal-body input[name="buttons.cancel"]': $.fn.ploneOverlay.defaultFormButton({
+          '.modal-body input[name="buttons.cancel"]': $.fn.ploneOverlay.defaultAjaxSubmit({
               onSave: function() { this.destroy(); }
             }),
-          '.modal-body input[name="buttons.save"]': $.fn.ploneOverlay.defaultFormButton({
+          '.modal-body input[name="buttons.save"]': $.fn.ploneOverlay.defaultAjaxSubmit({
               onSave: function(response) {
                 var overlay = this;
                 overlay.destroy();
