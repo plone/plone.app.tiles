@@ -7,7 +7,7 @@
 
 <body>
 
-  <div tal:attributes="class view/data/klass|nothing">
+  <div>
     <metal:content define-slot="content">
       Tile dummy content
     </metal:content>

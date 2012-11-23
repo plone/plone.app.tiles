@@ -32,10 +32,3 @@ class ITileEditView(IBrowserView):
 class ITileBaseSchema(model.Schema):
     """ Base interfaces from which all Plone tiles should inherit.
     """
-
-    # TODO: use some fieldset to put this into so its not on the first page
-    # TODO: should classes be defined in line
-    klass = TextLine(
-        title=_(u"Additional classes."),
-        required=False,
-        )
