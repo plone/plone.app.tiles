@@ -74,14 +74,13 @@ class DefaultAddForm(TileForm, form.Form):
         if tileURL.startswith(contextURL):
             tileRelativeURL = '.' + tileURL[len(contextURL):]
 
+        IStatusMessage(self.request).addStatusMessage(
+            _(u"Tile created at ${url}", mapping={'url': tileURL}),
+            type=u'info',
+        )
+
         notify(ObjectCreatedEvent(tile))
         notify(ObjectAddedEvent(tile, self.context, tileId))
-
-        IStatusMessage(self.request).addStatusMessage(
-                _(u"Tile created at ${url}",
-                  mapping={'url': tileURL}),
-                type=u'info',
-            )
 
         self.request.response.redirect(tileURL)
 
