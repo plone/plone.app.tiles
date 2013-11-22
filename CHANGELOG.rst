@@ -6,6 +6,9 @@ Changelog
 
 - remove classes option
 
+- Add deferred security checking for traversal on z3c.forms
+  [cewing calvinhp]
+
 1.0.1 (2012-06-25)
 ------------------
 
