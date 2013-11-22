@@ -1,5 +1,6 @@
 from z3c.form import form, button
 from plone.z3cform import layout
+from plone.z3cform.interfaces import IDeferSecurityCheck
 
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.event import notify
@@ -53,7 +54,17 @@ class DefaultEditForm(TileForm, form.Form):
 
         # Traverse to the tile. If it is a transient tile, it will pick up
         # query string parameters from the original request
-        tile = self.context.restrictedTraverse('@@%s/%s' % (typeName, tileId,))
+        # It is necessary to defer security checking because during initial 
+        # form setup, the security context is not yet set.  Setting the
+        # IDeferSecurityCheck interface on the request is handled in
+        # plone.z3cform.traversal.FormWidgetTraversal
+        # 
+        if IDeferSecurityCheck.providedBy(self.request):
+            tile = self.context.unrestrictedTraverse(
+                '@@%s/%s' % (typeName, tileId,))
+        else:
+            tile = self.context.restrictedTraverse(
+                '@@%s/%s' % (typeName, tileId,))
 
         dataManager = ITileDataManager(tile)
         return dataManager.get()

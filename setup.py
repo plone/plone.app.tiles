@@ -70,4 +70,8 @@ setup(
     ] + requires,
     tests_require=tests_require,
     extras_require={'test': tests_require},
+    entry_points="""
+        [z3c.autoinclude.plugin]
+        target = plone
+    """,
 )
