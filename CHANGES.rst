@@ -4,10 +4,10 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
-- remove classes option
-
 - Add deferred security checking for traversal on z3c.forms
   [cewing calvinhp]
+
+- remove classes option
 
 1.0.1 (2012-06-25)
 ------------------

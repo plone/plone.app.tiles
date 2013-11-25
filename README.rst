@@ -1,5 +1,5 @@
 Plone's Specific Implementation of Tiles
-----------------------------------------
+========================================
 
 ``plone.app.tiles`` is Plone's UI integration for `plone.tiles <http://pypi.python.org/pypi/plone.tiles>`_.
 

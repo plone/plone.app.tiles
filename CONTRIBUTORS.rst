@@ -1,5 +1,5 @@
 Contributors
-------------
+============
 
 - Martin Aspeli
 - Sjoerd van Elferen
