@@ -62,7 +62,7 @@ class PloneAppTiles(PloneSandboxLayer):
 PLONE_APP_TILES_FIXTURE = PloneAppTiles()
 PLONE_APP_TILES_INTEGRATION_TESTING = IntegrationTesting(
     bases=(PLONE_APP_TILES_FIXTURE,),
-    name="plone.app.tiles:Integration")
+    name="PloneAppTilesLayer:Integration")
 PLONE_APP_TILES_FUNCTIONAL_TESTING = FunctionalTesting(
     bases=(PLONE_APP_TILES_FIXTURE,),
-    name="plone.app.tiles:Functional")
+    name="PloneAppTilesLayer:Functional")
