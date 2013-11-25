@@ -7,5 +7,9 @@ install:
   - sed -ie "s#travis-4.x.cfg#travis-$PLONE_VERSION.x.cfg#" travis.cfg
   - mkdir -p buildout-cache/downloads
   - python bootstrap.py -c travis.cfg
-  - bin/buildout -c travis.cfg -N -q
-script: bin/test && bin/code-analysis
+  - bin/buildout -N -t 3 -c travis.cfg -q
+script:
+  - bin/code-analysis
+  - bin/coverage run --source=plone.app.tiles bin/test --layer=\!PloneAppTilesLayer; fi
+after_success:
+  - bin/coveralls

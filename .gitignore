@@ -5,3 +5,8 @@
 
 /build/
 /dist/
+/buildout-cache/
+/develop-eggs/
+/.installed.cfg
+/bin/
+/parts/
