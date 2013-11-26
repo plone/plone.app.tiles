@@ -44,11 +44,11 @@ class TileTraverser(object):
             raise KeyError(tile_name)
 
         view = queryMultiAdapter((self.context, self.request, tile_info),
-                self.targetInterface, name=tile_name)
+                                 self.targetInterface, name=tile_name)
 
         if view is None:
             view = queryMultiAdapter((self.context, self.request, tile_info),
-                    self.targetInterface)
+                                     self.targetInterface)
 
         if view is None:
             raise KeyError(tile_name)
@@ -113,12 +113,12 @@ class AddTile(TileTraverser):
         if 'form.button.Create' in self.request:
             newTileType = self.request.get('tiletype', None)
             if newTileType is None:
-                self.errors['tiletype'] = _(u"You must select the type of " + \
+                self.errors['tiletype'] = _(u"You must select the type of " +
                                             u"tile to create")
 
             if len(self.errors) == 0:
-                self.request.response.redirect("%s/@@add-tile/%s" % \
-                        (self.context.absolute_url(), newTileType))
+                self.request.response.redirect("%s/@@add-tile/%s" % (
+                    self.context.absolute_url(), newTileType))
                 return ''
 
         return self.index()

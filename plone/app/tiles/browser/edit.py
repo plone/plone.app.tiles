@@ -53,12 +53,11 @@ class DefaultEditForm(TileForm, form.Form):
         tileId = self.tileId
 
         # Traverse to the tile. If it is a transient tile, it will pick up
-        # query string parameters from the original request
-        # It is necessary to defer security checking because during initial 
-        # form setup, the security context is not yet set.  Setting the
-        # IDeferSecurityCheck interface on the request is handled in
+        # query string parameters from the original request It is necessary to
+        # defer security checking because during initial form setup, the
+        # security context is not yet set. Setting the IDeferSecurityCheck
+        # interface on the request is handled in
         # plone.z3cform.traversal.FormWidgetTraversal
-        # 
         if IDeferSecurityCheck.providedBy(self.request):
             tile = self.context.unrestrictedTraverse(
                 '@@%s/%s' % (typeName, tileId,))
@@ -88,7 +87,7 @@ class DefaultEditForm(TileForm, form.Form):
 
         # Traverse to a new tile in the context, with no data
         tile = self.context.restrictedTraverse(
-                '@@%s/%s' % (typeName, self.tileId,))
+            '@@%s/%s' % (typeName, self.tileId,))
 
         dataManager = ITileDataManager(tile)
         dataManager.set(data)

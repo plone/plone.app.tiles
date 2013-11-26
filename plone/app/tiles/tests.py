@@ -304,8 +304,8 @@ class FunctionalTest(unittest.TestCase):
         # We should now have a draft for this item with the relevant
         # annotations
 
-        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
-                        .replace('"', ''))
+        draftName = urllib.unquote(
+            cookies['plone.app.drafts.draftName'].replace('"', ''))
 
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
@@ -320,9 +320,8 @@ class FunctionalTest(unittest.TestCase):
         self.assertEquals(1, draftAnnotations[annotationsKey]['counter'])
 
         # Edit the tile, still on the add form
-        browser.open(baseURL + \
-            '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
-        browser.getControl(name='plone.app.tiles.demo.persistent.message').value = 'New message'
+        browser.open(baseURL + '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa
+        browser.getControl(name='plone.app.tiles.demo.persistent.message').value = 'New message'  # noqa
         browser.getControl(label='Save').click()
 
         # Verify annotations
@@ -351,8 +350,8 @@ class FunctionalTest(unittest.TestCase):
             ['plone.app.tiles.demo.persistent']
         browser.getControl(name='form.button.Create').click()
 
-        browser.getControl(name='plone.app.tiles.demo.persistent.message').value = 'Test message'
-        browser.getControl(name='plone.app.tiles.demo.persistent.counter').value = '1'
+        browser.getControl(name='plone.app.tiles.demo.persistent.message').value = 'Test message'  # noqa
+        browser.getControl(name='plone.app.tiles.demo.persistent.counter').value = '1'  # noqa
         browser.getControl(label='Save').click()
 
         # Save the edit form
@@ -390,10 +389,10 @@ class FunctionalTest(unittest.TestCase):
         # Get the values of the drafting cookies
 
         cookies = browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'] \
-                        .replace('"', ''))
-        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'] \
-                        .replace('"', ''))
+        targetKey = urllib.unquote(
+            cookies['plone.app.drafts.targetKey'].replace('"', ''))
+        cookiePath = urllib.unquote(
+            cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
         self.assertEquals(baseURL, 'http://nohost' + cookiePath)
@@ -402,15 +401,14 @@ class FunctionalTest(unittest.TestCase):
                           len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
         # Edit the tile
-        browser.open(baseURL + \
-            '/@@edit-tile/plone.app.tiles.demo.persistent/tile-2')
-        browser.getControl(name='plone.app.tiles.demo.persisten.message').value = 'Third message'
+        browser.open(baseURL + '/@@edit-tile/plone.app.tiles.demo.persistent/tile-2')  # noqa
+        browser.getControl(name='plone.app.tiles.demo.persisten.message').value = 'Third message'  # noqa
         browser.getControl(label='Save').click()
 
         # A draft should now have been created
 
-        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
-                        .replace('"', ''))
+        draftName = urllib.unquote(
+            cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
 
@@ -460,21 +458,20 @@ class FunctionalTest(unittest.TestCase):
         contextAnnotations = IAnnotations(context)
 
         cookies = browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'] \
-                        .replace('"', ''))
-        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'] \
-                        .replace('"', ''))
+        targetKey = urllib.unquote(
+            cookies['plone.app.drafts.targetKey'].replace('"', ''))
+        cookiePath = urllib.unquote(
+            cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
         # Edit the tile
-        browser.open(baseURL + \
-            '/@@edit-tile/plone.app.tiles.demo.persistent/tile-2')
+        browser.open(baseURL + '/@@edit-tile/plone.app.tiles.demo.persistent/tile-2')  # noqa
         browser.getControl(name='message').value = 'Third message'
         browser.getControl(label='Save').click()
 
         # A draft should now have been created
-        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
-                        .replace('"', ''))
+        draftName = urllib.unquote(
+            cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
 
@@ -519,10 +516,10 @@ class FunctionalTest(unittest.TestCase):
         contextAnnotations = IAnnotations(context)
 
         cookies = browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'] \
-                        .replace('"', ''))
-        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'] \
-                        .replace('"', ''))
+        targetKey = urllib.unquote(
+            cookies['plone.app.drafts.targetKey'].replace('"', ''))
+        cookiePath = urllib.unquote(
+            cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
         # Remove the tile
@@ -539,8 +536,8 @@ class FunctionalTest(unittest.TestCase):
                           browser.getControl(name='deleted.type').value)
 
         # Draft should have been created
-        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
-                        .replace('"', ''))
+        draftName = urllib.unquote(
+            cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
 
@@ -589,10 +586,10 @@ class FunctionalTest(unittest.TestCase):
         contextAnnotations = IAnnotations(context)
 
         cookies = browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(cookies['plone.app.drafts.targetKey'] \
-                        .replace('"', ''))
-        cookiePath = urllib.unquote(cookies['plone.app.drafts.path'] \
-                        .replace('"', ''))
+        targetKey = urllib.unquote(
+            cookies['plone.app.drafts.targetKey'].replace('"', ''))
+        cookiePath = urllib.unquote(
+            cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
         # Remove the tile
@@ -609,8 +606,8 @@ class FunctionalTest(unittest.TestCase):
                           browser.getControl(name='deleted.type').value)
 
         # Draft should have been created
-        draftName = urllib.unquote(cookies['plone.app.drafts.draftName'] \
-                        .replace('"', ''))
+        draftName = urllib.unquote(
+            cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
 

@@ -61,8 +61,8 @@ class TileForm(AutoExtensibleForm):
 
     def updateWidgets(self):
         # Override to set the widgets prefix before widgets are updated
-        self.widgets = getMultiAdapter((self, self.request, self.getContent()),
-            IWidgets)
+        self.widgets = getMultiAdapter(
+            (self, self.request, self.getContent()), IWidgets)
         self.widgets.prefix = self.tileType.__name__
         self.widgets.mode = self.mode
         self.widgets.ignoreContext = self.ignoreContext
