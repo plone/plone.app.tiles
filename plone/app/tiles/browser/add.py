@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-from plone.app.tiles import MessageFactory as _
-from plone.app.tiles.browser.base import TileForm
-from plone.app.tiles.utils import appendJSONData
-from plone.tiles.interfaces import ITileDataManager
 from plone.uuid.interfaces import IUUIDGenerator
 from plone.z3cform import layout
 from z3c.form import form, button
@@ -12,6 +8,11 @@ from zope.component import getUtility
 from zope.event import notify
 from zope.lifecycleevent import ObjectCreatedEvent, ObjectAddedEvent
 from zope.traversing.browser.absoluteurl import absoluteURL
+
+from plone.app.tiles import MessageFactory as _
+from plone.app.tiles.browser.base import TileForm
+from plone.tiles.interfaces import ITileDataManager
+from plone.app.tiles.utils import getEditTileURL, appendJSONData
 
 
 class DefaultAddForm(TileForm, form.Form):
@@ -64,16 +65,38 @@ class DefaultAddForm(TileForm, form.Form):
         # Look up the URL - we need to do this after we've set the data to
         # correctly account for transient tiles
         tileURL = absoluteURL(tile, self.request)
+        contextURL = absoluteURL(tile.context, self.request)
+        tileRelativeURL = tileURL
 
-        IStatusMessage(self.request).addStatusMessage(
-            _(u"Tile created at ${url}", mapping={'url': tileURL}),
-            type=u'info',
-        )
+        if tileURL.startswith(contextURL):
+            tileRelativeURL = '.' + tileURL[len(contextURL):]
 
         notify(ObjectCreatedEvent(tile))
         notify(ObjectAddedEvent(tile, self.context, tileId))
 
-        self.request.response.redirect(tileURL)
+        IStatusMessage(self.request).addStatusMessage(
+                _(u"Tile created at ${url}",
+                  mapping={'url': tileURL}),
+                type=u'info',
+            )
+        #import pdb; pdb.set_trace()
+
+
+        # Calculate the edit URL and append some data in a JSON structure,
+        # to help the UI know what to do.
+
+        url = getEditTileURL(tile, self.request)
+
+        tileDataJson = {}
+        tileDataJson['action'] = "save"
+        tileDataJson['mode'] = "add"
+        tileDataJson['url'] = tileRelativeURL
+        tileDataJson['tile_type'] = typeName
+        tileDataJson['id'] = tile.id
+
+        url = appendJSONData(url, 'tiledata', tileDataJson)
+        self.request.response.redirect(url)
+        #self.request.response.redirect(tileURL)
 
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
