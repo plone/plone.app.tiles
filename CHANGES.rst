@@ -4,6 +4,9 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
+- Add italian translation
+  [gborelli]
+
 - Add deferred security checking for traversal on z3c.forms
   [cewing calvinhp]
 
