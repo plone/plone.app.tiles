@@ -45,7 +45,7 @@ msgstr "Rimuovi"
 #: plone/app/tiles/browser/add.py:47
 #: plone/app/tiles/browser/edit.py:69
 msgid "Save"
-msgstr "Salve"
+msgstr "Salva"
 
 #: plone/app/tiles/browser/add.py:80
 msgid "Tile created at ${url}"
