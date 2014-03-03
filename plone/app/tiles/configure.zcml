@@ -5,51 +5,46 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="plone.app.tiles">
 
-    <i18n:registerTranslations directory="locales" />
+  <i18n:registerTranslations directory="locales" />
 
-    <include package="plone.tiles" />
-    <include package="plone.tiles" file="meta.zcml"/>
+  <include package="plone.tiles" />
+  <include package="plone.tiles" file="meta.zcml"/>
 
-    <include package="plone.uuid" />
+  <include package="plone.uuid" />
 
-    <include package="plone.app.drafts" />
-    <include package="plone.app.blocks" />
-    <include package="plone.app.z3cform" />
+  <include package="plone.app.drafts" />
+  <include package="plone.app.blocks" />
+  <include package="plone.app.z3cform" />
 
-    <!-- Views -->
-    <include package=".browser" />
+  <!-- Views -->
+  <include package=".browser" />
 
-    <include file="permissions.zcml" />
+  <include file="permissions.zcml" />
 
-    <!-- Drafting -->
-    <adapter factory=".drafting.draftingTileDataContext" />
-    <adapter factory=".drafting.TileDataDraftSyncer" name="plone.app.tiles.tiledata" />
-
-    <!-- Static resources -->
-    <browser:resourceDirectory
-        name="plone.app.tiles"
-        directory="resources" />
+  <!-- Drafting -->
+  <adapter factory=".drafting.draftingTileDataContext" />
+  <adapter factory=".drafting.TileDataDraftSyncer" name="plone.app.tiles.tiledata" />
 
   <!-- Image scale support for tile images -->
   <browser:page
-      name="images"
-      for="plone.tiles.interfaces.IPersistentTile"
-      class=".imagescaling.ImageScaling"
-      permission="zope2.View"
-      />
+    name="images"
+    for="plone.tiles.interfaces.IPersistentTile"
+    class=".imagescaling.ImageScaling"
+    permission="zope2.View"
+    />
 
-    <!-- Installation -->
-    <genericsetup:registerProfile
-        name="default"
-        title="Tiles support"
-        directory="profiles/default"
-        description="Basic support for managing tiles"
-        provides="Products.GenericSetup.interfaces.EXTENSION"
-        />
+  <!-- Installation -->
+  <genericsetup:registerProfile
+    name="default"
+    title="Tiles support"
+    directory="profiles/default"
+    description="Basic support for managing tiles"
+    provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
 
-   <subscriber handler=".handlers.notifyModified" />
+  <subscriber handler=".handlers.notifyModified" />
 
-    <!-- TODO: Remove once we stop doing TTW testing -->
-    <include file="demo.zcml" />
+  <!-- TODO: Remove once we stop doing TTW testing -->
+  <include file="demo.zcml" />
 
 </configure>
