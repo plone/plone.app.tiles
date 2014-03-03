@@ -48,7 +48,6 @@ setup(
         'zope.component',
         'zope.interface',
         'plone.app.blocks',
-        'plone.app.drafts',
         'plone.z3cform',
         'plone.autoform',
         'z3c.form',
@@ -64,6 +63,7 @@ setup(
     extras_require={
         'test': [
             'plone.app.testing',
+            'plone.app.drafts',
         ],
     },
 )

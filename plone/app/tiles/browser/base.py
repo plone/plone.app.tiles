@@ -7,7 +7,11 @@ from z3c.form.interfaces import IWidgets
 from plone.autoform.form import AutoExtensibleForm
 from plone.z3cform.interfaces import IDeferSecurityCheck
 
-from plone.app.drafts.interfaces import ICurrentDraftManagement
+try:
+    from plone.app.drafts.interfaces import ICurrentDraftManagement
+    PLONE_APP_DRAFTS = True
+except:
+    PLONE_APP_DRAFTS = False
 
 
 class TileFormLayout(object):
@@ -43,8 +47,9 @@ class TileForm(AutoExtensibleForm):
     def update(self):
 
         # Set up draft information if required
-        currentDraft = ICurrentDraftManagement(self.request)
-        currentDraft.mark()
+        if PLONE_APP_DRAFTS:
+            currentDraft = ICurrentDraftManagement(self.request)
+            currentDraft.mark()
 
         # Override to check the tile add/edit permission
         if not IDeferSecurityCheck.providedBy(self.request):
