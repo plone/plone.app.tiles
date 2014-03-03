@@ -16,6 +16,11 @@ class PloneAppTiles(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
+        import plone.app.drafts
+        xmlconfig.file(
+            'configure.zcml',
+            plone.app.drafts,
+            context=configurationContext)
         import plone.app.tiles
         xmlconfig.file(
             'configure.zcml',
@@ -27,6 +32,7 @@ class PloneAppTiles(PloneSandboxLayer):
             context=configurationContext)
 
     def setUpPloneSite(self, portal):
+        applyProfile(portal, 'plone.app.drafts:default')
         applyProfile(portal, 'plone.app.tiles:default')
 
         from plone.registry.interfaces import IRegistry
