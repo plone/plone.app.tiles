@@ -12,6 +12,9 @@ Changelog
 
 - remove classes option
 
+- Fix image scaling traversal
+  [simahawk]
+
 1.0.1 (2012-06-25)
 ------------------
 
