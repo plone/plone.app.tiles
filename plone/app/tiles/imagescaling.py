@@ -41,7 +41,11 @@ class ImageScale(BaseImageScale):
         self.request = request
         self.__dict__.update(**info)
         if self.data is None:
-            self.data = getattr(self.context, self.fieldname)
+            try:
+                self.data = getattr(self.context, self.fieldname)
+            except AttributeError:
+                self.data = self.context.data[self.fieldname]
+
         url = self.context.url
         extension = self.data.contentType.split('/')[-1].lower()
         if 'uid' in info:
