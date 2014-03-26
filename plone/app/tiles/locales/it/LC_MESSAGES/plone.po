@@ -36,7 +36,7 @@ msgstr "Modifica"
 
 #: plone/app/tiles/browser/edit.py:65
 msgid "Edit ${name}"
-msgstr "Modifca ${name}"
+msgstr "Modifica ${name}"
 
 #: plone/app/tiles/browser/traversal.py:102
 msgid "Remove"
