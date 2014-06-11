@@ -87,107 +87,68 @@ class FunctionalTest(unittest.TestCase):
         self.assertFalse(tile_id in self.browser.contents)
 
     def test_persistent_lifecycle(self):
-        folderAnnotations = IAnnotations(self.portal)
-        annotationsKey = "%s.tile-1" % ANNOTATIONS_KEY_PREFIX
+        folder_annotations = IAnnotations(self.portal)
+        annotations_key = '{0}.tile-1'.format(ANNOTATIONS_KEY_PREFIX)
 
-        self.assertEqual(None, folderAnnotations.get(annotationsKey))
+        self.assertEqual(None, folder_annotations.get(annotations_key))
 
         # Log in
         self.browser.addHeader(
             'Authorization',
-            'Basic %s:%s' % (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,))
+            'Basic {0}:{1}'.format(SITE_OWNER_NAME, SITE_OWNER_PASSWORD, )
+        )
 
         # Add a new persistent tile using the @@add-tile view
-        self.browser.open(self.portal_url + '/@@add-tile')
+        self.browser.open('{0}/@@add-tile'.format(self.portal_url))
         self.browser.getControl(name='tiletype').value = [
-            'plone.app.tiles.demo.persistent']
-        # self.browser.getControl(name='id').value = "tile-1"
+            'plone.app.tiles.demo.persistent'
+        ]
         self.browser.getControl(name='form.button.Create').click()
 
         # Fill in the data and save
-        self.browser.getControl(
-            name='plone.app.tiles.demo.persistent.message')\
-            .value = 'Test message'
-        self.browser.getControl(
-            name='plone.app.tiles.demo.persistent.counter').value = '1'
+        name = 'plone.app.tiles.demo.persistent.message'
+        message = 'Test message'
+        self.browser.getControl(name=name).value = message
+        counter = 1
+        name = 'plone.app.tiles.demo.persistent.counter'
+        self.browser.getControl(name=name).value = str(counter)
         self.browser.getControl(label='Save').click()
 
-        self.assertEqual(
-            self.portal_url +
-            '/@@edit-tile/plone.app.tiles.demo.persistent/' +
-            'tile-1?tiledata=%7B%22action%22%3A%20%22save' +
-            '%22%2C%20%22url%22%3A%20%22./%40%40plone.app.' +
-            'tiles.demo.persistent/tile-1%22%2C%20%22tile_' +
-            'type%22%3A%20%22plone.app.tiles.demo.persistent' +
-            '%22%2C%20%22mode%22%3A%20%22add%22%2C%20%22id' +
-            '%22%3A%20%22tile-1%22%7D',
-            self.browser.url)
+        # View the tile
+        msg = '<b>Persistent tile {0} #{1}</b>'.format(message, counter)
+        self.assertTrue(msg in self.browser.contents)
 
         # Verify annotations
-        self.assertEqual('Test message',
-                         folderAnnotations[annotationsKey]['message'])
-        self.assertEqual(1, folderAnnotations[annotationsKey]['counter'])
-
-        # View the tile
-        self.browser.open(
-            self.portal_url +
-            '/@@plone.app.tiles.demo.persistent/tile-1')
-        self.assertEqual(
-            "<html><body><b>Persistent tile Test message #1</b></body></html>",
-            self.browser.contents)
+        self.assertEqual(message,
+                         folder_annotations[annotations_key]['message'])
+        self.assertEqual(counter,
+                         folder_annotations[annotations_key]['counter'])
 
         # Edit the tile
-        self.browser.open(
-            self.portal_url +
-            '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
-        self.browser.getControl(
-            name='plone.app.tiles.demo.transient.message')\
-            .value = 'New message'
+        # prepend @@edit-tile to the tile type
+        url = self.browser.url.replace('@@', '@@edit-tile/')
+        self.browser.open(url)
+        name = 'plone.app.tiles.demo.persistent.message'
+        new_message = 'New message'
+        self.browser.getControl(name=name).value = new_message
         self.browser.getControl(label='Save').click()
 
-        self.assertEqual(
-            self.portal_url +
-            '/@@edit-tile/plone.app.tiles.demo.persistent/' +
-            'tile-1?tiledata=%7B%22action%22%3A%20%22save' +
-            '%22%2C%20%22url%22%3A%20%22./%40%40plone.app.' +
-            'tiles.demo.persistent/tile-1%22%2C%20%22' +
-            'tile_type%22%3A%20%22plone.app.tiles.demo.' +
-            'persistent%22%2C%20%22mode%22%3A%20%22edit' +
-            '%22%2C%20%22id%22%3A%20%22tile-1%22%7D',
-            self.browser.url)
+        # View the tile
+        msg = '<b>Persistent tile {0} #{1}</b>'.format(new_message, counter)
+        self.assertTrue(msg in self.browser.contents)
 
         # Verify annotations
-        self.assertEqual('New message',
-                          folderAnnotations[annotationsKey]['message'])
-        self.assertEqual(1, folderAnnotations[annotationsKey]['counter'])
-
-        # View the tile
-        self.browser.open(
-            self.portal_url +
-            '/@@plone.app.tiles.demo.persistent/tile-1')
-        self.assertEqual(
-            "<html><body><b>Persistent tile New message #1</b></body></html>",
-            self.browser.contents)
+        self.assertEqual(new_message,
+                         folder_annotations[annotations_key]['message'])
+        self.assertEqual(counter,
+                         folder_annotations[annotations_key]['counter'])
 
         # Remove the tile
-        self.browser.open(self.portal_url + '/@@delete-tile')
-        self.browser.getControl(name='id').value = 'tile-1'
-        self.browser.getControl(name='tiletype').value = \
-            ['plone.app.tiles.demo.persistent']
-        self.browser.getControl(name='confirm').click()
-
-        self.assertEqual('tile-1',
-                         self.browser.getControl(name='deleted.id').value)
-        self.assertEqual('plone.app.tiles.demo.persistent',
-                         self.browser.getControl(name='deleted.type').value)
+        self.browser.open('{0}/@@delete-tile'.format(self.portal_url))
+        self.browser.getLink('Delete').click()
 
         # Verify annotations
-        self.assertEqual(None, folderAnnotations.get(annotationsKey))
-
-        # Return to the content object
-        self.browser.getControl(label='OK').click()
-        self.assertEqual(self.portal_url + '/view',
-                         self.browser.url)
+        self.assertEqual(None, folder_annotations.get(annotations_key))
 
     # XXX: This test is failing. The cookies part of the headers read
     # by the browser is broken. The cookies are not extracted correctly
