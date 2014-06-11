@@ -23,6 +23,7 @@ class FunctionalTest(unittest.TestCase):
     def setUp(self):
         app = self.layer['app']
         self.portal = self.layer['portal']
+        self.portal_url = self.portal.absolute_url()
 
         self.browser = Browser(app)
         self.browser.handleErrors = False
@@ -43,7 +44,7 @@ class FunctionalTest(unittest.TestCase):
             (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,))
 
         # Add a new transient tile using the @@add-tile view
-        self.browser.open(self.portal.absolute_url() + '/@@add-tile')
+        self.browser.open('{0}/@@add-tile'.format(self.portal_url))
         self.browser.getControl(name='tiletype').value = \
             ['plone.app.tiles.demo.transient']
         # self.browser.getControl(name='id').value = "tile1"
@@ -56,7 +57,7 @@ class FunctionalTest(unittest.TestCase):
             .value = 'Test message'
         self.browser.getControl(label='Save').click()
 
-        self.assertEquals(self.portal.absolute_url() +
+        self.assertEquals(self.portal_url +
                           '/@@edit-tile/plone.app.tiles.demo.transient/tile' +
                           '-1?_tiledata=%7B%22message%22:%20%22Test%20messa' +
                           'ge%22%7D&tiledata=%7B%22action%22%3A%20%22save%22' +
@@ -69,7 +70,7 @@ class FunctionalTest(unittest.TestCase):
 
         # View the tile
         self.browser.open(
-            self.portal.absolute_url() +
+            self.portal_url +
             '/@@plone.app.tiles.demo.transient/tile-11' +
             '?message=Test+message')
         self.failUnless("<b>Transient tile Test message</b>" in
@@ -77,7 +78,7 @@ class FunctionalTest(unittest.TestCase):
 
         # Edit the tile
         self.browser.open(
-            self.portal.absolute_url() +
+            self.portal_url +
             '/@@edit-tile/plone.app.tiles.demo.transient/' +
             'tile-1?message=Test+message')
         self.browser.getControl(
@@ -85,7 +86,7 @@ class FunctionalTest(unittest.TestCase):
             'New message'
         self.browser.getControl(label='Save').click()
 
-        self.assertEquals(self.portal.absolute_url() +
+        self.assertEquals(self.portal_url +
                           '/@@edit-tile/plone.app.tiles.demo.transient/' +
                           'tile-1?_tiledata=%7B%22message%22:%20%22New%20' +
                           'message%22%7D&tiledata=%7B%22action%22%3A%20%22' +
@@ -99,14 +100,14 @@ class FunctionalTest(unittest.TestCase):
 
         # View the tile
         self.browser.open(
-            self.portal.absolute_url() +
+            self.portal_url +
             '/@@plone.app.tiles.demo.transient/tile-1?message=New+message')
         self.assertEquals(
             "<html><body><b>Transient tile New message</b></body></html>",
             self.browser.contents)
 
         # Remove the tile
-        self.browser.open(self.portal.absolute_url() + '/@@delete-tile')
+        self.browser.open(self.portal_url + '/@@delete-tile')
         self.browser.getControl(name='id').value = 'tile-1'
         self.browser.getControl(name='type').value = [
             'plone.app.tiles.demo.transient']
@@ -119,7 +120,7 @@ class FunctionalTest(unittest.TestCase):
 
         # Return to the content object
         self.browser.getControl(label='OK').click()
-        self.assertEquals(self.portal.absolute_url() + '/view',
+        self.assertEquals(self.portal_url + '/view',
                           self.browser.url)
 
     def test_persistent_lifecycle(self):
@@ -134,7 +135,7 @@ class FunctionalTest(unittest.TestCase):
             'Basic %s:%s' % (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,))
 
         # Add a new persistent tile using the @@add-tile view
-        self.browser.open(self.portal.absolute_url() + '/@@add-tile')
+        self.browser.open(self.portal_url + '/@@add-tile')
         self.browser.getControl(name='tiletype').value = [
             'plone.app.tiles.demo.persistent']
         # self.browser.getControl(name='id').value = "tile-1"
@@ -149,7 +150,7 @@ class FunctionalTest(unittest.TestCase):
         self.browser.getControl(label='Save').click()
 
         self.assertEquals(
-            self.portal.absolute_url() +
+            self.portal_url +
             '/@@edit-tile/plone.app.tiles.demo.persistent/' +
             'tile-1?tiledata=%7B%22action%22%3A%20%22save' +
             '%22%2C%20%22url%22%3A%20%22./%40%40plone.app.' +
@@ -166,7 +167,7 @@ class FunctionalTest(unittest.TestCase):
 
         # View the tile
         self.browser.open(
-            self.portal.absolute_url() +
+            self.portal_url +
             '/@@plone.app.tiles.demo.persistent/tile-1')
         self.assertEquals(
             "<html><body><b>Persistent tile Test message #1</b></body></html>",
@@ -174,7 +175,7 @@ class FunctionalTest(unittest.TestCase):
 
         # Edit the tile
         self.browser.open(
-            self.portal.absolute_url() +
+            self.portal_url +
             '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')
         self.browser.getControl(
             name='plone.app.tiles.demo.transient.message')\
@@ -182,7 +183,7 @@ class FunctionalTest(unittest.TestCase):
         self.browser.getControl(label='Save').click()
 
         self.assertEquals(
-            self.portal.absolute_url() +
+            self.portal_url +
             '/@@edit-tile/plone.app.tiles.demo.persistent/' +
             'tile-1?tiledata=%7B%22action%22%3A%20%22save' +
             '%22%2C%20%22url%22%3A%20%22./%40%40plone.app.' +
@@ -199,14 +200,14 @@ class FunctionalTest(unittest.TestCase):
 
         # View the tile
         self.browser.open(
-            self.portal.absolute_url() +
+            self.portal_url +
             '/@@plone.app.tiles.demo.persistent/tile-1')
         self.assertEquals(
             "<html><body><b>Persistent tile New message #1</b></body></html>",
             self.browser.contents)
 
         # Remove the tile
-        self.browser.open(self.portal.absolute_url() + '/@@delete-tile')
+        self.browser.open(self.portal_url + '/@@delete-tile')
         self.browser.getControl(name='id').value = 'tile-1'
         self.browser.getControl(name='tiletype').value = \
             ['plone.app.tiles.demo.persistent']
@@ -222,7 +223,7 @@ class FunctionalTest(unittest.TestCase):
 
         # Return to the content object
         self.browser.getControl(label='OK').click()
-        self.assertEquals(self.portal.absolute_url() + '/view',
+        self.assertEquals(self.portal_url + '/view',
                           self.browser.url)
 
     # XXX: This test is failing. The cookies part of the headers read
@@ -255,7 +256,7 @@ class FunctionalTest(unittest.TestCase):
         # Open the add form for a Document
 
         self.browser.open(
-            self.portal.absolute_url() +
+            self.portal_url +
             '/createObject?type_name=Document')
 
         editFormURL = self.browser.url
