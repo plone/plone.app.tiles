@@ -88,9 +88,10 @@ class AddTile(TileTraverser):
         tiles = []
 
         for tile_name in getUtility(IRegistry)['plone.app.tiles']:
-            tiletype = getUtility(ITileType, tile_name)
+            tiletype = queryUtility(ITileType, tile_name.strip())
             # check if we have permission to add this tile
-            if checkPermission(tiletype.add_permission, self.context):
+            if tiletype and checkPermission(
+                    tiletype.add_permission, self.context):
                 # tile actions
                 # TODO: read from registry
                 tiletype.actions = [{
