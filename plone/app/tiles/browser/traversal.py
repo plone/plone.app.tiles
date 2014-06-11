@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from zope.interface import Interface, implements
 from zope.component import queryMultiAdapter, queryUtility
 from zope.component import getUtility

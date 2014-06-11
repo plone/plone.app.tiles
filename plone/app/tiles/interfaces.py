@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from zope.publisher.interfaces.browser import IBrowserView
 from zope.i18nmessageid import MessageFactory
 from plone.supermodel import model

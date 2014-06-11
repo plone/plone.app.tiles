@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from z3c.form import form, button
 from plone.z3cform import layout
 from plone.z3cform.interfaces import IDeferSecurityCheck
