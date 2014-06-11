@@ -1,21 +1,19 @@
 # -*- coding: utf-8 -*-
-import urllib
+from plone.app.drafts.interfaces import DRAFT_NAME_KEY
+from plone.app.drafts.interfaces import IDraftStorage
+from plone.app.drafts.interfaces import PATH_KEY
+from plone.app.drafts.interfaces import TARGET_KEY
+from plone.app.testing import SITE_OWNER_NAME
+from plone.app.testing import SITE_OWNER_PASSWORD
+from plone.app.tiles.demo import TransientTile
+from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
+from plone.testing.z2 import Browser
+from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
+from zope.annotation.interfaces import IAnnotations
+from zope.component import getUtility
 
 import unittest2 as unittest
-
-from plone.testing.z2 import Browser
-from plone.app.testing import SITE_OWNER_NAME, SITE_OWNER_PASSWORD
-
-from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
-
-from zope.component import getUtility
-from zope.annotation.interfaces import IAnnotations
-
-from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
-
-from plone.app.drafts.interfaces import IDraftStorage
-from plone.app.drafts.interfaces import PATH_KEY, DRAFT_NAME_KEY, TARGET_KEY
-from plone.app.tiles.demo import TransientTile
+import urllib
 
 
 class FunctionalTest(unittest.TestCase):

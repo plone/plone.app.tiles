@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
-import urllib
-
-try:
-    import json
-except:
-    import simplejson as json
-
+from plone.tiles.interfaces import IPersistentTile
+from plone.tiles.interfaces import ITileDataManager
+from plone.tiles.interfaces import ITileType
 from zope.component import getMultiAdapter
 from zope.component import queryUtility
 from zope.traversing.browser.interfaces import IAbsoluteURL
 
-from plone.tiles.interfaces import ITileType, ITileDataManager, IPersistentTile
+import urllib
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 
 _safe = '@+'
 

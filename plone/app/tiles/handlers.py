@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from zope.component import adapter
-from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from plone.tiles.interfaces import ITile
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
+from zope.component import adapter
 
 
 @adapter(ITile, IObjectModifiedEvent)

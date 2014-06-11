@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from zope.publisher.interfaces.browser import IBrowserView
-from zope.i18nmessageid import MessageFactory
-from plone.supermodel import model
 from plone.app.z3cform.interfaces import IPloneFormLayer
+from plone.supermodel import model
+from zope.i18nmessageid import MessageFactory
+from zope.publisher.interfaces.browser import IBrowserView
+
 
 _ = MessageFactory('plone')
 

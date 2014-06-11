@@ -1,21 +1,18 @@
-# Image scale support for tile images
 # -*- coding: utf-8 -*-
-
-from logging import exception
+"""Image scale support for tile images."""
 from Acquisition import aq_base
 from ZODB.POSException import ConflictError
-
-from zope.annotation import IAnnotations
+from logging import exception
 from persistent.dict import PersistentDict
-from zope.publisher.interfaces import NotFound
-
-from plone.scale.scale import scaleImage
-from plone.scale.storage import AnnotationStorage as BaseAnnotationStorage
 from plone.namedfile.scaling import ImageScale as BaseImageScale
 from plone.namedfile.scaling import ImageScaling as BaseImageScaling
 from plone.namedfile.utils import set_headers, stream_data
 from plone.namedfile.interfaces import INamedImage
 from plone.rfc822.interfaces import IPrimaryFieldInfo
+from plone.scale.scale import scaleImage
+from plone.scale.storage import AnnotationStorage as BaseAnnotationStorage
+from zope.annotation import IAnnotations
+from zope.publisher.interfaces import NotFound
 
 
 class AnnotationStorage(BaseAnnotationStorage):

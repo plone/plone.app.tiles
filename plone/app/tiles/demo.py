@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from zope.interface import Interface
-from zope import schema
-
 from plone import tiles
+from zope import schema
+from zope.interface import Interface
 
 
 class ITransientTileData(Interface):

@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
-from zope.component import getMultiAdapter
-from zope.security import checkPermission
-
 from AccessControl import Unauthorized
-
-from z3c.form.interfaces import IWidgets
 from plone.autoform.form import AutoExtensibleForm
 from plone.z3cform.interfaces import IDeferSecurityCheck
+from z3c.form.interfaces import IWidgets
+from zope.component import getMultiAdapter
+from zope.security import checkPermission
 
 try:
     from plone.app.drafts.interfaces import ICurrentDraftManagement
     PLONE_APP_DRAFTS = True
-except:
+except ImportError:
     PLONE_APP_DRAFTS = False
 
 

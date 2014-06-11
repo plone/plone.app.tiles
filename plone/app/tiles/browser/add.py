@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
-from zope.component import getUtility
-
-from zope.lifecycleevent import ObjectCreatedEvent, ObjectAddedEvent
-from zope.event import notify
-
-from zope.traversing.browser.absoluteurl import absoluteURL
-
-from Products.statusmessages.interfaces import IStatusMessage
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-
-from z3c.form import form, button
-from plone.z3cform import layout
-from plone.uuid.interfaces import IUUIDGenerator
-from plone.tiles.interfaces import ITileDataManager
-
-from plone.app.tiles.browser.base import TileForm
+from Products.statusmessages.interfaces import IStatusMessage
 from plone.app.tiles import MessageFactory as _
+from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.utils import appendJSONData
+from plone.tiles.interfaces import ITileDataManager
+from plone.uuid.interfaces import IUUIDGenerator
+from plone.z3cform import layout
+from z3c.form import form, button
+from zope.component import getUtility
+from zope.event import notify
+from zope.lifecycleevent import ObjectCreatedEvent, ObjectAddedEvent
+from zope.traversing.browser.absoluteurl import absoluteURL
 
 
 class DefaultAddForm(TileForm, form.Form):

@@ -1,21 +1,16 @@
 # -*- coding: utf-8 -*-
-from z3c.form import form, button
-from plone.z3cform import layout
-from plone.z3cform.interfaces import IDeferSecurityCheck
-
-from zope.lifecycleevent import ObjectModifiedEvent
-from zope.event import notify
-
-from zope.traversing.browser.absoluteurl import absoluteURL
-
-from Products.statusmessages.interfaces import IStatusMessage
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-
-from plone.tiles.interfaces import ITileDataManager
-
+from Products.statusmessages.interfaces import IStatusMessage
+from plone.app.tiles import MessageFactory as _
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.utils import appendJSONData
-from plone.app.tiles import MessageFactory as _
+from plone.tiles.interfaces import ITileDataManager
+from plone.z3cform import layout
+from plone.z3cform.interfaces import IDeferSecurityCheck
+from z3c.form import form, button
+from zope.event import notify
+from zope.lifecycleevent import ObjectModifiedEvent
+from zope.traversing.browser.absoluteurl import absoluteURL
 
 
 class DefaultEditForm(TileForm, form.Form):

@@ -1,24 +1,18 @@
 # -*- coding: utf-8 -*-
-from zope.interface import implements
-from zope.interface import implementer
-from zope.interface import Interface
-
-from zope.component import adapts
-from zope.component import adapter
-
-from zope.annotation.interfaces import IAnnotations
-
-from plone.tiles.interfaces import ITileDataContext
-from plone.tiles.interfaces import ITile
-
-from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
-
-from plone.app.drafts.interfaces import IDrafting
-from plone.app.drafts.interfaces import IDraftSyncer
 from plone.app.drafts.interfaces import IDraft
-
+from plone.app.drafts.interfaces import IDraftSyncer
+from plone.app.drafts.interfaces import IDrafting
 from plone.app.drafts.proxy import DraftProxy
 from plone.app.drafts.utils import getCurrentDraft
+from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
+from plone.tiles.interfaces import ITile
+from plone.tiles.interfaces import ITileDataContext
+from zope.annotation.interfaces import IAnnotations
+from zope.component import adapts
+from zope.component import adapter
+from zope.interface import Interface
+from zope.interface import implementer
+from zope.interface import implements
 
 
 @implementer(ITileDataContext)
