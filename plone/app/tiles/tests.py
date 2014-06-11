@@ -12,6 +12,7 @@ from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 
+import re
 import unittest2 as unittest
 import urllib
 
@@ -40,88 +41,50 @@ class FunctionalTest(unittest.TestCase):
     def test_transient_lifecycle(self):
         self.browser.addHeader(
             'Authorization',
-            'Basic %s:%s' %
-            (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,))
+            'Basic {0}:{1}'.format(SITE_OWNER_NAME, SITE_OWNER_PASSWORD, )
+        )
 
         # Add a new transient tile using the @@add-tile view
         self.browser.open('{0}/@@add-tile'.format(self.portal_url))
         self.browser.getControl(name='tiletype').value = \
             ['plone.app.tiles.demo.transient']
-        # self.browser.getControl(name='id').value = "tile1"
         self.browser.getControl(name='form.button.Create').click()
 
-        # Fill in the data and save. Note that the URL for the edit
-        # form uses a `_tiledata` JSON argument to avoid collisions
-        # between raw form data and tile data.
-        self.browser.getControl(name='plone.app.tiles.demo.transient.message')\
-            .value = 'Test message'
+        # Now we are at the transient tile add form
+        url = '{0}/@@add-tile/plone.app.tiles.demo.transient'
+        self.assertEqual(
+            self.browser.url,
+            url.format(self.portal_url),
+        )
+
+        # Fill the form
+        name = 'plone.app.tiles.demo.transient.message'
+        self.browser.getControl(name=name).value = 'Test message'
         self.browser.getControl(label='Save').click()
 
-        self.assertEqual(self.portal_url +
-                         '/@@edit-tile/plone.app.tiles.demo.transient/tile' +
-                         '-1?_tiledata=%7B%22message%22:%20%22Test%20messa' +
-                         'ge%22%7D&tiledata=%7B%22action%22%3A%20%22save%22' +
-                         '%2C%20%22url%22%3A%20%22./%40%40plone.app.tiles.' +
-                         'demo.transient/tile-1%3Fmessage%3DTest%2Bmessage' +
-                         '%22%2C%20%22tile_type%22%3A%20%22plone.app.tiles.' +
-                         'demo.transient%22%2C%20%22mode%22%3A%20%22add%22' +
-                         '%2C%20%22id%22%3A%20%22tile-1%22%7D',
-                         self.browser.url)
-
-        # View the tile
-        self.browser.open(
-            self.portal_url +
-            '/@@plone.app.tiles.demo.transient/tile-11' +
-            '?message=Test+message')
-        self.assertTrue("<b>Transient tile Test message</b>" in
+        # See the tile
+        self.assertTrue('<b>Transient tile Test message</b>' in
                         self.browser.contents)
 
         # Edit the tile
-        self.browser.open(
-            self.portal_url +
-            '/@@edit-tile/plone.app.tiles.demo.transient/' +
-            'tile-1?message=Test+message')
-        self.browser.getControl(
-            name='plone.app.tiles.demo.transient.message').value = \
-            'New message'
+        # prepend @@edit-tile to the tile type
+        url = self.browser.url.replace('@@', '@@edit-tile/')
+        self.browser.open(url)
+        name = 'plone.app.tiles.demo.transient.message'
+        self.browser.getControl(name=name).value = 'New message'
         self.browser.getControl(label='Save').click()
+        self.assertTrue('<b>Transient tile New message</b>' in
+                        self.browser.contents)
 
-        self.assertEqual(self.portal_url +
-                         '/@@edit-tile/plone.app.tiles.demo.transient/' +
-                         'tile-1?_tiledata=%7B%22message%22:%20%22New%20' +
-                         'message%22%7D&tiledata=%7B%22action%22%3A%20%22' +
-                         'save%22%2C%20%22url%22%3A%20%22./%40%40plone.' +
-                         'app.tiles.demo.transient/tile-1%3Fmessage%3DNew' +
-                         '%2Bmessage%22%2C%20%22tile_type%22%3A%20%22' +
-                         'plone.app.tiles.demo.transient%22%2C%20%22mode' +
-                         '%22%3A%20%22edit%22%2C%20%22id%22%3A%20%22tile' +
-                         '-1%22%7D',
-                         self.browser.url)
+        # get the tile id
+        tile_id_regex = re.search('(?P<id>[\w-]+)\?', self.browser.url)
+        self.assertTrue(tile_id_regex)  # will fail if is None
+        tile_id = tile_id_regex.group('id')
 
-        # View the tile
-        self.browser.open(
-            self.portal_url +
-            '/@@plone.app.tiles.demo.transient/tile-1?message=New+message')
-        self.assertEqual(
-            "<html><body><b>Transient tile New message</b></body></html>",
-            self.browser.contents)
-
-        # Remove the tile
-        self.browser.open(self.portal_url + '/@@delete-tile')
-        self.browser.getControl(name='id').value = 'tile-1'
-        self.browser.getControl(name='type').value = [
-            'plone.app.tiles.demo.transient']
-        self.browser.getControl(name='confirm').click()
-
-        self.assertEqual('tile-1',
-                          self.browser.getControl(name='deleted.id').value)
-        self.assertEqual('plone.app.tiles.demo.transient',
-                          self.browser.getControl(name='deleted.type').value)
-
-        # Return to the content object
-        self.browser.getControl(label='OK').click()
-        self.assertEqual(self.portal_url + '/view',
-                         self.browser.url)
+        # a persistent tile can not be removed,
+        # so trying to access the @@delete-tile view will list nothing
+        self.browser.open('{0}/@@delete-tile'.format(self.portal_url))
+        self.assertFalse(tile_id in self.browser.contents)
 
     def test_persistent_lifecycle(self):
         folderAnnotations = IAnnotations(self.portal)
