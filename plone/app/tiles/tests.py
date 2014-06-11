@@ -33,9 +33,9 @@ class FunctionalTest(unittest.TestCase):
 
         traversed = self.portal.restrictedTraverse(
             '@@plone.app.tiles.demo.transient/tile-1')
-        self.failUnless(isinstance(traversed, TransientTile))
-        self.assertEquals('plone.app.tiles.demo.transient', traversed.__name__)
-        self.assertEquals('tile-1', traversed.id)
+        self.assertTrue(isinstance(traversed, TransientTile))
+        self.assertEqual('plone.app.tiles.demo.transient', traversed.__name__)
+        self.assertEqual('tile-1', traversed.id)
 
     def test_transient_lifecycle(self):
         self.browser.addHeader(
@@ -57,23 +57,23 @@ class FunctionalTest(unittest.TestCase):
             .value = 'Test message'
         self.browser.getControl(label='Save').click()
 
-        self.assertEquals(self.portal_url +
-                          '/@@edit-tile/plone.app.tiles.demo.transient/tile' +
-                          '-1?_tiledata=%7B%22message%22:%20%22Test%20messa' +
-                          'ge%22%7D&tiledata=%7B%22action%22%3A%20%22save%22' +
-                          '%2C%20%22url%22%3A%20%22./%40%40plone.app.tiles.' +
-                          'demo.transient/tile-1%3Fmessage%3DTest%2Bmessage' +
-                          '%22%2C%20%22tile_type%22%3A%20%22plone.app.tiles.' +
-                          'demo.transient%22%2C%20%22mode%22%3A%20%22add%22' +
-                          '%2C%20%22id%22%3A%20%22tile-1%22%7D',
-                          self.browser.url)
+        self.assertEqual(self.portal_url +
+                         '/@@edit-tile/plone.app.tiles.demo.transient/tile' +
+                         '-1?_tiledata=%7B%22message%22:%20%22Test%20messa' +
+                         'ge%22%7D&tiledata=%7B%22action%22%3A%20%22save%22' +
+                         '%2C%20%22url%22%3A%20%22./%40%40plone.app.tiles.' +
+                         'demo.transient/tile-1%3Fmessage%3DTest%2Bmessage' +
+                         '%22%2C%20%22tile_type%22%3A%20%22plone.app.tiles.' +
+                         'demo.transient%22%2C%20%22mode%22%3A%20%22add%22' +
+                         '%2C%20%22id%22%3A%20%22tile-1%22%7D',
+                         self.browser.url)
 
         # View the tile
         self.browser.open(
             self.portal_url +
             '/@@plone.app.tiles.demo.transient/tile-11' +
             '?message=Test+message')
-        self.failUnless("<b>Transient tile Test message</b>" in
+        self.assertTrue("<b>Transient tile Test message</b>" in
                         self.browser.contents)
 
         # Edit the tile
@@ -86,23 +86,23 @@ class FunctionalTest(unittest.TestCase):
             'New message'
         self.browser.getControl(label='Save').click()
 
-        self.assertEquals(self.portal_url +
-                          '/@@edit-tile/plone.app.tiles.demo.transient/' +
-                          'tile-1?_tiledata=%7B%22message%22:%20%22New%20' +
-                          'message%22%7D&tiledata=%7B%22action%22%3A%20%22' +
-                          'save%22%2C%20%22url%22%3A%20%22./%40%40plone.' +
-                          'app.tiles.demo.transient/tile-1%3Fmessage%3DNew' +
-                          '%2Bmessage%22%2C%20%22tile_type%22%3A%20%22' +
-                          'plone.app.tiles.demo.transient%22%2C%20%22mode' +
-                          '%22%3A%20%22edit%22%2C%20%22id%22%3A%20%22tile' +
-                          '-1%22%7D',
-                          self.browser.url)
+        self.assertEqual(self.portal_url +
+                         '/@@edit-tile/plone.app.tiles.demo.transient/' +
+                         'tile-1?_tiledata=%7B%22message%22:%20%22New%20' +
+                         'message%22%7D&tiledata=%7B%22action%22%3A%20%22' +
+                         'save%22%2C%20%22url%22%3A%20%22./%40%40plone.' +
+                         'app.tiles.demo.transient/tile-1%3Fmessage%3DNew' +
+                         '%2Bmessage%22%2C%20%22tile_type%22%3A%20%22' +
+                         'plone.app.tiles.demo.transient%22%2C%20%22mode' +
+                         '%22%3A%20%22edit%22%2C%20%22id%22%3A%20%22tile' +
+                         '-1%22%7D',
+                         self.browser.url)
 
         # View the tile
         self.browser.open(
             self.portal_url +
             '/@@plone.app.tiles.demo.transient/tile-1?message=New+message')
-        self.assertEquals(
+        self.assertEqual(
             "<html><body><b>Transient tile New message</b></body></html>",
             self.browser.contents)
 
@@ -113,21 +113,21 @@ class FunctionalTest(unittest.TestCase):
             'plone.app.tiles.demo.transient']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEquals('tile-1',
+        self.assertEqual('tile-1',
                           self.browser.getControl(name='deleted.id').value)
-        self.assertEquals('plone.app.tiles.demo.transient',
+        self.assertEqual('plone.app.tiles.demo.transient',
                           self.browser.getControl(name='deleted.type').value)
 
         # Return to the content object
         self.browser.getControl(label='OK').click()
-        self.assertEquals(self.portal_url + '/view',
-                          self.browser.url)
+        self.assertEqual(self.portal_url + '/view',
+                         self.browser.url)
 
     def test_persistent_lifecycle(self):
         folderAnnotations = IAnnotations(self.portal)
         annotationsKey = "%s.tile-1" % ANNOTATIONS_KEY_PREFIX
 
-        self.assertEquals(None, folderAnnotations.get(annotationsKey))
+        self.assertEqual(None, folderAnnotations.get(annotationsKey))
 
         # Log in
         self.browser.addHeader(
@@ -149,7 +149,7 @@ class FunctionalTest(unittest.TestCase):
             name='plone.app.tiles.demo.persistent.counter').value = '1'
         self.browser.getControl(label='Save').click()
 
-        self.assertEquals(
+        self.assertEqual(
             self.portal_url +
             '/@@edit-tile/plone.app.tiles.demo.persistent/' +
             'tile-1?tiledata=%7B%22action%22%3A%20%22save' +
@@ -161,15 +161,15 @@ class FunctionalTest(unittest.TestCase):
             self.browser.url)
 
         # Verify annotations
-        self.assertEquals('Test message',
-                          folderAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, folderAnnotations[annotationsKey]['counter'])
+        self.assertEqual('Test message',
+                         folderAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, folderAnnotations[annotationsKey]['counter'])
 
         # View the tile
         self.browser.open(
             self.portal_url +
             '/@@plone.app.tiles.demo.persistent/tile-1')
-        self.assertEquals(
+        self.assertEqual(
             "<html><body><b>Persistent tile Test message #1</b></body></html>",
             self.browser.contents)
 
@@ -182,7 +182,7 @@ class FunctionalTest(unittest.TestCase):
             .value = 'New message'
         self.browser.getControl(label='Save').click()
 
-        self.assertEquals(
+        self.assertEqual(
             self.portal_url +
             '/@@edit-tile/plone.app.tiles.demo.persistent/' +
             'tile-1?tiledata=%7B%22action%22%3A%20%22save' +
@@ -194,15 +194,15 @@ class FunctionalTest(unittest.TestCase):
             self.browser.url)
 
         # Verify annotations
-        self.assertEquals('New message',
+        self.assertEqual('New message',
                           folderAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, folderAnnotations[annotationsKey]['counter'])
+        self.assertEqual(1, folderAnnotations[annotationsKey]['counter'])
 
         # View the tile
         self.browser.open(
             self.portal_url +
             '/@@plone.app.tiles.demo.persistent/tile-1')
-        self.assertEquals(
+        self.assertEqual(
             "<html><body><b>Persistent tile New message #1</b></body></html>",
             self.browser.contents)
 
@@ -213,18 +213,18 @@ class FunctionalTest(unittest.TestCase):
             ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEquals('tile-1',
-                          self.browser.getControl(name='deleted.id').value)
-        self.assertEquals('plone.app.tiles.demo.persistent',
-                          self.browser.getControl(name='deleted.type').value)
+        self.assertEqual('tile-1',
+                         self.browser.getControl(name='deleted.id').value)
+        self.assertEqual('plone.app.tiles.demo.persistent',
+                         self.browser.getControl(name='deleted.type').value)
 
         # Verify annotations
-        self.assertEquals(None, folderAnnotations.get(annotationsKey))
+        self.assertEqual(None, folderAnnotations.get(annotationsKey))
 
         # Return to the content object
         self.browser.getControl(label='OK').click()
-        self.assertEquals(self.portal_url + '/view',
-                          self.browser.url)
+        self.assertEqual(self.portal_url + '/view',
+                         self.browser.url)
 
     # XXX: This test is failing. The cookies part of the headers read
     # by the browser is broken. The cookies are not extracted correctly
@@ -272,7 +272,7 @@ class FunctionalTest(unittest.TestCase):
             cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
-        self.assertEquals(baseURL, 'http://nohost' + cookiePath)
+        self.assertEqual(baseURL, 'http://nohost' + cookiePath)
 
         # Open the URL for the tile add view in this context. This simulates
         # an AJAX request for the same e.g. in a pop-up dialogue box
@@ -303,9 +303,9 @@ class FunctionalTest(unittest.TestCase):
         self.failIf(annotationsKey in folderAnnotations)
         self.failUnless(annotationsKey in draftAnnotations)
 
-        self.assertEquals('Test message',
-                          draftAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, draftAnnotations[annotationsKey]['counter'])
+        self.assertEqual('Test message',
+                         draftAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, draftAnnotations[annotationsKey]['counter'])
 
         # Edit the tile, still on the add form
         self.browser.open(baseURL + '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa
@@ -313,9 +313,9 @@ class FunctionalTest(unittest.TestCase):
         self.browser.getControl(label='Save').click()
 
         # Verify annotations
-        self.assertEquals('New message',
-                          draftAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, draftAnnotations[annotationsKey]['counter'])
+        self.assertEqual('New message',
+                         draftAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, draftAnnotations[annotationsKey]['counter'])
 
         # Remove the tile
         self.browser.open(baseURL + '/@@delete-tile')
@@ -324,13 +324,13 @@ class FunctionalTest(unittest.TestCase):
             ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEquals('tile-1',
-                          self.browser.getControl(name='deleted.id').value)
-        self.assertEquals('plone.app.tiles.demo.persistent',
-                          self.browser.getControl(name='deleted.type').value)
+        self.assertEqual('tile-1',
+                         self.browser.getControl(name='deleted.id').value)
+        self.assertEqual('plone.app.tiles.demo.persistent',
+                         self.browser.getControl(name='deleted.type').value)
 
         # Verify annotations
-        self.assertEquals(None, draftAnnotations.get(annotationsKey))
+        self.assertEqual(None, draftAnnotations.get(annotationsKey))
 
         # Add a new tile
         self.browser.open(baseURL + '/@@add-tile')
@@ -357,8 +357,8 @@ class FunctionalTest(unittest.TestCase):
 
         # The draft should have disappeared
 
-        self.assertEquals(None, drafts.getDraft(SITE_OWNER_NAME, targetKey,
-                                                draftName))
+        self.assertEqual(None, drafts.getDraft(SITE_OWNER_NAME, targetKey,
+                                               draftName))
 
         #
         # Step 2 - Edit the content object and a tile, but cancel
@@ -383,10 +383,10 @@ class FunctionalTest(unittest.TestCase):
             cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
-        self.assertEquals(baseURL, 'http://nohost' + cookiePath)
+        self.assertEqual(baseURL, 'http://nohost' + cookiePath)
 
-        self.assertEquals(0,
-                          len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
+        self.assertEqual(0,
+                         len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
         # Edit the tile
         self.browser.open(baseURL + '/@@edit-tile/plone.app.tiles.demo.persistent/tile-2')  # noqa
@@ -402,13 +402,13 @@ class FunctionalTest(unittest.TestCase):
 
         # The data should have been updated on the draft, but not the context
 
-        self.assertEquals('Third message',
-                          draftAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, draftAnnotations[annotationsKey]['counter'])
+        self.assertEqual('Third message',
+                         draftAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, draftAnnotations[annotationsKey]['counter'])
 
-        self.assertEquals('Test message',
-                          contextAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
+        self.assertEqual('Test message',
+                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # Cancel editing
 
@@ -422,9 +422,9 @@ class FunctionalTest(unittest.TestCase):
         context = self.portal['new-title']
         contextAnnotations = IAnnotations(context)
 
-        self.assertEquals('Test message',
-                          contextAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
+        self.assertEqual('Test message',
+                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # The draft should be discarded, too
 
@@ -433,8 +433,8 @@ class FunctionalTest(unittest.TestCase):
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
 
-        self.assertEquals(0,
-                          len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
+        self.assertEqual(0,
+                         len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
         #
         # Step 3 - Edit the content object and save
@@ -464,13 +464,13 @@ class FunctionalTest(unittest.TestCase):
         draftAnnotations = IAnnotations(draft)
 
         # The data should have been updated on the draft, but not the context
-        self.assertEquals('Third message',
-                          draftAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, draftAnnotations[annotationsKey]['counter'])
+        self.assertEqual('Third message',
+                         draftAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, draftAnnotations[annotationsKey]['counter'])
 
-        self.assertEquals('Test message',
-                          contextAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
+        self.assertEqual('Test message',
+                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # Save the edit form
         self.browser.open(editFormURL)
@@ -480,9 +480,9 @@ class FunctionalTest(unittest.TestCase):
         context = self.portal['new-title']
         contextAnnotations = IAnnotations(context)
 
-        self.assertEquals('Third message',
-                          contextAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
+        self.assertEqual('Third message',
+                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # The draft should have been discarded as well
         cookies = self.browser.cookies.forURL(baseURL)
@@ -491,8 +491,8 @@ class FunctionalTest(unittest.TestCase):
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
 
-        self.assertEquals(0,
-                          len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
+        self.assertEqual(0,
+                         len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
         #
         # Step 4 - Edit the content object, remove the tile, but cancel
@@ -518,10 +518,10 @@ class FunctionalTest(unittest.TestCase):
             ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEquals('tile-2',
-                          self.browser.getControl(name='deleted.id').value)
-        self.assertEquals('plone.app.tiles.demo.persistent',
-                          self.browser.getControl(name='deleted.type').value)
+        self.assertEqual('tile-2',
+                         self.browser.getControl(name='deleted.id').value)
+        self.assertEqual('plone.app.tiles.demo.persistent',
+                         self.browser.getControl(name='deleted.type').value)
 
         # Draft should have been created
         draftName = urllib.unquote(
@@ -531,13 +531,13 @@ class FunctionalTest(unittest.TestCase):
 
         # Verify that the deletion has happened on the draft (only)
 
-        self.assertEquals(None, draftAnnotations.get(annotationsKey))
-        self.assertEquals(set([u'plone.tiles.data.tile-2']),
-                          draft._proxyAnnotationsDeleted)
+        self.assertEqual(None, draftAnnotations.get(annotationsKey))
+        self.assertEqual(set([u'plone.tiles.data.tile-2']),
+                         draft._proxyAnnotationsDeleted)
 
-        self.assertEquals('Third message',
-                          contextAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
+        self.assertEqual('Third message',
+                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # Cancel editing
         # XXX: works around testbrowser/AT cancel button integration bug
@@ -550,9 +550,9 @@ class FunctionalTest(unittest.TestCase):
         context = self.portal['new-title']
         contextAnnotations = IAnnotations(context)
 
-        self.assertEquals('Third message',
-                          contextAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
+        self.assertEqual('Third message',
+                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # The draft should have been discarded as well
         cookies = self.browser.cookies.forURL(baseURL)
@@ -561,8 +561,8 @@ class FunctionalTest(unittest.TestCase):
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
 
-        self.assertEquals(0,
-                          len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
+        self.assertEqual(0,
+                         len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
         #
         # Step 5 - Edit the content object, remove the tile, and save
@@ -588,10 +588,10 @@ class FunctionalTest(unittest.TestCase):
             ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEquals('tile-2',
-                          self.browser.getControl(name='deleted.id').value)
-        self.assertEquals('plone.app.tiles.demo.persistent',
-                          self.browser.getControl(name='deleted.type').value)
+        self.assertEqual('tile-2',
+                         self.browser.getControl(name='deleted.id').value)
+        self.assertEqual('plone.app.tiles.demo.persistent',
+                         self.browser.getControl(name='deleted.type').value)
 
         # Draft should have been created
         draftName = urllib.unquote(
@@ -601,14 +601,14 @@ class FunctionalTest(unittest.TestCase):
 
         # Verify that the deletion has happened on the draft (only)
 
-        self.assertEquals(None, draftAnnotations.get(annotationsKey))
+        self.assertEqual(None, draftAnnotations.get(annotationsKey))
 
-        self.assertEquals(set([u'plone.tiles.data.tile-2']),
-                          draft._proxyAnnotationsDeleted)
+        self.assertEqual(set([u'plone.tiles.data.tile-2']),
+                         draft._proxyAnnotationsDeleted)
 
-        self.assertEquals('Third message',
-                          contextAnnotations[annotationsKey]['message'])
-        self.assertEquals(1, contextAnnotations[annotationsKey]['counter'])
+        self.assertEqual('Third message',
+                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # Save the edit form
         self.browser.open(editFormURL)
@@ -618,7 +618,7 @@ class FunctionalTest(unittest.TestCase):
         context = self.portal['new-title']
         contextAnnotations = IAnnotations(context)
 
-        self.assertEquals(None, contextAnnotations.get(annotationsKey))
+        self.assertEqual(None, contextAnnotations.get(annotationsKey))
 
         # The draft should have been discarded as well
         cookies = self.browser.cookies.forURL(baseURL)
@@ -627,5 +627,5 @@ class FunctionalTest(unittest.TestCase):
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
 
-        self.assertEquals(0,
-                          len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
+        self.assertEqual(0,
+                         len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
