@@ -111,9 +111,8 @@ class AddTile(TileTraverser):
     def __call__(self):
         self.errors = {}
         self.request['disable_border'] = True
-
         if 'form.button.Create' in self.request:
-            newTileType = self.request.get('tiletype', None)
+            newTileType = self.request.get('type', None)
             if newTileType is None:
                 self.errors['tiletype'] = _(u"You must select the type of " +
                                             u"tile to create")
