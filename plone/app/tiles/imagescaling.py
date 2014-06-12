@@ -138,7 +138,7 @@ class ImageScaling(BaseImageScaling):
             fieldname = IPrimaryFieldInfo(self.context).fieldname
         if scale is not None:
             available = self.getAvailableSizes(fieldname)
-            if not scale in available:
+            if scale not in available:
                 return None
             width, height = available[scale]
         storage = AnnotationStorage(self.context, self.modified)

@@ -92,11 +92,6 @@ class DefaultEditForm(TileForm, form.Form):
         # correctly account for transient tiles
         tileURL = absoluteURL(tile, self.request)
 
-        #contextURL = absoluteURL(tile.context, self.request)
-        #if tileURL.startswith(contextURL):
-        #    tileURL = '.' + tileURL[len(contextURL):]
-
-        # Get the tile URL, possibly with encoded data
         IStatusMessage(self.request).addStatusMessage(
             _(u"Tile saved",), type=u'info')
 
