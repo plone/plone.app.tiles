@@ -6,6 +6,10 @@ Plone's Specific Implementation of Tiles
     :alt: Travis CI badge
     :target: http://travis-ci.org/plone/plone.app.tiles
 
+.. image:: https://coveralls.io/repos/plone/plone.app.tiles/badge.png?branch=master
+    :alt: Coveralls badge
+    :target: https://coveralls.io/r/plone/plone.app.tiles
+
 .. image:: https://pypip.in/d/plone.app.tiles/badge.png
     :target: https://pypi.python.org/pypi/plone.app.tiles/
     :alt: Downloads
