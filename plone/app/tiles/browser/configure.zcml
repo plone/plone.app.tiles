@@ -76,8 +76,15 @@
         name="delete-tile"
         for="zope.annotation.interfaces.IAnnotatable"
         class=".traversal.DeleteTile"
-        template="delete.pt"
         permission="cmf.ModifyPortalContent"
+        />
+
+    <adapter
+        for="zope.annotation.interfaces.IAnnotatable
+             zope.publisher.interfaces.browser.IDefaultBrowserLayer
+             plone.tiles.interfaces.ITileType"
+        provides="..interfaces.ITileDeleteView"
+        factory=".delete.DefaultDeleteView"
         />
 
 </configure>

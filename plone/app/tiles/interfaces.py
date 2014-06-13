@@ -31,6 +31,15 @@ class ITileEditView(IBrowserView):
     """
 
 
+class ITileDeleteView(IBrowserView):
+    """A tile delete view as found by the @@delete-tile traversal view.
+
+    The default delete view is an adapter from (context, request, tile_info) to
+    this interface. Per-tile type overrides can be created by registering
+    named adapters matching the tile name.
+    """
+
+
 class ITileBaseSchema(model.Schema):
     """ Base interfaces from which all Plone tiles should inherit.
     """

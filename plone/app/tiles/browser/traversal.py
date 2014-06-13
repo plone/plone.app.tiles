@@ -2,11 +2,10 @@
 from plone.app.tiles import MessageFactory as _
 from plone.app.tiles.interfaces import ITileAddView
 from plone.app.tiles.interfaces import ITileEditView
+from plone.app.tiles.interfaces import ITileDeleteView
 from plone.memoize.view import memoize
 from plone.registry.interfaces import IRegistry
 from plone.tiles.interfaces import ITileType
-from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
-from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 from zope.component import queryMultiAdapter
 from zope.component import queryUtility
@@ -14,6 +13,9 @@ from zope.interface import Interface
 from zope.interface import implements
 from zope.publisher.interfaces import IPublishTraverse
 from zope.security import checkPermission
+
+from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
+from zope.annotation.interfaces import IAnnotations
 
 
 class TileTraverser(object):
@@ -176,33 +178,57 @@ class EditTile(TileTraverser):
 class DeleteTile(TileTraverser):
     """Implements the @@delete-tile traversal view
 
-    Traversing to /path/to/obj/@@delete-tile will list all tiles.
-    Traversing to /path/to/obj/@@delete-tile/tile-id will delete tile.
+    Traversing to /path/to/obj/@@delete-tile/tile-name/tile-id will delete tile.
+
+    BBB compat:
+    Also traversing to /path/to/obj/@@delete-tile/tile-id will delete tile
+    IF the tile exists into annotations, otherwise you get an error.
+
     """
 
     tileId = None
+    targetInterface = ITileDeleteView
 
     def __init__(self, context, request):
-        super(DeleteTile, self).__init__(context, request)
+        self.context = context
+        self.request = request
+        self.BBB_delete = False
+        self.tileId = None
         self.annotations = IAnnotations(self.context)
 
     def __call__(self):
-        self.deleted = False
-        if self.tileId is not None:
-            del self.annotations['%s.%s' % (
-                ANNOTATIONS_KEY_PREFIX, self.tileId)]
-        return self.index()
-
-    def tiles(self):
-        for item in self.annotations.keys():
-            if item.startswith(ANNOTATIONS_KEY_PREFIX):
-                yield item[len(ANNOTATIONS_KEY_PREFIX) + 1:]
+        if self.BBB_delete and self.tileId:
+            key = '%s.%s' % (
+                ANNOTATIONS_KEY_PREFIX,
+                self.tileId
+            )
+            del self.annotations[key]
+        else:
+            raise KeyError("Please traverse to @@delete-tile/tilename/id")
 
     def publishTraverse(self, request, name):
-        """Allow traversal to @@delete-tile/tilename
+        """Allow traversal to @@<view>/tilename/tileid
         """
-
-        if self.tileId is None:
+        key = '%s.%s' % (
+            ANNOTATIONS_KEY_PREFIX,
+            name
+        )
+        if key and key in self.annotations.keys():
+            self.BBB_delete = True
             self.tileId = name
+            return self
 
-        return self
+        # 1. Look up the view, but keep this view as the traversal context in
+
+        # anticipation of an id
+        if self.view is None:
+            self.view = self.getTileViewByName(name)
+            return self
+
+        # 2. Set the id and return the view we looked up in the previous
+        # traversal step.
+        elif getattr(self.view, 'tileId', None) is None:
+            self.view.tileId = name
+            return self.view
+
+        raise KeyError(name)
