@@ -127,8 +127,7 @@ class AddTile(TileTraverser):
         return self.index()
 
     def publishTraverse(self, request, name):
-        """Allow traversal to @@<view>/tilename
-        """
+        """Allow traversal to @@<view>/tilename."""
 
         # 1. Look up the view, but keep this view as the traversal context
         if self.view is None:
