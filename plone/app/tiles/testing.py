@@ -8,6 +8,15 @@ from zope.component import getUtility
 from zope.component import provideUtility
 from zope.configuration import xmlconfig
 
+import pkg_resources
+
+try:
+    pkg_resources.get_distribution('plone.app.drafts')
+except pkg_resources.DistributionNotFound:
+    HAS_DRAFTS = False
+else:
+    HAS_DRAFTS = True
+
 
 class PloneAppTiles(PloneSandboxLayer):
 
@@ -15,11 +24,12 @@ class PloneAppTiles(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
-        import plone.app.drafts
-        xmlconfig.file(
-            'configure.zcml',
-            plone.app.drafts,
-            context=configurationContext)
+        if HAS_DRAFTS:
+            import plone.app.drafts
+            xmlconfig.file(
+                'configure.zcml',
+                plone.app.drafts,
+                context=configurationContext)
         import plone.app.tiles
         xmlconfig.file(
             'configure.zcml',
@@ -31,7 +41,8 @@ class PloneAppTiles(PloneSandboxLayer):
             context=configurationContext)
 
     def setUpPloneSite(self, portal):
-        applyProfile(portal, 'plone.app.drafts:default')
+        if HAS_DRAFTS:
+            applyProfile(portal, 'plone.app.drafts:default')
         applyProfile(portal, 'plone.app.tiles:default')
 
         from plone.registry.interfaces import IRegistry
