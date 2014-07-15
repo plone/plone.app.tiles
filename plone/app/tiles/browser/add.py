@@ -12,7 +12,7 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 from plone.app.tiles import MessageFactory as _
 from plone.app.tiles.browser.base import TileForm
 from plone.tiles.interfaces import ITileDataManager
-from plone.app.tiles.utils import getEditTileURL, appendJSONData
+from plone.app.tiles.utils import appendJSONData
 
 
 class DefaultAddForm(TileForm, form.Form):
