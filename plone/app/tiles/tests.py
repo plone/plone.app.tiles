@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 from plone.app.testing import SITE_OWNER_NAME
 from plone.app.testing import SITE_OWNER_PASSWORD
-from plone.app.tiles.demo import TransientTile
-from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
+from zExceptions import NotFound
 from plone.testing.z2 import Browser
-from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
-
 import pkg_resources
+
+from plone.app.tiles.demo import TransientTile
+from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
+from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
+
 
 try:
     pkg_resources.get_distribution('plone.app.drafts')
@@ -92,14 +94,16 @@ class FunctionalTest(unittest.TestCase):
         self.assertTrue(tile_id_regex)  # will fail if is None
         tile_id = tile_id_regex.group('id')
 
-        # a persistent tile can not be removed,
-        # so trying to access the @@delete-tile view will list nothing
-        self.browser.open('{0}/@@delete-tile'.format(self.portal_url))
-        self.assertFalse(tile_id in self.browser.contents)
+        # a transient tile can not be removed,
+        # so trying to access the @@delete-tile will raise NotFound
+        delete_url = '{0}/@@delete-tile/{1}'.format(self.portal_url,
+                                                    tile_id)
+        self.assertRaises(NotFound, self.browser.open, delete_url)
 
     def test_persistent_lifecycle(self):
         folder_annotations = IAnnotations(self.portal)
-        annotations_key = '{0}.tile-1'.format(ANNOTATIONS_KEY_PREFIX)
+        tile_id = 'tile-1'
+        annotations_key = '{0}.{1}'.format(ANNOTATIONS_KEY_PREFIX, tile_id)
 
         self.assertEqual(None, folder_annotations.get(annotations_key))
 
@@ -155,8 +159,11 @@ class FunctionalTest(unittest.TestCase):
                          folder_annotations[annotations_key]['counter'])
 
         # Remove the tile
-        self.browser.open('{0}/@@delete-tile'.format(self.portal_url))
-        self.browser.getLink('Delete').click()
+        self.browser.open('{0}/@@delete-tile/{1}'.format(self.portal_url,
+                                                         tile_id))
+
+        # Verify status code
+        self.assertEqual('200 Ok', self.browser.headers['status'])
 
         # Verify annotations
         self.assertEqual(None, folder_annotations.get(annotations_key))
