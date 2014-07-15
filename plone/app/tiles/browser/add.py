@@ -65,28 +65,19 @@ class DefaultAddForm(TileForm, form.Form):
         # Look up the URL - we need to do this after we've set the data to
         # correctly account for transient tiles
         tileURL = absoluteURL(tile, self.request)
+
+        IStatusMessage(self.request).addStatusMessage(
+            _(u"Tile created at ${url}", mapping={'url': tileURL}),
+            type=u'info',
+        )
+
         contextURL = absoluteURL(tile.context, self.request)
         tileRelativeURL = tileURL
-
         if tileURL.startswith(contextURL):
             tileRelativeURL = '.' + tileURL[len(contextURL):]
 
-        notify(ObjectCreatedEvent(tile))
-        notify(ObjectAddedEvent(tile, self.context, tileId))
-
-        IStatusMessage(self.request).addStatusMessage(
-                _(u"Tile created at ${url}",
-                  mapping={'url': tileURL}),
-                type=u'info',
-            )
-        #import pdb; pdb.set_trace()
-
-
         # Calculate the edit URL and append some data in a JSON structure,
         # to help the UI know what to do.
-
-        url = getEditTileURL(tile, self.request)
-
         tileDataJson = {}
         tileDataJson['action'] = "save"
         tileDataJson['mode'] = "add"
@@ -94,9 +85,11 @@ class DefaultAddForm(TileForm, form.Form):
         tileDataJson['tile_type'] = typeName
         tileDataJson['id'] = tile.id
 
-        url = appendJSONData(url, 'tiledata', tileDataJson)
+        notify(ObjectCreatedEvent(tile))
+        notify(ObjectAddedEvent(tile, self.context, tileId))
+
+        url = appendJSONData(tileURL, 'tiledata', tileDataJson)
         self.request.response.redirect(url)
-        #self.request.response.redirect(tileURL)
 
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
