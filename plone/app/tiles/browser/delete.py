@@ -1,5 +1,4 @@
-#-*- coding: utf-8 -*-
-
+# -*- coding: utf-8 -*-
 from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from zope.annotation.interfaces import IAnnotations
 from Products.Five import BrowserView
