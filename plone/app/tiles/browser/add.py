@@ -78,6 +78,7 @@ class DefaultAddForm(TileForm, form.Form):
 
         # Calculate the edit URL and append some data in a JSON structure,
         # to help the UI know what to do.
+        # XXX: This is possibly used only by collective.tinymcetiles
         tileDataJson = {}
         tileDataJson['action'] = "save"
         tileDataJson['mode'] = "add"
