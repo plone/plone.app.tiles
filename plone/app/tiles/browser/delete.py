@@ -25,7 +25,8 @@ class DefaultDeleteView(BrowserView):
     def __call__(self):
         self.deleted = False
         key = self.get_key()
-        # XXX: should we trigger a proper event here?
+        # XXX: Should we trigger a proper event here?
+        # XXX: Is it useful outside the (removed?) book keeping system?
         if key and key in self.annotations.keys():
             del self.annotations[key]
             return True

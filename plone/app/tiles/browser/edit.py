@@ -97,7 +97,15 @@ class DefaultEditForm(TileForm, form.Form):
 
         notify(ObjectModifiedEvent(tile))
 
-        self.request.response.redirect(tileURL)
+        try:
+            url = self.nextURL(tile)
+        except NotImplementedError:
+            url = tileURL
+
+        self.request.response.redirect(url)
+
+    def nextURL(self, tile):
+        raise NotImplementedError
 
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
