@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.0 (unreleased)
+2.0.0 (2015-04-21)
 ------------------
 
 - Remove base tag, which is removed in Plone 5
