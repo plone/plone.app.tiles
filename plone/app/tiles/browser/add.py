@@ -87,10 +87,8 @@ class DefaultAddForm(TileForm, form.Form):
 
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
-        tileDataJson = {}
-        tileDataJson['action'] = "cancel"
-        url = self.request.getURL()
-        url = appendJSONData(url, 'tiledata', tileDataJson)
+        url = appendJSONData(self.action, '#', {'action': "cancel"})
+        url = url.replace('@@' + self.name.replace('_', '-') + '/', '@@')
         self.request.response.redirect(url)
 
     def updateActions(self):

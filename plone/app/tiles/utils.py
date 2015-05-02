@@ -52,14 +52,17 @@ def getEditTileURL(tile, request):
     return url
 
 
-def appendJSONData(url, key, data):
+def appendJSONData(url, key='#', data=None):
     """Append JSON data (e.g a dict) to the given URL and return the new
     URL. ``key`` is the url parameter key.
     """
-
-    toAppend = "%s=%s" % (key, urllib.quote(json.dumps(data)),)
-
-    if '?' in url:
-        return url + '&' + toAppend
+    if data is None:
+        return url
+    elif key == '#' or not key:
+        return url + '#' + urllib.quote(json.dumps(data))
     else:
-        return url + '?' + toAppend
+        quoted = "%s=%s" % (key, urllib.quote(json.dumps(data)),)
+        if '?' in url:
+            return url + '&' + quoted
+        else:
+            return url + '?' + quoted

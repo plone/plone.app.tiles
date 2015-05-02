@@ -5,6 +5,7 @@ from plone.z3cform.interfaces import IDeferSecurityCheck
 from z3c.form.interfaces import IWidgets
 from zope.component import getMultiAdapter
 from zope.security import checkPermission
+from zope.traversing.browser.absoluteurl import absoluteURL
 
 try:
     from plone.app.drafts.interfaces import ICurrentDraftManagement
@@ -42,6 +43,21 @@ class TileForm(AutoExtensibleForm):
     # can pass simple things on the edit screen and have them be interpreted
     # by transient tiles
     prefix = ''
+
+    # Name is used to form the form action url
+    name = ''
+
+    @property
+    def action(self):
+        """See interfaces.IInputForm"""
+        if self.tileType and self.tileId and self.name:
+            tile = self.context.restrictedTraverse(
+                '@@%s/%s' % (self.tileType.__name__, self.tileId,))
+            url = absoluteURL(tile, self.request)
+            url = url.replace('@@', '@@' + self.name.replace('_', '-') + '/')
+        else:
+            url = self.request.getURL()
+        return url
 
     def update(self):
 
