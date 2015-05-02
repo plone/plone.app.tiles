@@ -8,6 +8,8 @@ Changelog
   @@delete-tile/tile-name/tile-id into a form to support automatic CSRF
   protection in Plone 5
   [datakurre]
+- Remove status messages from tile form operations
+  [datakurre]
 - Remove tiledata JavaScript-variable from tile form templates
   [datakurre]
 - Fix tile form action URLs to contain transient tile state
