@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
+from plone.app.tiles import MessageFactory as _
+from plone.app.tiles.browser.base import TileForm
+from plone.app.tiles.utils import appendJSONData
+from plone.tiles.interfaces import ITileDataManager
 from plone.uuid.interfaces import IUUIDGenerator
 from plone.z3cform import layout
 from z3c.form import form, button
 from zope.component import getUtility
 from zope.event import notify
-from zope.lifecycleevent import ObjectCreatedEvent
 from zope.lifecycleevent import ObjectAddedEvent
+from zope.lifecycleevent import ObjectCreatedEvent
 from zope.traversing.browser.absoluteurl import absoluteURL
+import logging
 
-from plone.app.tiles import MessageFactory as _
-from plone.app.tiles.browser.base import TileForm
-from plone.tiles.interfaces import ITileDataManager
-from plone.app.tiles.utils import appendJSONData
+logger = logging.getLogger('plone.app.tiles')
 
 
 class DefaultAddForm(TileForm, form.Form):
@@ -74,6 +76,7 @@ class DefaultAddForm(TileForm, form.Form):
 
         notify(ObjectCreatedEvent(tile))
         notify(ObjectAddedEvent(tile, self.context, tileId))
+        logger.debug(u"Tile created at {0}".format(tileURL))
 
         try:
             url = self.nextURL(tile)

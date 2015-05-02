@@ -196,29 +196,27 @@ class DeleteTile(TileTraverser):
         self.annotations = IAnnotations(self.context)
 
     def __call__(self):
-        if self.BBB_delete and self.tileId:
-            key = '%s.%s' % (
-                ANNOTATIONS_KEY_PREFIX,
-                self.tileId
-            )
-            del self.annotations[key]
-        else:
-            raise KeyError("Please traverse to @@delete-tile/tilename/id")
+        raise KeyError("Please traverse to @@delete-tile/tilename/id")
 
     def publishTraverse(self, request, name):
         """Allow traversal to @@<view>/tilename/tileid
         """
-        key = '%s.%s' % (
-            ANNOTATIONS_KEY_PREFIX,
-            name
-        )
-        if key and key in self.annotations.keys():
-            self.BBB_delete = True
-            self.tileId = name
-            return self
-
         # 1. Look up the view, but keep this view as the traversal context in
 
+        # anticipation of an id
+        if self.view is None:
+            self.view = self.getTileViewByName(name)
+            return self
+
+        # 2. Set the id and return the view we looked up in the previous
+        # traversal step.
+        elif getattr(self.view, 'tileId', None) is None:
+            self.view.tileId = name
+            return self.view
+
+        raise KeyError(name)
+
+        # 1. Look up the view, but keep this view as the traversal context in
         # anticipation of an id
         if self.view is None:
             self.view = self.getTileViewByName(name)

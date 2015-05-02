@@ -11,6 +11,9 @@ from z3c.form import form, button
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.traversing.browser.absoluteurl import absoluteURL
+import logging
+
+logger = logging.getLogger('plone.app.tiles')
 
 
 class DefaultEditForm(TileForm, form.Form):
@@ -96,6 +99,7 @@ class DefaultEditForm(TileForm, form.Form):
             _(u"Tile saved",), type=u'info')
 
         notify(ObjectModifiedEvent(tile))
+        logger.debug(u"Tile edited at {0}".format(tileURL))
 
         try:
             url = self.nextURL(tile)

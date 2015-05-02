@@ -1,39 +1,115 @@
 # -*- coding: utf-8 -*-
-from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
-from zope.annotation.interfaces import IAnnotations
-from Products.Five import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope.traversing.browser import absoluteURL
+from plone.app.tiles import MessageFactory as _
+from plone.app.tiles.browser.base import TileForm
+from plone.app.tiles.utils import appendJSONData
+from plone.tiles.interfaces import ITileDataManager
+from plone.z3cform import layout
+from z3c.form import form, button
+from zope.event import notify
+from zope.lifecycleevent import ObjectRemovedEvent
+import logging
+
+logger = logging.getLogger('plone.app.tiles')
 
 
-class DefaultDeleteView(BrowserView):
+class DefaultDeleteForm(TileForm, form.Form):
+    """Standard tile delete form, which is wrapped by DefaultDeleteView (see
+    below).
+    """
 
+    name = "delete_tile"
+
+    # Set during traversal
+    tileType = None
     tileId = None
+
+    ignoreContext = True
+
+    schema = None
+
+    def __init__(self, context, request):
+        super(DefaultDeleteForm, self).__init__(context, request)
+        self.request['disable_border'] = True
+
+    # UI
+
+    @property
+    def label(self):
+        return _(u"Delete ${name}", mapping={'name': self.tileType.title})
+
+    # Buttons/actions
+
+    @button.buttonAndHandler(_('Delete'), name='delete')
+    def handleDelete(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        typeName = self.tileType.__name__
+
+        # Traverse to a new tile in the context, with no data
+        tile = self.context.restrictedTraverse(
+            '@@%s/%s' % (typeName, self.tileId,))
+        # Look up the URL - we need to do this before we've deletd the data to
+        # correctly account for transient tiles
+        tileURL = absoluteURL(tile, self.request)
+
+        dataManager = ITileDataManager(tile)
+        dataManager.delete()
+
+        notify(ObjectRemovedEvent(tile))
+        logger.debug(u"Tile deleted at {0}".format(tileURL))
+
+        try:
+            url = self.nextURL(tile)
+        except NotImplementedError:
+            url = self.context.absolute_url()
+
+        self.request.response.redirect(url)
+
+    def nextURL(self, tile):
+        raise NotImplementedError
+
+    @button.buttonAndHandler(_(u'Cancel'), name='cancel')
+    def handleCancel(self, action):
+        url = appendJSONData(self.action, '#', {'action': "cancel"})
+        url = url.replace('@@' + self.name.replace('_', '-') + '/', '@@')
+        self.request.response.redirect(url)
+
+    def updateActions(self):
+        super(DefaultDeleteForm, self).updateActions()
+        self.actions["delete"].addClass("context")
+        self.actions["cancel"].addClass("standalone")
+
+
+class DefaultDeleteView(layout.FormWrapper):
+    """This is the default delete view as looked up by the @@delete-tile
+    traveral view. It is an unnamed adapter on  (context, request, tileType).
+
+    Note that this is registered in ZCML as a simple <adapter />, but we
+    also use the <class /> directive to set up security.
+    """
+
+    form = DefaultDeleteForm
+    index = ViewPageTemplateFile('tileformlayout.pt')
+
+    # Set by sub-path traversal in @@delete-tile - we delegate to the form
+
+    def __getTileId(self):
+        return getattr(self.form_instance, 'tileId', None)
+
+    def __setTileId(self, value):
+        self.form_instance.tileId = value
+    tileId = property(__getTileId, __setTileId)
 
     def __init__(self, context, request, tileType):
         super(DefaultDeleteView, self).__init__(context, request)
         self.tileType = tileType
-        self.annotations = IAnnotations(self.context)
-        self.tileId = None
 
-    def get_key(self):
-        if self.tileId:
-            return '%s.%s' % (
-                ANNOTATIONS_KEY_PREFIX,
-                self.tileId
-            )
-        return ''
-
-    def __call__(self):
-        self.deleted = False
-        key = self.get_key()
-        # XXX: Should we trigger a proper event here?
-        # XXX: Is it useful outside the (removed?) book keeping system?
-        if key and key in self.annotations.keys():
-            del self.annotations[key]
-            return True
-        # return self.index()
-        return False
-
-    def tiles(self):
-        for item in self.annotations.keys():
-            if item.startswith(ANNOTATIONS_KEY_PREFIX):
-                yield item[len(ANNOTATIONS_KEY_PREFIX) + 1:]
+        # Configure the form instance
+        if self.form_instance is not None:
+            if getattr(self.form_instance, 'tileType', None) is None:
+                self.form_instance.tileType = tileType

@@ -71,7 +71,8 @@
             />
     </class>
 
-    <!-- Delete view -->
+    <!-- Standard delete view and form - invoked from the @@delete-tile traversal view -->
+
     <browser:page
         name="delete-tile"
         for="zope.annotation.interfaces.IAnnotatable"

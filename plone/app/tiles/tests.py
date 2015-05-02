@@ -159,8 +159,9 @@ class FunctionalTest(unittest.TestCase):
                          folder_annotations[annotations_key]['counter'])
 
         # Remove the tile
-        self.browser.open('{0}/@@delete-tile/{1}'.format(self.portal_url,
-                                                         tile_id))
+        self.browser.open('{0}/@@delete-tile/{1}/{2}'.format(
+            self.portal_url, "plone.app.tiles.demo.persistent", tile_id))
+        self.browser.getControl(label='Delete').click()
 
         # Verify status code
         self.assertEqual('200 Ok', self.browser.headers['status'])
