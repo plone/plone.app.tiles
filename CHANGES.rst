@@ -1,11 +1,20 @@
 Changelog
 =========
 
-2.0.1 (unreleased)
+2.1.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Remove deprecated support for @@delete-tile/tile-id and refactor view at
+  @@delete-tile/tile-name/tile-id into a form to support automatic CSRF
+  protection in Plone 5
+  [datakurre]
+- Remove tiledata JavaScript-variable from tile form templates
+  [datakurre]
+- Fix tile form action URLs to contain transient tile state
+  [datakurre]
+- Move tile form action info JSON in form action redirect URLs from query to
+  fragment
+  [datakurre]
 
 2.0.0 (2015-04-21)
 ------------------
