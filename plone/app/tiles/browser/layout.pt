@@ -9,7 +9,6 @@
         lang portal_state/language;
         view nocall:view | nocall: plone_view;
         dummy python: plone_view.mark_view(view);
-        tiledata context/REQUEST/tiledata | string:{};
         portal_url portal_state/portal_url;"
     tal:attributes="lang lang;">
 <head>
