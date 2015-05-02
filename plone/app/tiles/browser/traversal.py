@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from plone.app.tiles import MessageFactory as _
 from plone.app.tiles.interfaces import ITileAddView
-from plone.app.tiles.interfaces import ITileEditView
 from plone.app.tiles.interfaces import ITileDeleteView
+from plone.app.tiles.interfaces import ITileEditView
 from plone.memoize.view import memoize
 from plone.registry.interfaces import IRegistry
 from plone.tiles.interfaces import ITileType
+from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 from zope.component import queryMultiAdapter
 from zope.component import queryUtility
@@ -13,9 +14,6 @@ from zope.interface import Interface
 from zope.interface import implements
 from zope.publisher.interfaces import IPublishTraverse
 from zope.security import checkPermission
-
-from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
-from zope.annotation.interfaces import IAnnotations
 
 
 class TileTraverser(object):
