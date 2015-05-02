@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.statusmessages.interfaces import IStatusMessage
 from plone.app.tiles import MessageFactory as _
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.utils import appendJSONData
@@ -68,11 +67,6 @@ class DefaultAddForm(TileForm, form.Form):
         # Look up the URL - we need to do this after we've set the data to
         # correctly account for transient tiles
         tileURL = absoluteURL(tile, self.request)
-
-        IStatusMessage(self.request).addStatusMessage(
-            _(u"Tile created at ${url}", mapping={'url': tileURL}),
-            type=u'info',
-        )
 
         notify(ObjectCreatedEvent(tile))
         notify(ObjectAddedEvent(tile, self.context, tileId))
