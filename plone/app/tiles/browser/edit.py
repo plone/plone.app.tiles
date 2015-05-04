@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Acquisition import Implicit
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.tiles import MessageFactory as _
 from plone.app.tiles.browser.base import TileForm
@@ -13,6 +14,10 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 import logging
 
 logger = logging.getLogger('plone.app.tiles')
+
+
+class AcquirableDictionary(dict, Implicit):
+    """Wrapper to make tile data dictionary acquirable and permission aware"""
 
 
 class DefaultEditForm(TileForm, form.Form):
@@ -64,7 +69,7 @@ class DefaultEditForm(TileForm, form.Form):
                 '@@%s/%s' % (typeName, tileId,))
 
         dataManager = ITileDataManager(tile)
-        return dataManager.get()
+        return AcquirableDictionary(dataManager.get()).__of__(self.context)
 
     # UI
 
