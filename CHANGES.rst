@@ -12,6 +12,9 @@ Changelog
   [datakurre]
 - Remove tiledata JavaScript-variable from tile form templates
   [datakurre]
+- Fix issue where catalog source could not properly check permissions on tile
+  edit form with wrapping edit form tile data into acquisition wrapper
+  [datakurre]
 - Fix tile form action URLs to contain transient tile state
   [datakurre]
 - Move tile form action info JSON in form action redirect URLs from query to
