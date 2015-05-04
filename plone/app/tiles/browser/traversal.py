@@ -176,11 +176,6 @@ class DeleteTile(TileTraverser):
     """Implements the @@delete-tile traversal view
 
     Traversing to /path/to/obj/@@delete-tile/tile-name/tile-id will delete tile.
-
-    BBB compat:
-    Also traversing to /path/to/obj/@@delete-tile/tile-id will delete tile
-    IF the tile exists into annotations, otherwise you get an error.
-
     """
 
     tileId = None
@@ -189,7 +184,6 @@ class DeleteTile(TileTraverser):
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        self.BBB_delete = False
         self.tileId = None
         self.annotations = IAnnotations(self.context)
 
@@ -201,20 +195,6 @@ class DeleteTile(TileTraverser):
         """
         # 1. Look up the view, but keep this view as the traversal context in
 
-        # anticipation of an id
-        if self.view is None:
-            self.view = self.getTileViewByName(name)
-            return self
-
-        # 2. Set the id and return the view we looked up in the previous
-        # traversal step.
-        elif getattr(self.view, 'tileId', None) is None:
-            self.view.tileId = name
-            return self.view
-
-        raise KeyError(name)
-
-        # 1. Look up the view, but keep this view as the traversal context in
         # anticipation of an id
         if self.view is None:
             self.view = self.getTileViewByName(name)
