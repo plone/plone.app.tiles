@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from zope.traversing.browser import absoluteURL
+from Products.statusmessages.interfaces import IStatusMessage
 from plone.app.tiles import MessageFactory as _
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.utils import appendJSONData
 from plone.tiles.interfaces import ITileDataManager
 from plone.z3cform import layout
-from z3c.form import form, button
+from z3c.form import button
+from z3c.form import form
 from zope.event import notify
 from zope.lifecycleevent import ObjectRemovedEvent
+from zope.traversing.browser import absoluteURL
 import logging
 
 logger = logging.getLogger('plone.app.tiles')
@@ -62,6 +64,15 @@ class DefaultDeleteForm(TileForm, form.Form):
 
         notify(ObjectRemovedEvent(tile))
         logger.debug(u"Tile deleted at {0}".format(tileURL))
+
+        # Skip form rendering for AJAX requests
+        if self.request.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            IStatusMessage(self.request).addStatusMessage(
+                _(u"Tile deleted at ${url}", mapping={'url': tileURL}),
+                type=u'info'
+            )
+            self.template = lambda: u''
+            return
 
         try:
             url = self.nextURL(tile)
