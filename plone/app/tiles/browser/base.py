@@ -60,11 +60,9 @@ class TileForm(AutoExtensibleForm):
         return url
 
     def update(self):
-
-        # Set up draft information if required
+        # Support drafting tile data context
         if PLONE_APP_DRAFTS:
-            currentDraft = ICurrentDraftManagement(self.request)
-            currentDraft.mark()
+            ICurrentDraftManagement(self.request).mark()
 
         # Override to check the tile add/edit permission
         if not IDeferSecurityCheck.providedBy(self.request):
