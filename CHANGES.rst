@@ -12,6 +12,9 @@ Changelog
   [datakurre]
 - Remove tiledata JavaScript-variable from tile form templates
   [datakurre]
+- Fix issue where tile preview during drafting did not use drafting tile data
+  for the preview
+  [datakurre]
 - Fix issue where catalog source could not properly check permissions on tile
   edit form with wrapping edit form tile data into acquisition wrapper
   [datakurre]
