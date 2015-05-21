@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from plone.app.drafts.interfaces import IDraft
 from plone.app.drafts.interfaces import ICurrentDraftManagement
+from plone.app.drafts.interfaces import IDraft
 from plone.app.drafts.interfaces import IDraftSyncer
 from plone.app.drafts.interfaces import IDrafting
 from plone.app.drafts.proxy import DraftProxy
@@ -9,9 +9,10 @@ from plone.app.tiles.interfaces import ITilesFormLayer
 from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from plone.tiles.interfaces import ITile
 from plone.tiles.interfaces import ITileDataContext
+from urlparse import urlparse
 from zope.annotation.interfaces import IAnnotations
-from zope.component import adapts
 from zope.component import adapter
+from zope.component import adapts
 from zope.interface import Interface
 from zope.interface import implementer
 from zope.interface import implements
@@ -31,6 +32,13 @@ def draftingTileDataContext(context, request, tile):
 
     # When tile is previewed during drafted content is edited, heuristics...
     else:
+        referrer = request.get('HTTP_REFERER', '')
+        path = urlparse(referrer).path
+        if all((not path.endswith('/edit'),
+                not path.endswith('/@@edit'),
+                not path.split('/')[-1].startswith('++add++'))):
+            return context
+
         draft = getCurrentDraft(request)
         if draft is None:
             return context
