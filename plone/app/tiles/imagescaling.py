@@ -4,15 +4,18 @@ from Acquisition import aq_base
 from ZODB.POSException import ConflictError
 from logging import exception
 from persistent.dict import PersistentDict
+from plone.namedfile.interfaces import INamedImage
 from plone.namedfile.scaling import ImageScale as BaseImageScale
 from plone.namedfile.scaling import ImageScaling as BaseImageScaling
-from plone.namedfile.utils import set_headers, stream_data
-from plone.namedfile.interfaces import INamedImage
+from plone.namedfile.utils import set_headers
+from plone.namedfile.utils import stream_data
 from plone.rfc822.interfaces import IPrimaryFieldInfo
 from plone.scale.scale import scaleImage
 from plone.scale.storage import AnnotationStorage as BaseAnnotationStorage
-from zope.annotation import IAnnotations
+from plone.tiles.interfaces import ITileDataManager
 from zope.publisher.interfaces import NotFound
+
+IMAGESCALES_KEY = '_plone.scales'
 
 
 class AnnotationStorage(BaseAnnotationStorage):
@@ -24,10 +27,12 @@ class AnnotationStorage(BaseAnnotationStorage):
     @property
     def storage(self):
         tile = self.context
-        cover = tile.context
-        return IAnnotations(cover).setdefault(
-            'plone.tiles.scale.%s' % tile.id,
-            PersistentDict())
+        manager = ITileDataManager(tile)
+        data = manager.get()
+        if IMAGESCALES_KEY not in data:
+            data[IMAGESCALES_KEY] = PersistentDict()
+            manager.set(data)
+        return data[IMAGESCALES_KEY]
 
 
 class ImageScale(BaseImageScale):
