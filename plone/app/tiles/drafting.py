@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from plone.app.blocks.layoutbehavior import ILayoutAware
 from plone.app.drafts.interfaces import ICurrentDraftManagement
+from plone.app.drafts.interfaces import USERID_KEY
 from plone.app.drafts.interfaces import IDraft
 from plone.app.drafts.interfaces import IDraftSyncer
 from plone.app.drafts.interfaces import IDrafting
@@ -32,6 +34,16 @@ def draftingTileDataContext(context, request, tile):
 
     # When tile is previewed during drafted content is edited, heuristics...
     else:
+        # Manually configure draft user id, if we are still in traverse
+        if getattr(request, 'PUBLISHED', None) is None:
+            IAnnotations(request)[USERID_KEY] = request.cookies.get(USERID_KEY)
+
+        # No active draft for the request
+        draft = getCurrentDraft(request)
+        if draft is None:
+            return context
+
+        # Not referring from an edit form
         referrer = request.get('HTTP_REFERER', '')
         path = urlparse(referrer).path
         if all((not path.endswith('/edit'),
@@ -39,9 +51,6 @@ def draftingTileDataContext(context, request, tile):
                 not path.split('/')[-1].startswith('++add++'))):
             return context
 
-        draft = getCurrentDraft(request)
-        if draft is None:
-            return context
         ICurrentDraftManagement(request).mark()
 
     return DraftProxy(draft, context)
@@ -63,12 +72,20 @@ class TileDataDraftSyncer(object):
         draftAnnotations = IAnnotations(self.draft)
         targetAnnotations = IAnnotations(self.target)
 
+        layout = ILayoutAware(self.target).content
+
         for key, value in draftAnnotations.iteritems():
             if key.startswith(ANNOTATIONS_KEY_PREFIX):
-                targetAnnotations[key] = value
+                tile_id = key[len(ANNOTATIONS_KEY_PREFIX) + 1:]
+                if tile_id in layout:
+                    targetAnnotations[key] = value
 
-        annotationsDeleted = getattr(self.draft, '_proxyAnnotationsDeleted',
-                                     set())
+        annotationsDeleted = getattr(
+            self.draft, '_proxyAnnotationsDeleted', set())
+
         for key in annotationsDeleted:
             if key.startswith(ANNOTATIONS_KEY_PREFIX) and key in targetAnnotations:  # noqa
                 del targetAnnotations[key]
+
+        # TODO: Should we also remove all tile annotations, whose tile_id
+        # cannot be found from layout?
