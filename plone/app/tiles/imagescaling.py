@@ -13,7 +13,14 @@ from plone.rfc822.interfaces import IPrimaryFieldInfo
 from plone.scale.scale import scaleImage
 from plone.scale.storage import AnnotationStorage as BaseAnnotationStorage
 from plone.tiles.interfaces import ITileDataManager
+from zope.interface import alsoProvides
 from zope.publisher.interfaces import NotFound
+
+try:
+    from plone.protect.interfaces import IDisableCSRFProtection
+    HAS_PLONE_PROTECT = True
+except ImportError:
+    HAS_PLONE_PROTECT = False
 
 IMAGESCALES_KEY = '_plone.scales'
 
@@ -114,6 +121,9 @@ class ImageScaling(BaseImageScaling):
         try:
             result = scaleImage(orig_data, direction=direction,
                                 height=height, width=width, **parameters)
+            # Disable Plone 5 implicit CSRF to allow scaling on GET
+            if HAS_PLONE_PROTECT:
+                alsoProvides(self.request, IDisableCSRFProtection)
         except (ConflictError, KeyboardInterrupt):
             raise
         except Exception:
