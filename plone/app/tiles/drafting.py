@@ -28,7 +28,10 @@ def draftingTileDataContext(context, request, tile):
     """
     # When drafted content with tiles is saved, IDrafting is provided
     if IDrafting.providedBy(request):
-        draft = getCurrentDraft(request, create=True)
+        if request.method == 'POST':
+            draft = getCurrentDraft(request, create=True)
+        else:
+            draft = getCurrentDraft(request, create=False)
         if draft is None:
             return context
 
