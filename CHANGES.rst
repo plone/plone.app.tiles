@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.0 (unreleased)
+2.1.0 (2015-05-25)
 ------------------
 
 - Remove deprecated support for @@delete-tile/tile-id and refactor view at
