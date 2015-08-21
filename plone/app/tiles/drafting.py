@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
+from urlparse import urlparse
+
 from plone.app.blocks.layoutbehavior import ILayoutAware
+from plone.app.blocks.utils import resolveResource
 from plone.app.drafts.interfaces import ICurrentDraftManagement
-from plone.app.drafts.interfaces import USERID_KEY
 from plone.app.drafts.interfaces import IDraft
 from plone.app.drafts.interfaces import IDraftSyncer
 from plone.app.drafts.interfaces import IDrafting
+from plone.app.drafts.interfaces import USERID_KEY
 from plone.app.drafts.proxy import DraftProxy
 from plone.app.drafts.utils import getCurrentDraft
 from plone.app.tiles.interfaces import ITilesFormLayer
 from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from plone.tiles.interfaces import ITile
 from plone.tiles.interfaces import ITileDataContext
-from urlparse import urlparse
+from zExceptions import NotFound
 from zope.annotation.interfaces import IAnnotations
 from zope.component import adapter
 from zope.component import adapts
@@ -75,7 +78,17 @@ class TileDataDraftSyncer(object):
         draftAnnotations = IAnnotations(self.draft)
         targetAnnotations = IAnnotations(self.target)
 
-        layout = ILayoutAware(self.target).content
+        behavior_data = ILayoutAware(self.target)
+        try:
+            if behavior_data.contentLayout:
+                try:
+                    layout = resolveResource(behavior_data.contentLayout)
+                except (NotFound, RuntimeError):
+                    layout = ''
+            else:
+                layout = behavior_data.content
+        except AttributeError:
+            layout = behavior_data.content
 
         for key, value in draftAnnotations.iteritems():
             if key.startswith(ANNOTATIONS_KEY_PREFIX):
