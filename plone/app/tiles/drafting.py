@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from plone.app.blocks.layoutbehavior import ILayoutAware
 from plone.app.drafts.interfaces import ICurrentDraftManagement
 from plone.app.drafts.interfaces import USERID_KEY
 from plone.app.drafts.interfaces import IDraft

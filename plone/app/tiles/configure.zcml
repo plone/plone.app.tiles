@@ -13,7 +13,6 @@
 
   <include package="plone.uuid" />
 
-  <include package="plone.app.blocks" />
   <include package="plone.app.z3cform" />
 
   <!-- Views -->
