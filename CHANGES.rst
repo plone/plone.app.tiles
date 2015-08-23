@@ -1,9 +1,11 @@
 Changelog
 =========
 
-2.1.1 (unreleased)
+2.2.0 (unreleased)
 ------------------
 
+- Remove unnecessary dependency on plone.app.blocks
+  [datakurre]
 - Fix issue where expected all drafted tiles to be mentioned in very specific
   layout field; Fixed to sync all drafted tiles instead:w
   [datakurre]
