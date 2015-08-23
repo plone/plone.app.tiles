@@ -4,8 +4,9 @@ Changelog
 2.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Fix issue where expected all drafted tiles to be mentioned in very specific
+  layout field; Fixed to sync all drafted tiles instead:w
+  [datakurre]
 
 2.1.0 (2015-05-25)
 ------------------
