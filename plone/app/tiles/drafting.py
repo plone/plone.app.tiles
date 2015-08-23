@@ -75,13 +75,9 @@ class TileDataDraftSyncer(object):
         draftAnnotations = IAnnotations(self.draft)
         targetAnnotations = IAnnotations(self.target)
 
-        layout = ILayoutAware(self.target).content
-
         for key, value in draftAnnotations.iteritems():
             if key.startswith(ANNOTATIONS_KEY_PREFIX):
-                tile_id = key[len(ANNOTATIONS_KEY_PREFIX) + 1:]
-                if tile_id in layout:
-                    targetAnnotations[key] = value
+                targetAnnotations[key] = value
 
         annotationsDeleted = getattr(
             self.draft, '_proxyAnnotationsDeleted', set())
@@ -89,6 +85,3 @@ class TileDataDraftSyncer(object):
         for key in annotationsDeleted:
             if key.startswith(ANNOTATIONS_KEY_PREFIX) and key in targetAnnotations:  # noqa
                 del targetAnnotations[key]
-
-        # TODO: Should we also remove all tile annotations, whose tile_id
-        # cannot be found from layout?
