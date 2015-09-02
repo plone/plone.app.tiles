@@ -80,14 +80,15 @@ class TileDataDraftSyncer(object):
 
         behavior_data = ILayoutAware(self.target)
         try:
-            if behavior_data.contentLayout:
-                try:
-                    layout = resolveResource(behavior_data.contentLayout)
-                except (NotFound, RuntimeError):
-                    layout = ''
-            else:
-                layout = behavior_data.content
+            contentLayout = behavior_data.contentLayout
         except AttributeError:
+            contentLayout = None
+        if contentLayout:
+            try:
+                layout = resolveResource(behavior_data.contentLayout)
+            except (NotFound, RuntimeError):
+                layout = ''
+        else:
             layout = behavior_data.content
 
         for key, value in draftAnnotations.iteritems():
