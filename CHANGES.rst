@@ -6,8 +6,9 @@ Changelog
 
 - Remove unnecessary dependency on plone.app.blocks
   [datakurre]
+
 - Fix issue where expected all drafted tiles to be mentioned in very specific
-  layout field; Fixed to sync all drafted tiles instead:w
+  layout field; Fixed to sync all drafted tiles instead
   [datakurre]
 
 2.1.0 (2015-05-25)
