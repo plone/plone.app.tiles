@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.2.0 (unreleased)
+2.2.0 (2015-09-04)
 ------------------
 
 - Remove unnecessary dependency on plone.app.blocks
