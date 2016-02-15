@@ -25,9 +25,13 @@ if HAS_DRAFTS:
     from plone.app.drafts.interfaces import PATH_KEY
     from plone.app.drafts.interfaces import TARGET_KEY
 
-import re
-import unittest2 as unittest
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
+
 import urllib
+import re
 
 
 class FunctionalTest(unittest.TestCase):
