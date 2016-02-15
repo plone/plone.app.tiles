@@ -4,7 +4,9 @@ Changelog
 2.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix default role assignment: Remove Reviewer and add Contributor to 
+  'Add Tile' permission in ``rolemap.xml``.
+  [jensens]
 
 
 2.2.0 (2015-09-04)

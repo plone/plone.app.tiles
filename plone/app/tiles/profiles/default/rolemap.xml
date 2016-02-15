@@ -4,7 +4,7 @@
         <permission name="Add tile" acquire="True">
             <role name="Manager"/>
             <role name="Site Administrator"/>
-            <role name="Reviewer"/>
+            <role name="Contributor"/>
         </permission>
     </permissions>
 </rolemap>
