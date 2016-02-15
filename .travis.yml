@@ -17,8 +17,8 @@ before_install:
   - echo "eggs-directory = $HOME/buildout-cache/eggs" >> $HOME/.buildout/default.cfg
 install:
 - pip install zc.buildout
-- bin/buildout -N -t 3 -c test-$PLONE_VERSION.cfg annotate
-- bin/buildout -N -t 3 -c test-$PLONE_VERSION.cfg
+- buildout -N -t 3 -c test-$PLONE_VERSION.cfg annotate
+- buildout -N -t 3 -c test-$PLONE_VERSION.cfg
 script:
 - bin/code-analysis
 - bin/test
