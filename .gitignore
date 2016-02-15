@@ -19,6 +19,7 @@
 /include/
 /lib/
 /local.cfg
+/local/
 /mockup
 /nixenv
 /parts/
