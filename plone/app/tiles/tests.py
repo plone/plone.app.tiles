@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from plone.app.testing import SITE_OWNER_NAME
 from plone.app.testing import SITE_OWNER_PASSWORD
-from zExceptions import NotFound
+from plone.app.tiles.demo import TransientTile
+from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
 from plone.testing.z2 import Browser
+from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
+from zExceptions import NotFound
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 import pkg_resources
-
-from plone.app.tiles.demo import TransientTile
-from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
-from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
-
+import re
+import urllib
 
 try:
     pkg_resources.get_distribution('plone.app.drafts')
@@ -29,9 +29,6 @@ try:
     import unittest2 as unittest
 except ImportError:
     import unittest
-
-import urllib
-import re
 
 
 class FunctionalTest(unittest.TestCase):
