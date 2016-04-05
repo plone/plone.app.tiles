@@ -8,7 +8,6 @@ Changelog
   'Add Tile' permission in ``rolemap.xml``.
   [jensens]
 
-
 2.2.0 (2015-09-04)
 ------------------
 
