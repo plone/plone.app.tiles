@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.2.1 (unreleased)
+2.2.1 (2016-04-06)
 ------------------
 
 - Fix default role assignment: Remove Reviewer and add Contributor to 
