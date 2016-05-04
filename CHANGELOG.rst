@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.1 (2012-06-25)
+1.0.2 (2016-05-04)
 ------------------
 
 - Remove cyclic dependency [fixes #7]
