@@ -2,26 +2,28 @@ language: python
 python: 2.7
 sudo: false
 env:
-- PLONE_VERSION=4.2.x
-- PLONE_VERSION=4.3.x
-- PLONE_VERSION=5.x
+- PLONE_VERSION=4.2
+- PLONE_VERSION=4.3
+- PLONE_VERSION=5.0
+- PLONE_VERSION=5.1
 cache:
   pip: true
   directories:
-  - $HOME/buildout-cache
+  - eggs
+matrix:
+  fast_finish: true
 before_install:
-  - mkdir -p $HOME/buildout-cache/{eggs,downloads}
-  - mkdir $HOME/.buildout
-  - echo "[buildout]" > $HOME/.buildout/default.cfg
-  - echo "download-cache = $HOME/buildout-cache/downloads" >> $HOME/.buildout/default.cfg
-  - echo "eggs-directory = $HOME/buildout-cache/eggs" >> $HOME/.buildout/default.cfg
-install:
 - pip install zc.buildout
-- buildout -N -t 3 -c test-$PLONE_VERSION.cfg annotate
-- buildout -N -t 3 -c test-$PLONE_VERSION.cfg
+- cp test-$PLONE_VERSION.cfg buildout.cfg
+install:
+- buildout annotate
+- buildout
 script:
 - bin/code-analysis
 - bin/test
 after_success:
-- bin/coverage run --source=plone.app.tiles bin/test --layer=\!PloneAppTilesLayer
-- bin/coveralls
+- bin/createcoverage -t --layer=\!PloneAppTilesLayer
+- pip install coveralls
+- coveralls
+notifications:
+  irc: irc.freenode.org#plone-testing
