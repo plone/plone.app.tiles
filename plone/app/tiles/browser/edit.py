@@ -93,7 +93,9 @@ class DefaultEditForm(TileForm, form.Form):
             '@@%s/%s' % (typeName, self.tileId,))
 
         dataManager = ITileDataManager(tile)
-        dataManager.set(data)
+        new_data = {}
+        form.applyChanges(self, new_data, data)
+        dataManager.set(new_data)
 
         # Look up the URL - we need to do this after we've set the data to
         # correctly account for transient tiles
