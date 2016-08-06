@@ -578,7 +578,7 @@ class FunctionalTest(unittest.TestCase):
 
     def test_data_manager_add_form(self):
         """Test that appropriate IDataManagers are used when processing tile
-        add form."""
+        add and edit forms."""
 
         # Log in
         self.browser.addHeader(
