@@ -582,8 +582,8 @@ class FunctionalTest(unittest.TestCase):
 
         # Log in
         self.browser.addHeader(
-                'Authorization',
-                'Basic {0}:{1}'.format(SITE_OWNER_NAME, SITE_OWNER_PASSWORD, )
+            'Authorization',
+            'Basic {0}:{1}'.format(SITE_OWNER_NAME, SITE_OWNER_PASSWORD, )
         )
 
         # Add a new persistent tile using the @@add-tile view
