@@ -36,7 +36,7 @@ class TileTraverser(object):
         """We look up for adapter from ``(context, request, tileType)`` to an
         appropriate interface. The default is to use the unnamed adapter, but
         this can be overridden by registering a named adapter with the name of
-        the tile type. This way, a custom add/edit view can be reigstered for
+        the tile type. This way, a custom add/edit view can be registered for
         a particular type of tile.
         """
 
