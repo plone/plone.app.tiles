@@ -4,8 +4,8 @@ Changelog
 2.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Reformat docs and update some references.
+  [gforcad]
 
 2.2.1 (2016-04-06)
 ------------------
