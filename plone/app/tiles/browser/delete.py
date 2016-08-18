@@ -52,10 +52,10 @@ class DefaultDeleteForm(TileForm, form.Form):
 
         typeName = self.tileType.__name__
 
-        # Traverse to a new tile in the context, with no data
+        # Traverse to the tile about to be removed
         tile = self.context.restrictedTraverse(
             '@@%s/%s' % (typeName, self.tileId,))
-        # Look up the URL - we need to do this before we've deletd the data to
+        # Look up the URL - we need to do this before we've deleted the data to
         # correctly account for transient tiles
         tileURL = absoluteURL(tile, self.request)
 
