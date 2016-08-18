@@ -109,12 +109,13 @@ class DefaultDeleteView(layout.FormWrapper):
 
     # Set by sub-path traversal in @@delete-tile - we delegate to the form
 
-    def __getTileId(self):
+    @property
+    def tileId(self):
         return getattr(self.form_instance, 'tileId', None)
 
-    def __setTileId(self, value):
+    @tileId.setter
+    def tileId(self, value):
         self.form_instance.tileId = value
-    tileId = property(__getTileId, __setTileId)
 
     def __init__(self, context, request, tileType):
         super(DefaultDeleteView, self).__init__(context, request)

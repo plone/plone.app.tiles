@@ -4,8 +4,11 @@ Changelog
 2.2.2 (unreleased)
 ------------------
 
+- Use @property instead of property().
+  [gforcada]
+
 - Reformat docs and update some references.
-  [gforcad]
+  [gforcada]
 
 2.2.1 (2016-04-06)
 ------------------
