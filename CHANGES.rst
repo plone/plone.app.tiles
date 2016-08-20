@@ -10,6 +10,9 @@ Changelog
 - Reformat docs and update some references.
   [gforcada]
 
+- Update testing infrastructure.
+  [gforcada]
+
 2.2.1 (2016-04-06)
 ------------------
 
