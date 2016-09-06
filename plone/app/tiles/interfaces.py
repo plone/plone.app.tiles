@@ -8,6 +8,11 @@ from zope.publisher.interfaces.browser import IBrowserView
 _ = MessageFactory('plone')
 
 
+REGISTERED_TILES_VOCABULARY = 'plone.app.tiles.RegisteredTiles'
+AVAILABLE_TILES_VOCABULARY = 'plone.app.tiles.AvailableTiles'
+ALLOWED_TILES_VOCABULARY = 'plone.app.tiles.AllowedTiles'
+
+
 class ITilesFormLayer(IPloneFormLayer):
     """Request layer installed via browserlayer.xml
     """

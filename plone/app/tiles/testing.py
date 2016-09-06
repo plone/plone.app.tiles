@@ -45,14 +45,6 @@ class PloneAppTiles(PloneSandboxLayer):
             applyProfile(portal, 'plone.app.drafts:default')
         applyProfile(portal, 'plone.app.tiles:default')
 
-        from plone.registry.interfaces import IRegistry
-
-        registry = getUtility(IRegistry)
-        registry['plone.app.tiles'] = [
-            u'plone.app.tiles.demo.transient',
-            u'plone.app.tiles.demo.persistent',
-        ]
-
     # Temporarily set up a more predictable UUID generator so that we can
     # rely on the uuids in tests
 
