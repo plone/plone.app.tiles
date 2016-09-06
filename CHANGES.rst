@@ -6,6 +6,9 @@ Changelog
 
 - Use @property instead of property().
   [gforcada]
+- Use z3c.form's applyForm() in tile add and edit forms so
+  IDataManagers get used.
+  [danmur]
 
 - Reformat docs and update some references.
   [gforcada]
