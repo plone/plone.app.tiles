@@ -62,7 +62,7 @@ class DefaultDeleteForm(TileForm, form.Form):
         dataManager = ITileDataManager(tile)
         dataManager.delete()
 
-        notify(ObjectRemovedEvent(tile))
+        notify(ObjectRemovedEvent(tile, self.context, self.tileId))
         logger.debug(u"Tile deleted at {0}".format(tileURL))
 
         # Skip form rendering for AJAX requests

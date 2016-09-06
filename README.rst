@@ -26,7 +26,7 @@ This package contains the following things:
 * A view ``@@edit-tile``, and an associated form, which can be used to edit a tile based on the tile's schema.
   This will fire an ``IObjectModifiedEvent`` for the modified tile (a transient object) when successfully submitted.
 
-* A view ``@@delete-tile``, where the user may select a tile type, enter a tile id, and opt to clear out any persistent data for that tile.
+* A view ``@@delete-tile``, and associated form, which can be used to delete a tile and associated persistent data.
   This can also be called by AJAX code given appropriate request parameters.
   This will fire an ``IObjectRemovedEvent`` for the removed tile (a transient object).
   The ``oldParent`` attribute will be the tile's context, and the ``oldName`` attribute will be the tile's id.

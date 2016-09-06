@@ -13,7 +13,7 @@
         />
 
     <!-- tile wrapper
-        also "main_template" for tiles -->
+         also "main_template" for tiles -->
     <browser:page
         name="tile-wrapper"
         for="*"
@@ -37,8 +37,14 @@
         class=".traversal.EditTile"
         />
 
-    <!-- Standard add view and form - invoked from the @@add-tile traversal view -->
+    <browser:page
+        name="delete-tile"
+        for="zope.annotation.interfaces.IAnnotatable"
+        class=".traversal.DeleteTile"
+        permission="cmf.ModifyPortalContent"
+        />
 
+    <!-- Standard add view and form - invoked from the @@add-tile traversal view -->
     <adapter
         for="zope.annotation.interfaces.IAnnotatable
              zope.publisher.interfaces.browser.IDefaultBrowserLayer
@@ -55,7 +61,6 @@
     </class>
 
     <!-- Standard edit view and form - invoked from the @@edit-tile traversal view -->
-
     <adapter
         for="zope.annotation.interfaces.IAnnotatable
              zope.publisher.interfaces.browser.IDefaultBrowserLayer
@@ -72,14 +77,6 @@
     </class>
 
     <!-- Standard delete view and form - invoked from the @@delete-tile traversal view -->
-
-    <browser:page
-        name="delete-tile"
-        for="zope.annotation.interfaces.IAnnotatable"
-        class=".traversal.DeleteTile"
-        permission="cmf.ModifyPortalContent"
-        />
-
     <adapter
         for="zope.annotation.interfaces.IAnnotatable
              zope.publisher.interfaces.browser.IDefaultBrowserLayer
@@ -87,5 +84,12 @@
         provides="..interfaces.ITileDeleteView"
         factory=".delete.DefaultDeleteView"
         />
+
+    <class class=".delete.DefaultDeleteView">
+        <require
+            permission="cmf.ModifyPortalContent"
+            interface="zope.publisher.interfaces.browser.IBrowserPage"
+        />
+    </class>
 
 </configure>
