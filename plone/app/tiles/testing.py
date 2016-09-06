@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+from Products.CMFCore.utils import getToolByName
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
+from plone.dexterity.fti import DexterityFTI
 from zope.component import getUtility
 from zope.component import provideUtility
-from zope.configuration import xmlconfig
+import plone.app.tiles
 
 import pkg_resources
 
@@ -15,6 +17,7 @@ try:
 except pkg_resources.DistributionNotFound:
     HAS_DRAFTS = False
 else:
+    import plone.app.drafts
     HAS_DRAFTS = True
 
 
@@ -23,27 +26,28 @@ class PloneAppTiles(PloneSandboxLayer):
     defaultBases = (PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
-        # Load ZCML
         if HAS_DRAFTS:
-            import plone.app.drafts
-            xmlconfig.file(
-                'configure.zcml',
-                plone.app.drafts,
-                context=configurationContext)
-        import plone.app.tiles
-        xmlconfig.file(
-            'configure.zcml',
-            plone.app.tiles,
-            context=configurationContext)
-        xmlconfig.file(
-            'demo.zcml',
-            plone.app.tiles,
-            context=configurationContext)
+            self.loadZCML(package=plone.app.drafts)
+        self.loadZCML(package=plone.app.tiles)
+        self.loadZCML(package=plone.app.tiles, name='demo.zcml')
 
     def setUpPloneSite(self, portal):
         if HAS_DRAFTS:
             applyProfile(portal, 'plone.app.drafts:default')
         applyProfile(portal, 'plone.app.tiles:default')
+        self.registerFTI(portal)
+
+    def registerFTI(self, portal):
+        types_tool = getToolByName(portal, 'portal_types')
+        fti = DexterityFTI(
+            'Page',
+            global_allow=True,
+            behaviors=(
+                'plone.app.dexterity.behaviors.metadata.IBasic',
+                'plone.app.drafts.interfaces.IDraftable',
+            )
+        )
+        types_tool._setObject('Page', fti)
 
     # Temporarily set up a more predictable UUID generator so that we can
     # rely on the uuids in tests
@@ -60,7 +64,6 @@ class PloneAppTiles(PloneSandboxLayer):
                 return 'tile-%d' % self.counter
 
         self._uuidGenerator = getUtility(IUUIDGenerator)
-
         provideUtility(FauxUUIDGenerator(), provides=IUUIDGenerator)
 
     def testTearDown(self):

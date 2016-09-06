@@ -64,6 +64,7 @@ setup(
     extras_require={
         'test': [
             'Pillow',
+            'plone.dexterity',
             'plone.app.testing',
             'plone.app.drafts',
         ],
