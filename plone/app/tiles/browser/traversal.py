@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 from plone.app.tiles import MessageFactory as _
+from plone.app.tiles.interfaces import ALLOWED_TILES_VOCABULARY
 from plone.app.tiles.interfaces import ITileAddView
 from plone.app.tiles.interfaces import ITileDeleteView
 from plone.app.tiles.interfaces import ITileEditView
 from plone.memoize.view import memoize
-from plone.registry.interfaces import IRegistry
 from plone.tiles.interfaces import ITileType
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 from zope.component import queryMultiAdapter
 from zope.component import queryUtility
-from zope.interface import Interface
 from zope.interface import implements
+from zope.interface import Interface
 from zope.publisher.interfaces import IPublishTraverse
+from zope.schema.interfaces import IVocabularyFactory
 from zope.security import checkPermission
 
 
@@ -87,8 +88,12 @@ class AddTile(TileTraverser):
         """
         tiles = []
 
-        for tile_name in getUtility(IRegistry)['plone.app.tiles']:
-            tiletype = queryUtility(ITileType, tile_name.strip())
+        factory = getUtility(IVocabularyFactory,
+                             name=ALLOWED_TILES_VOCABULARY)
+        vocabulary = factory(self.context)
+
+        for item in vocabulary:
+            tiletype = item.value
             # check if we have permission to add this tile
             if tiletype and checkPermission(
                     tiletype.add_permission, self.context):

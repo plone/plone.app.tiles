@@ -15,6 +15,16 @@
 
   <include package="plone.app.z3cform" />
 
+  <!-- Vocabularies -->
+  <utility factory=".vocabularies.RegisteredTilesVocabulary"
+           name="plone.app.tiles.RegisteredTiles" />
+
+  <utility factory=".vocabularies.AvailableTilesVocabulary"
+           name="plone.app.tiles.AvailableTiles" />
+
+  <utility factory=".vocabularies.AllowedTilesVocabulary"
+           name="plone.app.tiles.AllowedTiles" />
+
   <!-- Views -->
   <include package=".browser" />
 

@@ -1,14 +1,25 @@
 Changelog
 =========
 
-2.2.2 (unreleased)
+3.0.0 (unreleased)
 ------------------
+
+- Deprecate registry record ``plone.app.tiles``. The registry
+  record is still registered, but not used by plone.app.tiles
+  [datakurre]
+
+- Add new vocabularies *plone.app.tiles.RegisteredTiles*,
+  *plone.app.tiles.AvailableTiles* and *plone.app.tiles.AllowedTiles* to
+  list all registered tiles, tiles available in the current context
+  and tiles allowed to be added in the current context by the current user
+  [datakurre]
+
+- Fix to use z3c.form's applyForm() in tile add and edit forms so
+  IDataManagers get used and complex fields are filled properly
+  [danmur]
 
 - Use @property instead of property().
   [gforcada]
-- Use z3c.form's applyForm() in tile add and edit forms so
-  IDataManagers get used.
-  [danmur]
 
 - Reformat docs and update some references.
   [gforcada]

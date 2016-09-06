@@ -31,6 +31,17 @@ This package contains the following things:
   This will fire an ``IObjectRemovedEvent`` for the removed tile (a transient object).
   The ``oldParent`` attribute will be the tile's context, and the ``oldName`` attribute will be the tile's id.
 
+* A vocabulary ``plone.app.tiles.RegisteredTiles``, which contains all
+  registered tile types.
+
+* A vocabulary ``plone.app.tiles.AvailableTiles``, which contains all
+  registered tile types, which have been registered for the current context.
+
+* A vocabulary ``plone.app.tiles.AllowedTiles``, which contains all
+  registered tile types, which have been registered for the current context,
+  and, which are currently allowed to be added (for which the current
+  user has required add permission).
+
 The default add and edit forms should suffice for most use cases.
 You can use `plone.autoform <http://pypi.python.org/pypi/plone.autoform>`_ to configure alternative widgets.
 

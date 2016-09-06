@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
+import urllib
+
+import pkg_resources
 from plone.app.testing import SITE_OWNER_NAME
 from plone.app.testing import SITE_OWNER_PASSWORD
-from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
 from plone.testing.z2 import Browser
-from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from z3c.form.datamanager import DictionaryField
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getGlobalSiteManager
 from zope.component import getUtility
 from zope.component import provideAdapter
-import pkg_resources
-import urllib
+
+from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
+from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 
 try:
     pkg_resources.get_distribution('plone.app.drafts')
