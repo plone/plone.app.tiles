@@ -8,6 +8,8 @@ from plone.app.testing import applyProfile
 from plone.dexterity.fti import DexterityFTI
 from zope.component import getUtility
 from zope.component import provideUtility
+import plone.app.dexterity
+import plone.app.relationfield
 import plone.app.tiles
 
 import pkg_resources
@@ -26,12 +28,16 @@ class PloneAppTiles(PloneSandboxLayer):
     defaultBases = (PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
+        self.loadZCML(package=plone.app.dexterity)
+        self.loadZCML(package=plone.app.relationfield)
         if HAS_DRAFTS:
             self.loadZCML(package=plone.app.drafts)
         self.loadZCML(package=plone.app.tiles)
         self.loadZCML(package=plone.app.tiles, name='demo.zcml')
 
     def setUpPloneSite(self, portal):
+        applyProfile(portal, 'plone.app.dexterity:default')
+        applyProfile(portal, 'plone.app.relationfield:default')
         if HAS_DRAFTS:
             applyProfile(portal, 'plone.app.drafts:default')
         applyProfile(portal, 'plone.app.tiles:default')

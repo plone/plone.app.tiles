@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-from plone.app.tiles import MessageFactory as _
+from plone.app.tiles import _ as _
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.utils import appendJSONData
 from plone.tiles.interfaces import ITileDataManager

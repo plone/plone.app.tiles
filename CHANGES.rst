@@ -7,6 +7,11 @@ Changelog
 - Remove ``Add tile`` (plone.app.tiles.AddTile) permission, because
   it was not use by default and each tiles may have it's own add permission
   and use existing permissions like ``cmf.ModifyPortalContent``.
+
+- Add CMFEditions modifier to prevent (previously broken) versioning of blobs
+  and relations in persistent tile data (in annotations); Whenever a previous
+  version is restored, the blob and relation versions from the current
+  working copy version are applied for the restored version
   [datakurre]
 
 - Deprecate registry record ``plone.app.tiles``. The registry

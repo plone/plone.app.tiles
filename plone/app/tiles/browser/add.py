@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from plone.app.tiles import MessageFactory as _
 from plone.app.tiles.browser.base import TileForm
+from plone.app.tiles import _
 from plone.app.tiles.utils import appendJSONData
 from plone.tiles.interfaces import ITileDataManager
 from plone.uuid.interfaces import IUUIDGenerator
 from plone.z3cform import layout
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form import form, button
 from zope.component import getUtility
 from zope.event import notify

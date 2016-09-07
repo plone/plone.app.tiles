@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from plone.app.tiles import MessageFactory as _
+from plone.app.tiles import _ as _
 from plone.app.tiles.interfaces import ALLOWED_TILES_VOCABULARY
 from plone.app.tiles.interfaces import ITileAddView
 from plone.app.tiles.interfaces import ITileDeleteView
