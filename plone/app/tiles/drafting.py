@@ -18,6 +18,12 @@ from zope.interface import Interface
 from zope.interface import implementer
 from zope.interface import implements
 
+try:
+    from plone.app.drafts.dexterity import IDisplayFormDrafting
+except ImportError:
+    class IDisplayFormDrafting(object):
+        pass
+
 
 @implementer(ITileDataContext)
 @adapter(Interface, ITilesFormLayer, ITile)
@@ -48,9 +54,10 @@ def draftingTileDataContext(context, request, tile):
         # Not referring from an edit form
         referrer = request.get('HTTP_REFERER', '')
         path = urlparse(referrer).path
-        if all((not path.endswith('/edit'),
-                not path.endswith('/@@edit'),
-                not path.split('/')[-1].startswith('++add++'))):
+        if (not IDisplayFormDrafting.providedBy(request) and
+                not path.endswith('/edit') and
+                not path.endswith('/@@edit') and
+                not path.split('/')[-1].startswith('++add++')):
             return context
 
         ICurrentDraftManagement(request).mark()
