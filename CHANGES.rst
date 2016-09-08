@@ -4,6 +4,11 @@ Changelog
 3.0.0 (unreleased)
 ------------------
 
+- Remove ``Add tile`` (plone.app.tiles.AddTile) permission, because
+  it was not use by default and each tiles may have it's own add permission
+  and use existing permissions like ``cmf.ModifyPortalContent``.
+  [datakurre]
+
 - Deprecate registry record ``plone.app.tiles``. The registry
   record is still registered, but not used by plone.app.tiles
   [datakurre]

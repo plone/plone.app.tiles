@@ -28,8 +28,6 @@
   <!-- Views -->
   <include package=".browser" />
 
-  <include file="permissions.zcml" />
-
   <!-- Drafting -->
   <configure zcml:condition="installed plone.app.drafts">
     <adapter
@@ -59,8 +57,5 @@
     />
 
   <subscriber handler=".handlers.notifyModified" />
-
-  <!-- TODO: Remove once we stop doing TTW testing -->
-  <include file="demo.zcml" />
 
 </configure>
