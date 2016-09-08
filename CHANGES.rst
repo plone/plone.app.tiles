@@ -13,6 +13,9 @@ Changelog
   record is still registered, but not used by plone.app.tiles
   [datakurre]
 
+- Add support for drafting preview when request has IDisplayFormDrafting
+  [datakurre]
+
 - Add new vocabularies *plone.app.tiles.RegisteredTiles*,
   *plone.app.tiles.AvailableTiles* and *plone.app.tiles.AllowedTiles* to
   list all registered tiles, tiles available in the current context
