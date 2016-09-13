@@ -8,7 +8,13 @@ if sys.version_info[0] == 2 and sys.version_info[1] < 6:
 else:
     requires = []
 
-tests_require = ['plone.app.testing']
+tests_require = ['Pillow',
+                 'plone.app.drafts',
+                 'plone.app.relationfield',
+                 'plone.app.testing',
+                 'plone.dexterity',
+                 'plone.app.dexterity',
+                 'plone.namedfile[blobs]']
 
 
 setup(
