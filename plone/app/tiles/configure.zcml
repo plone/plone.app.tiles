@@ -4,8 +4,11 @@
     xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="plone.app.tiles">
 
+  <five:registerPackage package="." initialize=".initialize" />
   <i18n:registerTranslations directory="locales" />
 
   <include package="plone.tiles" />
@@ -50,7 +53,26 @@
 
   <subscriber handler=".handlers.notifyModified" />
 
+<<<<<<< HEAD
   <!-- TODO: Remove once we stop doing TTW testing -->
   <include file="demo.zcml" />
+=======
+    <genericsetup:importStep
+        name="plone.app.tiles_default"
+        title="plone.app.tiles setup"
+        description="Install CMFEditions modifier"
+        handler=".setuphandlers.post_setup"
+        />
+
+    <genericsetup:upgradeStep
+        profile="plone.app.tiles:default"
+        source="1" destination="2"
+        title="Install CMFEditions modifier"
+        handler=".setuphandlers.install_modifiers"
+        />
+
+    <!-- TODO: Remove once we stop doing TTW testing -->
+    <include file="demo.zcml" />
+>>>>>>> 38077cb... Backport CMFEditions modifier for preventing versioningof blobs and relation values in tile annotations
 
 </configure>

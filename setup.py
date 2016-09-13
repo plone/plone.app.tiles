@@ -3,7 +3,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '2.2.1'
+version = '2.3.0.dev01'
 long_description = (
     open('README.rst').read() + '\n' +
     open('CONTRIBUTORS.rst').read() + '\n' +
@@ -66,6 +66,9 @@ setup(
             'Pillow',
             'plone.app.testing',
             'plone.app.drafts',
+            'plone.dexterity',
+            'plone.app.dexterity',
+            'plone.namedfile[blobs]'
         ],
     },
 )

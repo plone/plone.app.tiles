@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
-from plone.app.testing import PLONE_FIXTURE
-from plone.app.testing import IntegrationTesting
-from plone.app.testing import FunctionalTesting
-from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
+from plone.app.testing import FunctionalTesting
+from plone.app.testing import IntegrationTesting
+from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import PloneSandboxLayer
+from plone.dexterity.fti import DexterityFTI
 from zope.component import getUtility
 from zope.component import provideUtility
-from zope.configuration import xmlconfig
-
 import pkg_resources
+import plone.app.dexterity
+import plone.app.relationfield
+import plone.app.tiles
 
 try:
     pkg_resources.get_distribution('plone.app.drafts')
 except pkg_resources.DistributionNotFound:
     HAS_DRAFTS = False
 else:
+    import plone.app.drafts
     HAS_DRAFTS = True
 
 
@@ -24,26 +27,12 @@ class PloneAppTiles(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
+        self.loadZCML(package=plone.app.dexterity)
+        self.loadZCML(package=plone.app.relationfield)
         if HAS_DRAFTS:
-            import plone.app.drafts
-            xmlconfig.file(
-                'configure.zcml',
-                plone.app.drafts,
-                context=configurationContext)
-        import plone.app.tiles
-        xmlconfig.file(
-            'configure.zcml',
-            plone.app.tiles,
-            context=configurationContext)
-        xmlconfig.file(
-            'demo.zcml',
-            plone.app.tiles,
-            context=configurationContext)
-
-    def setUpPloneSite(self, portal):
-        if HAS_DRAFTS:
-            applyProfile(portal, 'plone.app.drafts:default')
-        applyProfile(portal, 'plone.app.tiles:default')
+            self.loadZCML(package=plone.app.drafts)
+        self.loadZCML(package=plone.app.tiles)
+        self.loadZCML(package=plone.app.tiles, name='demo.zcml')
 
         from plone.registry.interfaces import IRegistry
 
@@ -52,6 +41,26 @@ class PloneAppTiles(PloneSandboxLayer):
             u'plone.app.tiles.demo.transient',
             u'plone.app.tiles.demo.persistent',
         ]
+
+    def setUpPloneSite(self, portal):
+        applyProfile(portal, 'plone.app.dexterity:default')
+        applyProfile(portal, 'plone.app.relationfield:default')
+        if HAS_DRAFTS:
+            applyProfile(portal, 'plone.app.drafts:default')
+        applyProfile(portal, 'plone.app.tiles:default')
+        self.registerFTI(portal)
+
+    def registerFTI(self, portal):
+        types_tool = getToolByName(portal, 'portal_types')
+        fti = DexterityFTI(
+            'Page',
+            global_allow=True,
+            behaviors=(
+                'plone.app.dexterity.behaviors.metadata.IBasic',
+                'plone.app.drafts.interfaces.IDraftable',
+            )
+        )
+        types_tool._setObject('Page', fti)
 
     # Temporarily set up a more predictable UUID generator so that we can
     # rely on the uuids in tests
