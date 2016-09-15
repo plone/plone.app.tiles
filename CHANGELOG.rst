@@ -1,11 +1,13 @@
 Changelog
 =========
 
-1.0.3 (unreleased)
+1.1.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Add CMFEditions modifier to prevent (previously broken) versioning of blobs
+  and relations in persistent tile data (in annotations); Whenever a previous
+  version is restored, the blob and relation versions from the current working
+  copy version are applied for the restored version [datakurre]
 
 1.0.2 (2016-05-04)
 ------------------
