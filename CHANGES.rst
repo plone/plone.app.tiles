@@ -4,21 +4,23 @@ Changelog
 3.0.0 (unreleased)
 ------------------
 
-- Remove ``Add tile`` (plone.app.tiles.AddTile) permission, because
-  it was not use by default and each tiles may have it's own add permission
-  and use existing permissions like ``cmf.ModifyPortalContent``.
+Breaking changes:
 
-- Add CMFEditions modifier to prevent (previously broken) versioning of blobs
-  and relations in persistent tile data (in annotations); Whenever a previous
-  version is restored, the blob and relation versions from the current
-  working copy version are applied for the restored version
+- Remove ``Add tile`` (plone.app.tiles.AddTile) permission, because
+  it was not use by default and each tiles may have its own add permission
+  and use existing permissions like ``cmf.ModifyPortalContent``.
   [datakurre]
 
 - Deprecate registry record ``plone.app.tiles``. The registry
   record is still registered, but not used by plone.app.tiles
   [datakurre]
 
-- Add support for drafting preview when request has IDisplayFormDrafting
+New features:
+
+- Add CMFEditions modifier to prevent (previously broken) versioning of blobs
+  and relations in persistent tile data (in annotations); Whenever a previous
+  version is restored, the blob and relation versions from the current
+  working copy version are applied for the restored version
   [datakurre]
 
 - Add new vocabularies *plone.app.tiles.RegisteredTiles*,
@@ -27,9 +29,18 @@ Changelog
   and tiles allowed to be added in the current context by the current user
   [datakurre]
 
+- Add support for drafting preview when request has
+  plone.app.drafts.interfaces.IDisplayFormDrafting
+  (requires plone.app.drafts >= 1.1.0)
+  [datakurre]
+
+Bug fixes:
+
 - Fix to use z3c.form's applyForm() in tile add and edit forms so
   IDataManagers get used and complex fields are filled properly
   [danmur]
+
+Refactoring:
 
 - Use @property instead of property().
   [gforcada]
