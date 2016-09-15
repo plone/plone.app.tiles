@@ -2,3 +2,4 @@ recursive-include plone *
 include setup.py *.txt *.rst *.GPL
 exclude bootstrap.py Makefile *.cfg *.in *.nix *.sh
 global-exclude *.pyc
+exclude .coveragerc
