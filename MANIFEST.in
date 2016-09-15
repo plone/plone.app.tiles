@@ -1,3 +1,5 @@
+graft docs
+graft plone
 include *.rst
-recursive-include plone/app/tiles *
 global-exclude *.pyc
+exclude rebuild_i18n.sh
