@@ -67,6 +67,8 @@ def manage_addCleanTileAnnotations(self, id, title=None, REQUEST=None):
         REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
 
+ANNOTATION_KEY_PREFIXES = [ANNOTATIONS_KEY_PREFIX,  # plone.tiles default
+                           'plone.tiles.scale']  # collective.cover scales
 MAPPING_TYPES = [dict, PersistentMapping]
 ITERABLE_TYPES = [list, tuple, set, frozenset, PersistentList]
 CLEANABLE_TYPES = [Blob, NamedFile, RelationValue]
@@ -129,7 +131,7 @@ class CleanTileAnnotations:
         refs = []
         annotations = IAnnotations(obj)
         for key in annotations:
-            if not key.startswith(ANNOTATIONS_KEY_PREFIX):
+            if not any([key.startswith(k) for k in ANNOTATION_KEY_PREFIXES]):
                 continue
             refs.extend(getReferences(annotations[key]))
 
