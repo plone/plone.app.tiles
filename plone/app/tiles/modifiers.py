@@ -106,7 +106,7 @@ def restoreValues(obj, repo_clone, key=None):
         for key, value in obj.items():
             if any([isinstance(value, t) for t in MAPPING_TYPES]):
                 # Handle mappings recursively
-                if key in repo_clone:
+                if key in repo_clone and repo_clone.get(key) is not None:
                     restoreValues(value, repo_clone[key])
             elif any([isinstance(value, t) for t in CLEANABLE_TYPES]):
                 # Assign simple value by reference
