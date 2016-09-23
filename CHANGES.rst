@@ -1,10 +1,18 @@
 Changelog
 =========
 
+2.3.0 (unreleased)
+------------------
+
+- Add CMFEditions modifier to prevent (previously broken) versioning of blobs
+  and relations in persistent tile data (in annotations); Whenever a previous
+  version is restored, the blob and relation versions from the current working
+  copy version are applied for the restored version [datakurre]
+
 2.2.1 (2016-04-06)
 ------------------
 
-- Fix default role assignment: Remove Reviewer and add Contributor to 
+- Fix default role assignment: Remove Reviewer and add Contributor to
   'Add Tile' permission in ``rolemap.xml``.
   [jensens]
 
