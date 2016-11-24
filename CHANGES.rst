@@ -4,6 +4,16 @@ Changelog
 3.0.2 (unreleased)
 ------------------
 
+Breaking changes:
+
+- Nothing changed yet.
+
+New features:
+
+- Nothing changed yet.
+
+Bug fixes:
+
 - Nothing changed yet.
 
 
