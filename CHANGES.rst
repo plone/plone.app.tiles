@@ -4,7 +4,19 @@ Changelog
 3.0.1 (unreleased)
 ------------------
 
+Breaking changes:
+
 - Nothing changed yet.
+
+New features:
+
+- Nothing changed yet.
+
+Bug fixes:
+
+- ``plone_view/mark_view`` was deprecated and removed in Plone 5.1.
+  Use ``plone_layout/mark_view`` instead.
+  [thet]
 
 
 3.0.0 (2016-09-15)
@@ -60,7 +72,7 @@ Refactoring:
 2.2.1 (2016-04-06)
 ------------------
 
-- Fix default role assignment: Remove Reviewer and add Contributor to 
+- Fix default role assignment: Remove Reviewer and add Contributor to
   'Add Tile' permission in ``rolemap.xml``.
   [jensens]
 
