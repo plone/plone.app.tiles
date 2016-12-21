@@ -4,17 +4,10 @@ Changelog
 3.0.2 (unreleased)
 ------------------
 
-Breaking changes:
-
-- Nothing changed yet.
-
-New features:
-
-- Nothing changed yet.
-
 Bug fixes:
 
-- Nothing changed yet.
+- Fix issue where deprecated fieldname was passed to getAvailableSizes
+  [datakurre]
 
 
 3.0.1 (2016-11-24)
