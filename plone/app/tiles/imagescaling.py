@@ -152,7 +152,7 @@ class ImageScaling(BaseImageScaling):
         if fieldname is None:
             fieldname = IPrimaryFieldInfo(self.context).fieldname
         if scale is not None:
-            available = self.getAvailableSizes(fieldname)
+            available = self.getAvailableSizes()
             if scale not in available:
                 return None
             width, height = available[scale]
