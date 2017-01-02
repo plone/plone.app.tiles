@@ -113,7 +113,9 @@ class ImageScaling(BaseImageScaling):
             _, format = orig_value.contentType.split('/', 1)
             return None, format, (orig_value._width, orig_value._height)
         if hasattr(aq_base(orig_value), 'open'):
-            orig_data = orig_value.open()
+            fp = orig_value.open()
+            orig_data = fp.read()
+            fp.close()
         else:
             orig_data = getattr(aq_base(orig_value), 'data', orig_value)
         if not orig_data:
