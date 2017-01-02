@@ -4,7 +4,10 @@ Changelog
 3.0.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+Bug fixes:
+
+- Fix issue where tile image scaling leaked didn't close opened files
+  [datakurre]
 
 
 3.0.2 (2016-12-21)
