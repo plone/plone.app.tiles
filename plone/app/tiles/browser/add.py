@@ -64,6 +64,8 @@ class DefaultAddForm(TileForm, form.Form):
         dataManager = ITileDataManager(tile)
         new_data = {}
         form.applyChanges(self, new_data, data)
+        for group in self.groups:
+            form.applyChanges(group, new_data, data)
         dataManager.set(new_data)
 
         # Look up the URL - we need to do this after we've set the data to
