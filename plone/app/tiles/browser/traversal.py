@@ -16,6 +16,8 @@ from zope.publisher.interfaces import IPublishTraverse
 from zope.schema.interfaces import IVocabularyFactory
 from zope.security import checkPermission
 
+import urllib
+
 
 class TileTraverser(object):
     """Base class for tile add/edit view traversers.
@@ -123,8 +125,17 @@ class AddTile(TileTraverser):
                                             u"tile to create")
 
             if len(self.errors) == 0:
-                self.request.response.redirect("%s/@@add-tile/%s" % (
-                    self.context.absolute_url(), newTileType))
+                # Redirect to tile add form with additional query
+                query = self.request.form.copy()
+                del query['tiletype']
+                del query['form.button.Create']
+                encoded = urllib.urlencode(query)
+                if encoded:
+                    self.request.response.redirect("%s/@@add-tile/%s?%s" % (
+                        self.context.absolute_url(), newTileType, encoded))
+                else:
+                    self.request.response.redirect("%s/@@add-tile/%s" % (
+                        self.context.absolute_url(), newTileType))
                 return ''
 
         return self.index()
