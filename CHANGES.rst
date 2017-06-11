@@ -4,11 +4,14 @@ Changelog
 3.1.0 (unreleased)
 ------------------
 
-- Add to pass extra parameters given for add-tile-traverser forward to tile add
-  form
+- Fix issue where drafting was ignored when rendering field tiles or their
+  widgets on an edit form with tiles (e.g. on Mosaic Editor)
   [datakurre]
 
-- Fieldset support in tile schemas
+- Add to pass extra parameters given for add-tile-traverser forward to tile add form
+  [datakurre]
+
+- Add support for fieldsets in tile schemas
   [datakurre]
 
 

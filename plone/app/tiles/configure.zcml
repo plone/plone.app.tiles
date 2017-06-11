@@ -34,11 +34,31 @@
   <configure zcml:condition="installed plone.app.drafts">
     <adapter
       factory=".drafting.draftingTileDataContext"
-      />
+    />
     <adapter
       name="plone.app.tiles.tiledata"
       factory=".drafting.TileDataDraftSyncer"
+    />
+    <configure zcml:condition="installed plone.app.dexterity">
+      <subscriber
+        handler=".drafting_z3cform.afterTraversalDrafting"
       />
+      <adapter
+        factory=".drafting_z3cform.TileWidgetTraversal"
+        name="widget"
+      />
+      <adapter
+        factory=".drafting_z3cform.DisplayTileFormFieldWidgets"
+      />
+      <browser:page
+        allowed_attributes="scale tag"
+        class=".drafting_z3cform.TileDraftingImageScaling"
+        for="plone.namedfile.interfaces.IImageScaleTraversable"
+        layer="plone.app.z3cform.interfaces.IPloneFormLayer"
+        name="images"
+        permission="zope2.View"
+      />
+    </configure>
   </configure>
 
   <!-- Image scale support for tile images -->
