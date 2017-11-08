@@ -109,9 +109,13 @@ class TileDraftingImageScaling(ImageScaling):
                 **parameters
             )
 
+        data = getattr(aq_base(self._context), fieldname, None)
+        draft = getattr(aq_base(self.context), fieldname, None)
+
+        if draft is None:
+            return None
+
         view = create()
-        data = getattr(self._context, view.fieldname)
-        draft = getattr(self.context, view.fieldname)
 
         # 1) When draft has no changes scale the original
         if data is draft:
@@ -133,12 +137,12 @@ class TileDraftingImageScaling(ImageScaling):
                 del storage[view.uid]
                 view = create()
 
-        from datetime import datetime
-        print self.context
-        for value in self.context.__annotations__['plone.scale'].values():
-            print value['uid'], datetime.fromtimestamp(
-                value['modified'] / 1000.), value['key'][-2][-1]
-        print '-' * 80
+        # from datetime import datetime
+        # print self.context
+        # for value in self.context.__annotations__['plone.scale'].values():
+        #     print value['uid'], datetime.fromtimestamp(
+        #         value['modified'] / 1000.), value['key'][-2][-1]
+        # print '-' * 80
 
         return view
 
