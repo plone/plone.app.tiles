@@ -10,6 +10,7 @@ from plone.behavior.interfaces import IBehaviorAssignable
 from plone.namedfile.scaling import ImageScaling
 from plone.scale.storage import AnnotationStorage
 from plone.tiles.interfaces import ITile
+from plone.uuid.interfaces import IUUID
 from plone.z3cform.traversal import FormWidgetTraversal
 from z3c.form.field import FieldWidgets as FieldWidgetsBase
 from z3c.form.interfaces import IForm
@@ -75,9 +76,13 @@ class TileDraftingImageScaling(ImageScaling):
             referer.endswith('/@@edit') or
             referer.split('/')[-1].startswith('++add++')
         ):
-            self._drafting = True
-            ICurrentDraftManagement(request).mark()
-            context = draftingTileDataContext(context, request, context)
+            current = ICurrentDraftManagement(request)
+            if current.path == '/'.join(context.getPhysicalPath()):
+                current.mark()
+                context = draftingTileDataContext(context, request, context)
+                self._drafting = True
+            else:
+                self._drafting = False
         else:
             self._drafting = False
         super(TileDraftingImageScaling, self).__init__(context, request)
