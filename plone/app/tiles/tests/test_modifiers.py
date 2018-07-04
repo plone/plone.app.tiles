@@ -18,7 +18,7 @@ import unittest
 
 
 class Tile(PersistentTile):
-    pass
+    __name__ = u'test.tile'
 
 
 class TestModifiers(unittest.TestCase):
