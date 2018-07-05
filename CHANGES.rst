@@ -1,10 +1,15 @@
 Changelog
 =========
 
-3.0.4 (unreleased)
+3.1.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add to pass extra parameters given for add-tile-traverser forward to tile add
+  form
+  [datakurre]
+
+- Fieldset support in tile schemas
+  [datakurre]
 
 
 3.0.3 (2017-01-02)

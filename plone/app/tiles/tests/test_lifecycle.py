@@ -49,7 +49,7 @@ class TestTileLifecycle(unittest.TestCase):
         # Now we are at the transient tile add form
         url = '{0}/@@add-tile/plone.app.tiles.demo.transient'
         self.assertEqual(
-            self.browser.url,
+            self.browser.url.split('?')[0],
             url.format(self.portal_url),
         )
 

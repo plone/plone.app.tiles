@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from plone import tiles
+from plone.supermodel.model import fieldset
 from zope import schema
 from zope.interface import Interface
 
@@ -20,6 +21,11 @@ class IPersistentTileData(Interface):
 
     message = schema.TextLine(title=u"Persisted message")
     counter = schema.Int(title=u"Counter")
+
+    fieldset(
+        'counter',
+        label=u"Counter",
+        fields=['counter'])
 
 
 class PersistentTile(tiles.PersistentTile):
