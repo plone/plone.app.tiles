@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.1.0 (unreleased)
+3.1.0 (2018-07-05)
 ------------------
 
 - Add to pass extra parameters given for add-tile-traverser forward to tile add
