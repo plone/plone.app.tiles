@@ -10,13 +10,11 @@ from plone.app.tiles.interfaces import ITilesFormLayer
 from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from plone.tiles.interfaces import ITile
 from plone.tiles.interfaces import ITileDataContext
-from urlparse import urlparse
+from urllib.parse import urlparse
 from zope.annotation.interfaces import IAnnotations
 from zope.component import adapter
-from zope.component import adapts
 from zope.interface import Interface
 from zope.interface import implementer
-from zope.interface import implements
 
 try:
     from plone.app.drafts.dexterity import IDisplayFormDrafting
@@ -65,12 +63,11 @@ def draftingTileDataContext(context, request, tile):
     return DraftProxy(draft, context)
 
 
+@implementer(IDraftSyncer)
+@adapter(IDraft, Interface)
 class TileDataDraftSyncer(object):
     """Copy draft persistent tile data to the real object on save
     """
-
-    implements(IDraftSyncer)
-    adapts(IDraft, Interface)
 
     def __init__(self, draft, target):
         self.draft = draft

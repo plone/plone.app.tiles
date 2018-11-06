@@ -10,7 +10,7 @@ from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 from zope.component import queryMultiAdapter
 from zope.component import queryUtility
-from zope.interface import implements
+from zope.interface import implementer
 from zope.interface import Interface
 from zope.publisher.interfaces import IPublishTraverse
 from zope.schema.interfaces import IVocabularyFactory
@@ -19,6 +19,7 @@ from zope.security import checkPermission
 import urllib
 
 
+@implementer(IPublishTraverse)
 class TileTraverser(object):
     """Base class for tile add/edit view traversers.
 
@@ -27,7 +28,6 @@ class TileTraverser(object):
     """
 
     targetInterface = Interface
-    implements(IPublishTraverse)
 
     view = None
 
