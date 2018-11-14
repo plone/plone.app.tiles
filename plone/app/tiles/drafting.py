@@ -78,7 +78,7 @@ class TileDataDraftSyncer(object):
         draftAnnotations = IAnnotations(self.draft)
         targetAnnotations = IAnnotations(self.target)
 
-        for key, value in draftAnnotations.iteritems():
+        for key, value in draftAnnotations.items():
             if key.startswith(ANNOTATIONS_KEY_PREFIX):
                 targetAnnotations[key] = value
 
