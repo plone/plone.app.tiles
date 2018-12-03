@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
 from plone.app.drafts.interfaces import ICurrentDraftManagement
-from plone.app.drafts.interfaces import USERID_KEY
 from plone.app.drafts.interfaces import IDraft
 from plone.app.drafts.interfaces import IDraftSyncer
 from plone.app.drafts.interfaces import IDrafting
+from plone.app.drafts.interfaces import USERID_KEY
 from plone.app.drafts.proxy import DraftProxy
 from plone.app.drafts.utils import getCurrentDraft
 from plone.app.tiles.interfaces import ITilesFormLayer
 from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from plone.tiles.interfaces import ITile
 from plone.tiles.interfaces import ITileDataContext
+from six.moves.urllib.parse import urlparse
 from zope.annotation.interfaces import IAnnotations
 from zope.component import adapter
 from zope.interface import Interface
 from zope.interface import implementer
 
-try:
-    from urlparse import urlparse
-except ImportError:
-    from urllib.parse import urlparse
 try:
     from plone.app.drafts.dexterity import IDisplayFormDrafting
 except ImportError:

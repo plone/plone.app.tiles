@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from operator import attrgetter
 from plone.app.tiles import _ as _
 from plone.app.tiles.interfaces import ALLOWED_TILES_VOCABULARY
 from plone.app.tiles.interfaces import ITileAddView
@@ -15,8 +16,7 @@ from zope.interface import Interface
 from zope.publisher.interfaces import IPublishTraverse
 from zope.schema.interfaces import IVocabularyFactory
 from zope.security import checkPermission
-
-import urllib
+from six.moves.urllib.parse import urlencode
 
 
 @implementer(IPublishTraverse)
@@ -80,9 +80,6 @@ class AddTile(TileTraverser):
 
     targetInterface = ITileAddView
 
-    def tileSortKey(self, type1, type2):
-        return cmp(type1.title, type2.title)
-
     @memoize
     def tileTypes(self):
         """Get a list of addable ITileType objects representing tiles
@@ -112,7 +109,7 @@ class AddTile(TileTraverser):
                 }]
                 tiles.append(tiletype)
 
-        tiles.sort(self.tileSortKey)
+        tiles.sort(key=attrgetter('title'))
         return tiles
 
     def __call__(self):
@@ -129,7 +126,7 @@ class AddTile(TileTraverser):
                 query = self.request.form.copy()
                 del query['tiletype']
                 del query['form.button.Create']
-                encoded = urllib.urlencode(query)
+                encoded = urlencode(query)
                 if encoded:
                     self.request.response.redirect("%s/@@add-tile/%s?%s" % (
                         self.context.absolute_url(), newTileType, encoded))
