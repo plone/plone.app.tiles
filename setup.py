@@ -39,6 +39,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
+        'six',
         'zope.annotation',
         'zope.i18nmessageid',
         'plone.namedfile',

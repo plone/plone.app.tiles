@@ -146,8 +146,8 @@ class TestTileLifecycle(unittest.TestCase):
             self.portal_url, "plone.app.tiles.demo.persistent", tile_id))
         self.browser.getControl(label='Delete').click()
 
-        # Verify status code
-        self.assertEqual('200 Ok', self.browser.headers['status'])
+        # Verify status code (different cases in zope.testbrowser)
+        self.assertEqual('200 ok', self.browser.headers['status'].lower())
 
         # Verify annotations
         self.assertEqual(None, folder_annotations.get(annotations_key))

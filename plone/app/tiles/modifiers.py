@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pkg_resources
+
 from Acquisition import aq_base
 from App.class_init import InitializeClass
 from Products.CMFEditions.Modifiers import ConditionalTalesModifier
@@ -10,10 +11,10 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from ZODB.blob import Blob
 from persistent.list import PersistentList
 from persistent.mapping import PersistentMapping
+from plone.namedfile import NamedFile
+from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from zope.annotation import IAnnotations
 from zope.interface import implementer
-from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
-from plone.namedfile import NamedFile
 
 try:
     from plone.namedfile import NamedBlobFile
@@ -85,14 +86,14 @@ def getReferences(obj):
     """
     refs = []
     if any([isinstance(obj, t) for t in MAPPING_TYPES]):
-        refs.extend(getReferences(obj.values()))
+        refs.extend(getReferences(list(obj.values())))
     if not any([isinstance(obj, t) for t in ITERABLE_TYPES]):
         return refs
     for value in obj:
         if any([isinstance(value, t) for t in CLEANABLE_TYPES]):
             refs.append(id(aq_base(value)))
         elif any([isinstance(value, t) for t in MAPPING_TYPES]):
-            refs.extend(getReferences(value.values()))
+            refs.extend(getReferences(list(value.values())))
         elif any([isinstance(value, t) for t in ITERABLE_TYPES]):
             refs.extend(getReferences(value))
     return refs

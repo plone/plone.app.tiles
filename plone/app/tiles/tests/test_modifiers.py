@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
+import pickle
+import unittest
+
 from persistent.list import PersistentList
 from persistent.mapping import PersistentMapping
-from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
+from plone.app.testing import setRoles
 from plone.app.tiles.modifiers import CleanTileAnnotations
 from plone.app.tiles.testing import PLONE_APP_TILES_INTEGRATION_TESTING
 from plone.dexterity.utils import createContentInContainer
 from plone.namedfile import NamedBlobFile
 from plone.tiles import PersistentTile
 from plone.tiles.interfaces import ITileDataManager
+from six import BytesIO
 from z3c.relationfield import RelationValue
 from zope.component import getUtility
 from zope.intid.interfaces import IIntIds
-import pickle
-import StringIO
-import unittest
 
 
 class Tile(PersistentTile):
@@ -63,7 +64,7 @@ class TestModifiers(unittest.TestCase):
         # The modifier works by preventing CMFEditions deepcopy to clone blobs
         # and relations in tile annotations. We simulate this in test by
         # creating a custom pickler and configuring it with modifier callbacks.
-        src = StringIO.StringIO()
+        src = BytesIO()
         pickler = pickle.Pickler(src)
         pickler.persistent_id = callbacks[0]
         unpickler = pickle.Unpickler(src)
