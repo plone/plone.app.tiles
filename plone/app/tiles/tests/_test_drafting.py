@@ -99,7 +99,6 @@ class TestTileDrafting(unittest.TestCase):
         # Fill in the data and save
         self.browser.getControl(
             name='plone.app.tiles.demo.persistent.message').value = 'Test message'  # noqa: E501
-        import pdb; pdb.set_trace()
         self.browser.getControl(
             name='plone.app.tiles.demo.persistent.counter').value = '1'
         # XXX
