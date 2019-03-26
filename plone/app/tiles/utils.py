@@ -2,11 +2,10 @@
 from plone.tiles.interfaces import IPersistentTile
 from plone.tiles.interfaces import ITileDataManager
 from plone.tiles.interfaces import ITileType
+from six.moves.urllib import parse as urlparse
 from zope.component import getMultiAdapter
 from zope.component import queryUtility
 from zope.traversing.browser.interfaces import IAbsoluteURL
-
-import urllib
 
 try:
     import json
@@ -34,9 +33,9 @@ def getEditTileURL(tile, request):
 
     url = str(getMultiAdapter((context, request), IAbsoluteURL))
 
-    tileFragment = "@@edit-tile/" + urllib.quote(name.encode('utf-8'), _safe)
+    tileFragment = "@@edit-tile/" + urlparse.quote(name.encode('utf-8'), _safe)
     if id:
-        tileFragment += '/' + urllib.quote(id.encode('utf-8'), _safe)
+        tileFragment += '/' + urlparse.quote(id.encode('utf-8'), _safe)
 
     url = '%s/%s' % (url, tileFragment,)
 
@@ -59,9 +58,9 @@ def appendJSONData(url, key='#', data=None):
     if data is None:
         return url
     elif key == '#' or not key:
-        return url + '#' + urllib.quote(json.dumps(data))
+        return url + '#' + urlparse.quote(json.dumps(data))
     else:
-        quoted = "%s=%s" % (key, urllib.quote(json.dumps(data)),)
+        quoted = "%s=%s" % (key, urlparse.quote(json.dumps(data)),)
         if '?' in url:
             return url + '&' + quoted
         else:
