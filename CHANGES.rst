@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Python 3 compatible urllib imports
+  [petschki]
 
 
 3.1.1 (2019-02-10)

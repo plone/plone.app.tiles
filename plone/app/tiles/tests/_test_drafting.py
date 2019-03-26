@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-import urllib
 import pkg_resources
+
 from plone.app.testing import SITE_OWNER_NAME
 from plone.app.testing import SITE_OWNER_PASSWORD
+from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
 from plone.testing.z2 import Browser
+from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
+from six.moves.urllib import parse as urlparse
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
-from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
-from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 
 try:
     pkg_resources.get_distribution('plone.app.drafts')
@@ -79,9 +80,9 @@ class TestTileDrafting(unittest.TestCase):
 
         cookies = self.browser.cookies.forURL(baseURL)
 
-        targetKey = urllib.unquote(
+        targetKey = urlparse.unquote(
             cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urllib.unquote(
+        cookiePath = urlparse.unquote(
             cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
@@ -91,13 +92,13 @@ class TestTileDrafting(unittest.TestCase):
         # an AJAX request for the same e.g. in a pop-up dialogue box
 
         self.browser.open(baseURL + '/@@add-tile')
-        self.browser.getControl(name='tiletype').value = \
-            ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(
+            name='tiletype').value = ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='form.button.Create').click()
 
         # Fill in the data and save
-        self.browser.getControl(name='plone.app.tiles.demo.persistent.message')\
-            .value = 'Test message'
+        self.browser.getControl(
+            name='plone.app.tiles.demo.persistent.message').value = 'Test message'  # noqa: E501
         self.browser.getControl(
             name='plone.app.tiles.demo.persistent.counter').value = '1'
         # XXX
@@ -110,7 +111,7 @@ class TestTileDrafting(unittest.TestCase):
         # We should now have a draft for this item with the relevant
         # annotations
 
-        draftName = urllib.unquote(
+        draftName = urlparse.unquote(
             cookies['plone.app.drafts.draftName'].replace('"', ''))
 
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
@@ -195,9 +196,9 @@ class TestTileDrafting(unittest.TestCase):
         # Get the values of the drafting cookies
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(
+        targetKey = urlparse.unquote(
             cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urllib.unquote(
+        cookiePath = urlparse.unquote(
             cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
@@ -213,7 +214,7 @@ class TestTileDrafting(unittest.TestCase):
 
         # A draft should now have been created
 
-        draftName = urllib.unquote(
+        draftName = urlparse.unquote(
             cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
@@ -264,9 +265,9 @@ class TestTileDrafting(unittest.TestCase):
         contextAnnotations = IAnnotations(context)
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(
+        targetKey = urlparse.unquote(
             cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urllib.unquote(
+        cookiePath = urlparse.unquote(
             cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
@@ -276,7 +277,7 @@ class TestTileDrafting(unittest.TestCase):
         self.browser.getControl(label='Save').click()
 
         # A draft should now have been created
-        draftName = urllib.unquote(
+        draftName = urlparse.unquote(
             cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
@@ -322,9 +323,9 @@ class TestTileDrafting(unittest.TestCase):
         contextAnnotations = IAnnotations(context)
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(
+        targetKey = urlparse.unquote(
             cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urllib.unquote(
+        cookiePath = urlparse.unquote(
             cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
@@ -342,7 +343,7 @@ class TestTileDrafting(unittest.TestCase):
                          self.browser.getControl(name='deleted.type').value)
 
         # Draft should have been created
-        draftName = urllib.unquote(
+        draftName = urlparse.unquote(
             cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
@@ -392,9 +393,9 @@ class TestTileDrafting(unittest.TestCase):
         contextAnnotations = IAnnotations(context)
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urllib.unquote(
+        targetKey = urlparse.unquote(
             cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urllib.unquote(
+        cookiePath = urlparse.unquote(
             cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
@@ -412,7 +413,7 @@ class TestTileDrafting(unittest.TestCase):
                          self.browser.getControl(name='deleted.type').value)
 
         # Draft should have been created
-        draftName = urllib.unquote(
+        draftName = urlparse.unquote(
             cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
