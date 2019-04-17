@@ -90,7 +90,7 @@ class ImageScaling(BaseImageScaling):
             info = storage.get(name)
             if info is not None:
                 scale_view = ImageScale(self.context, self.request, **info)
-                return scale_view.__of__(self.context)
+                return scale_view
         else:
             # otherwise `name` must refer to a field...
             if '.' in name:
@@ -98,7 +98,7 @@ class ImageScaling(BaseImageScaling):
             value = getattr(self.context, name)
             scale_view = ImageScale(self.context, self.request,
                                     data=value, fieldname=name)
-            return scale_view.__of__(self.context)
+            return scale_view
         if image is not None:
             return image
         raise NotFound(self, name, self.request)
@@ -169,4 +169,4 @@ class ImageScaling(BaseImageScaling):
         if info is not None:
             info['fieldname'] = fieldname
             scale_view = ImageScale(self.context, self.request, **info)
-            return scale_view.__of__(self.context)
+            return scale_view
