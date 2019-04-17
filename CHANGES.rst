@@ -17,6 +17,9 @@ Bug fixes:
 - Python 3 compatible urllib imports
   [petschki]
 
+- Fix imagescaling methods, by removing calls of no longer existing __of__ method
+  [MrTango]
+
 
 3.1.1 (2019-02-10)
 ------------------
