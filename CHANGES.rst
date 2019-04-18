@@ -1,16 +1,8 @@
 Changelog
 =========
 
-3.1.2 (unreleased)
+3.1.2 (2019-04-18)
 ------------------
-
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
 
 Bug fixes:
 
