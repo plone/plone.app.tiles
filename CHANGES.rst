@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Update trove classifiers
+  [petschki]
 
 
 3.1.2 (2019-04-18)
