@@ -4,7 +4,10 @@ Changelog
 3.1.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+Bug fixes:
+
+- Fix for losing not changed data when editing a tile
+  [lyralemos]
 
 
 3.1.3 (2020-03-21)

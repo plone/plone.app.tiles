@@ -97,7 +97,12 @@ class DefaultEditForm(TileForm, form.Form):
         form.applyChanges(self, new_data, data)
         for group in self.groups:
             form.applyChanges(group, new_data, data)
-        dataManager.set(new_data)
+        
+        # Merge new data with the current to avoid losing data
+        current_data = self.getContent()
+        current_data.update(new_data)
+
+        dataManager.set(current_data)
 
         # Look up the URL - we need to do this after we've set the data to
         # correctly account for transient tiles
