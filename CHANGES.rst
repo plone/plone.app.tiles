@@ -4,7 +4,14 @@ Changelog
 3.1.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+
+- Officially dropped support for Plone 5.0.
+  No related changes, but we will no longer test with it.
+  [maurits]
+
+- Updated Travis test setup.
+  Test with Plone 4.3, 5.1, 5.2.  Last one on Py 2.7, 3.6. 3.7, 3.8.
+  [maurits]
 
 
 3.1.3 (2020-03-21)
