@@ -30,3 +30,5 @@ install:
   - bin/buildout -N -t 3
 script:
   - bin/$TARGET
+after_success:
+  - if test "$TARGET" == "coverage.sh"; then pip install -q coveralls && coveralls; fi
