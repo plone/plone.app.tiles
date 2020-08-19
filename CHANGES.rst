@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.1.4 (unreleased)
+3.2.0 (unreleased)
 ------------------
 
 
