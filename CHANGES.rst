@@ -4,10 +4,17 @@ Changelog
 3.2.0 (unreleased)
 ------------------
 
+New features:
 
 - Officially dropped support for Plone 5.0.
   No related changes, but we will no longer test with it.
   [maurits]
+
+Bug fixes:
+
+- Fix losing an image on edit when it is not changed.
+  Fixes `issue 36 <https://github.com/plone/plone.app.tiles/issues/36>`_.
+  [lyralemos, maurits]
 
 - Updated Travis test setup.
   Test with Plone 4.3, 5.1, 5.2.  Last one on Py 2.7, 3.6. 3.7, 3.8.

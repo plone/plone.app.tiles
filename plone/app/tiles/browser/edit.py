@@ -89,7 +89,8 @@ class DefaultEditForm(TileForm, form.Form):
         tile = self.context.restrictedTraverse('@@%s/%s' % (typeName, self.tileId,))
 
         dataManager = ITileDataManager(tile)
-        new_data = {}
+        # Get the current data and apply changes to it.
+        new_data = self.getContent()
         form.applyChanges(self, new_data, data)
         for group in self.groups:
             form.applyChanges(group, new_data, data)
