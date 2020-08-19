@@ -68,7 +68,7 @@ class TestTileLifecycle(unittest.TestCase):
         self.assertTrue('<b>Transient tile New message</b>' in self.browser.contents)
 
         # get the tile id
-        tile_id_regex = re.search('(?P<id>[\w-]+)\?', self.browser.url)
+        tile_id_regex = re.search(r'(?P<id>[\w-]+)\?', self.browser.url)
         self.assertTrue(tile_id_regex)  # will fail if is None
         tile_id = tile_id_regex.group('id')
 
