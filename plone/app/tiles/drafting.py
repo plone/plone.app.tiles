@@ -19,6 +19,7 @@ from zope.interface import implementer
 try:
     from plone.app.drafts.dexterity import IDisplayFormDrafting
 except ImportError:
+
     class IDisplayFormDrafting(object):
         pass
 
@@ -52,10 +53,12 @@ def draftingTileDataContext(context, request, tile):
         # Not referring from an edit form
         referrer = request.get('HTTP_REFERER', '')
         path = urlparse(referrer).path
-        if (not IDisplayFormDrafting.providedBy(request) and
-                not path.endswith('/edit') and
-                not path.endswith('/@@edit') and
-                not path.split('/')[-1].startswith('++add++')):
+        if (
+            not IDisplayFormDrafting.providedBy(request)
+            and not path.endswith('/edit')
+            and not path.endswith('/@@edit')
+            and not path.split('/')[-1].startswith('++add++')
+        ):
             return context
 
         ICurrentDraftManagement(request).mark()
@@ -82,8 +85,7 @@ class TileDataDraftSyncer(object):
             if key.startswith(ANNOTATIONS_KEY_PREFIX):
                 targetAnnotations[key] = value
 
-        annotationsDeleted = getattr(
-            self.draft, '_proxyAnnotationsDeleted', set())
+        annotationsDeleted = getattr(self.draft, '_proxyAnnotationsDeleted', set())
 
         for key in annotationsDeleted:
             if key.startswith(ANNOTATIONS_KEY_PREFIX) and key in targetAnnotations:  # noqa

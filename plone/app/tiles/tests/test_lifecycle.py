@@ -36,21 +36,18 @@ class TestTileLifecycle(unittest.TestCase):
 
     def test_transient_lifecycle(self):
         self.browser.addHeader(
-            'Authorization',
-            'Basic {0}:{1}'.format(SITE_OWNER_NAME, SITE_OWNER_PASSWORD, )
+            'Authorization', 'Basic {0}:{1}'.format(SITE_OWNER_NAME, SITE_OWNER_PASSWORD,),
         )
 
         # Add a new transient tile using the @@add-tile view
         self.browser.open('{0}/@@add-tile'.format(self.portal_url))
-        self.browser.getControl(name='tiletype').value = \
-            ['plone.app.tiles.demo.transient']
+        self.browser.getControl(name='tiletype').value = ['plone.app.tiles.demo.transient']
         self.browser.getControl(name='form.button.Create').click()
 
         # Now we are at the transient tile add form
         url = '{0}/@@add-tile/plone.app.tiles.demo.transient'
         self.assertEqual(
-            self.browser.url.split('?')[0],
-            url.format(self.portal_url),
+            self.browser.url.split('?')[0], url.format(self.portal_url),
         )
 
         # Fill the form
@@ -59,8 +56,7 @@ class TestTileLifecycle(unittest.TestCase):
         self.browser.getControl(label='Save').click()
 
         # See the tile
-        self.assertTrue('<b>Transient tile Test message</b>' in
-                        self.browser.contents)
+        self.assertTrue('<b>Transient tile Test message</b>' in self.browser.contents)
 
         # Edit the tile
         # prepend @@edit-tile to the tile type
@@ -69,8 +65,7 @@ class TestTileLifecycle(unittest.TestCase):
         name = 'plone.app.tiles.demo.transient.message'
         self.browser.getControl(name=name).value = 'New message'
         self.browser.getControl(label='Save').click()
-        self.assertTrue('<b>Transient tile New message</b>' in
-                        self.browser.contents)
+        self.assertTrue('<b>Transient tile New message</b>' in self.browser.contents)
 
         # get the tile id
         tile_id_regex = re.search('(?P<id>[\w-]+)\?', self.browser.url)
@@ -79,8 +74,7 @@ class TestTileLifecycle(unittest.TestCase):
 
         # a transient tile can not be removed,
         # so trying to access the @@delete-tile will raise NotFound
-        delete_url = '{0}/@@delete-tile/{1}'.format(self.portal_url,
-                                                    tile_id)
+        delete_url = '{0}/@@delete-tile/{1}'.format(self.portal_url, tile_id)
         self.assertRaises(NotFound, self.browser.open, delete_url)
 
     def test_persistent_lifecycle(self):
@@ -92,15 +86,12 @@ class TestTileLifecycle(unittest.TestCase):
 
         # Log in
         self.browser.addHeader(
-            'Authorization',
-            'Basic {0}:{1}'.format(SITE_OWNER_NAME, SITE_OWNER_PASSWORD, )
+            'Authorization', 'Basic {0}:{1}'.format(SITE_OWNER_NAME, SITE_OWNER_PASSWORD,),
         )
 
         # Add a new persistent tile using the @@add-tile view
         self.browser.open('{0}/@@add-tile'.format(self.portal_url))
-        self.browser.getControl(name='tiletype').value = [
-            'plone.app.tiles.demo.persistent'
-        ]
+        self.browser.getControl(name='tiletype').value = ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='form.button.Create').click()
 
         # Fill in the data and save
@@ -117,10 +108,8 @@ class TestTileLifecycle(unittest.TestCase):
         self.assertTrue(msg in self.browser.contents)
 
         # Verify annotations
-        self.assertEqual(message,
-                         folder_annotations[annotations_key]['message'])
-        self.assertEqual(counter,
-                         folder_annotations[annotations_key]['counter'])
+        self.assertEqual(message, folder_annotations[annotations_key]['message'])
+        self.assertEqual(counter, folder_annotations[annotations_key]['counter'])
 
         # Edit the tile
         # prepend @@edit-tile to the tile type
@@ -136,14 +125,15 @@ class TestTileLifecycle(unittest.TestCase):
         self.assertTrue(msg in self.browser.contents)
 
         # Verify annotations
-        self.assertEqual(new_message,
-                         folder_annotations[annotations_key]['message'])
-        self.assertEqual(counter,
-                         folder_annotations[annotations_key]['counter'])
+        self.assertEqual(new_message, folder_annotations[annotations_key]['message'])
+        self.assertEqual(counter, folder_annotations[annotations_key]['counter'])
 
         # Remove the tile
-        self.browser.open('{0}/@@delete-tile/{1}/{2}'.format(
-            self.portal_url, "plone.app.tiles.demo.persistent", tile_id))
+        self.browser.open(
+            '{0}/@@delete-tile/{1}/{2}'.format(
+                self.portal_url, "plone.app.tiles.demo.persistent", tile_id
+            )
+        )
         self.browser.getControl(label='Delete').click()
 
         # Verify status code (different cases in zope.testbrowser)

@@ -23,21 +23,18 @@ class TestVocabularies(unittest.TestCase):
     layer = PLONE_APP_TILES_INTEGRATION_TESTING
 
     def testRegisteredTilesVocabulary(self):
-        factory = getUtility(IVocabularyFactory,
-                             name=REGISTERED_TILES_VOCABULARY)
+        factory = getUtility(IVocabularyFactory, name=REGISTERED_TILES_VOCABULARY)
         vocabulary = factory(self.layer['portal'])
         self.assertEqual(len(vocabulary), 2)
 
     def testAvailableTilesVocabulary(self):
-        factory = getUtility(IVocabularyFactory,
-                             name=AVAILABLE_TILES_VOCABULARY)
+        factory = getUtility(IVocabularyFactory, name=AVAILABLE_TILES_VOCABULARY)
         vocabulary = factory(self.layer['portal'])
         self.assertEqual(len(vocabulary), 2)
 
     def testAllowedTilesVocabulary(self):
         logout()
-        factory = getUtility(IVocabularyFactory,
-                             name=ALLOWED_TILES_VOCABULARY)
+        factory = getUtility(IVocabularyFactory, name=ALLOWED_TILES_VOCABULARY)
         vocabulary = factory(self.layer['portal'])
         self.assertEqual(len(vocabulary), 0)
 

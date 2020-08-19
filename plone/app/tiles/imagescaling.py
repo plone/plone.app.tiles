@@ -18,6 +18,7 @@ from zope.publisher.interfaces import NotFound
 
 try:
     from plone.protect.interfaces import IDisableCSRFProtection
+
     HAS_PLONE_PROTECT = True
 except ImportError:
     HAS_PLONE_PROTECT = False
@@ -81,7 +82,7 @@ class ImageScaling(BaseImageScaling):
         if stack:
             # field and scale name were given...
             scale = stack.pop()
-            image = self.scale(name, scale)             # this is aq-wrapped
+            image = self.scale(name, scale)  # this is aq-wrapped
         elif '-' in name:
             # we got a uid...
             if '.' in name:
@@ -96,15 +97,13 @@ class ImageScaling(BaseImageScaling):
             if '.' in name:
                 name, ext = name.rsplit('.', 1)
             value = getattr(self.context, name)
-            scale_view = ImageScale(self.context, self.request,
-                                    data=value, fieldname=name)
+            scale_view = ImageScale(self.context, self.request, data=value, fieldname=name)
             return scale_view
         if image is not None:
             return image
         raise NotFound(self, name, self.request)
 
-    def create(self, fieldname, direction='thumbnail',
-               height=None, width=None, **parameters):
+    def create(self, fieldname, direction='thumbnail', height=None, width=None, **parameters):
         """ factory for image scales, see `IImageScaleStorage.scale` """
         orig_value = self.context.data.get(fieldname)
         if orig_value is None:
@@ -121,22 +120,23 @@ class ImageScaling(BaseImageScaling):
         if not orig_data:
             return
         try:
-            result = scaleImage(orig_data, direction=direction,
-                                height=height, width=width, **parameters)
+            result = scaleImage(
+                orig_data, direction=direction, height=height, width=width, **parameters
+            )
             # Disable Plone 5 implicit CSRF to allow scaling on GET
             if HAS_PLONE_PROTECT:
                 alsoProvides(self.request, IDisableCSRFProtection)
         except (ConflictError, KeyboardInterrupt):
             raise
         except Exception:
-            exception('could not scale "%r" of %r',
-                      orig_value, self.context.context.absolute_url())
+            exception(
+                'could not scale "%r" of %r', orig_value, self.context.context.absolute_url(),
+            )
             return
         if result is not None:
             data, format, dimensions = result
             mimetype = 'image/%s' % format.lower()
-            value = orig_value.__class__(data, contentType=mimetype,
-                                         filename=orig_value.filename)
+            value = orig_value.__class__(data, contentType=mimetype, filename=orig_value.filename)
             value.fieldname = fieldname
             return value, format, dimensions
 
@@ -149,8 +149,7 @@ class ImageScaling(BaseImageScaling):
                 mtime += v._p_mtime
         return mtime
 
-    def scale(self, fieldname=None, scale=None,
-              height=None, width=None, **parameters):
+    def scale(self, fieldname=None, scale=None, height=None, width=None, **parameters):
         if fieldname is None:
             fieldname = IPrimaryFieldInfo(self.context).fieldname
         if scale is not None:
@@ -160,11 +159,7 @@ class ImageScaling(BaseImageScaling):
             width, height = available[scale]
         storage = AnnotationStorage(self.context, self.modified)
         info = storage.scale(
-            factory=self.create,
-            fieldname=fieldname,
-            height=height,
-            width=width,
-            **parameters
+            factory=self.create, fieldname=fieldname, height=height, width=width, **parameters
         )
         if info is not None:
             info['fieldname'] = fieldname

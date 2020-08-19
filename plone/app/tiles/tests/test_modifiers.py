@@ -31,7 +31,7 @@ class TestModifiers(unittest.TestCase):
         self.request = self.layer['request']
         # we need to have the Manager role to be able to add things
         # to the portal root
-        setRoles(self.portal, TEST_USER_ID, ['Manager', ])
+        setRoles(self.portal, TEST_USER_ID, ['Manager',])
 
     def testCleanTileDataModifier(self):
         # Create page and tile
@@ -44,13 +44,15 @@ class TestModifiers(unittest.TestCase):
         data = {
             'boolean': True,
             'blob': NamedBlobFile('dummy test data', filename=u'test.txt'),
-            'iterable': PersistentList([
-                NamedBlobFile('dummy test data', filename=u'test.txt'),
-                NamedBlobFile('dummy test data', filename=u'test.txt'),
-            ]),
-            'mapping': PersistentMapping({
-                'blob': NamedBlobFile('dummy test data', filename=u'test.txt'),
-            }),
+            'iterable': PersistentList(
+                [
+                    NamedBlobFile('dummy test data', filename=u'test.txt'),
+                    NamedBlobFile('dummy test data', filename=u'test.txt'),
+                ]
+            ),
+            'mapping': PersistentMapping(
+                {'blob': NamedBlobFile('dummy test data', filename=u'test.txt'),}
+            ),
             'relation': RelationValue(getUtility(IIntIds).getId(page)),
         }
         data['relation'].from_object = related

@@ -12,7 +12,8 @@ def initialize(context):
 
     for modifier in modifiers:
         context.registerClass(
-            modifier['wrapper'], modifier['id'],
+            modifier['wrapper'],
+            modifier['id'],
             permission=ManagePortal,
             constructors=(modifier['form'], modifier['factory']),
             icon=modifier['icon'],

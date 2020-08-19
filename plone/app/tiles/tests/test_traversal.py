@@ -18,8 +18,7 @@ class TestTileTraversal(unittest.TestCase):
     def test_restrictedTraverse(self):
         # The easiest way to look up a tile in Zope 2 is to use traversal:
 
-        traversed = self.portal.restrictedTraverse(
-            '@@plone.app.tiles.demo.transient/tile-1')
+        traversed = self.portal.restrictedTraverse('@@plone.app.tiles.demo.transient/tile-1')
         self.assertTrue(isinstance(traversed, TransientTile))
         self.assertEqual('plone.app.tiles.demo.transient', traversed.__name__)
         self.assertEqual('tile-1', traversed.id)

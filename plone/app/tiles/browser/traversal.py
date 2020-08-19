@@ -47,12 +47,12 @@ class TileTraverser(object):
         if tile_info is None:
             raise KeyError(tile_name)
 
-        view = queryMultiAdapter((self.context, self.request, tile_info),
-                                 self.targetInterface, name=tile_name)
+        view = queryMultiAdapter(
+            (self.context, self.request, tile_info), self.targetInterface, name=tile_name,
+        )
 
         if view is None:
-            view = queryMultiAdapter((self.context, self.request, tile_info),
-                                     self.targetInterface)
+            view = queryMultiAdapter((self.context, self.request, tile_info), self.targetInterface)
 
         if view is None:
             raise KeyError(tile_name)
@@ -87,26 +87,19 @@ class AddTile(TileTraverser):
         """
         tiles = []
 
-        factory = getUtility(IVocabularyFactory,
-                             name=ALLOWED_TILES_VOCABULARY)
+        factory = getUtility(IVocabularyFactory, name=ALLOWED_TILES_VOCABULARY)
         vocabulary = factory(self.context)
 
         for item in vocabulary:
             tiletype = item.value
             # check if we have permission to add this tile
-            if tiletype and checkPermission(
-                    tiletype.add_permission, self.context):
+            if tiletype and checkPermission(tiletype.add_permission, self.context):
                 # tile actions
                 # TODO: read from registry
-                tiletype.actions = [{
-                    'name': 'edit',
-                    'url': '@@edit-tile',
-                    'title': _('Edit'),
-                }, {
-                    'name': 'remove',
-                    'url': '@@delete-tile',
-                    'title': _('Remove'),
-                }]
+                tiletype.actions = [
+                    {'name': 'edit', 'url': '@@edit-tile', 'title': _('Edit'),},
+                    {'name': 'remove', 'url': '@@delete-tile', 'title': _('Remove'),},
+                ]
                 tiles.append(tiletype)
 
         tiles.sort(key=attrgetter('title'))
@@ -118,8 +111,7 @@ class AddTile(TileTraverser):
         if 'form.button.Create' in self.request:
             newTileType = self.request.get('tiletype', None)
             if newTileType is None:
-                self.errors['tiletype'] = _(u"You must select the type of " +
-                                            u"tile to create")
+                self.errors['tiletype'] = _(u"You must select the type of " + u"tile to create")
 
             if len(self.errors) == 0:
                 # Redirect to tile add form with additional query
@@ -128,11 +120,13 @@ class AddTile(TileTraverser):
                 del query['form.button.Create']
                 encoded = urlencode(query)
                 if encoded:
-                    self.request.response.redirect("%s/@@add-tile/%s?%s" % (
-                        self.context.absolute_url(), newTileType, encoded))
+                    self.request.response.redirect(
+                        "%s/@@add-tile/%s?%s" % (self.context.absolute_url(), newTileType, encoded)
+                    )
                 else:
-                    self.request.response.redirect("%s/@@add-tile/%s" % (
-                        self.context.absolute_url(), newTileType))
+                    self.request.response.redirect(
+                        "%s/@@add-tile/%s" % (self.context.absolute_url(), newTileType)
+                    )
                 return ''
 
         return self.index()

@@ -10,6 +10,7 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 
 try:
     from plone.app.drafts.interfaces import ICurrentDraftManagement
+
     PLONE_APP_DRAFTS = True
 except ImportError:
     PLONE_APP_DRAFTS = False
@@ -38,10 +39,13 @@ class TileFormGroup(Group):
         # Override to set the widgets prefix before widgets are updated
         # Note: updateWidgets(prefix=...) is not yet supported by
         # z3c.form 2.5.1 used by Plone 4.2
-        self.widgets = getMultiAdapter(
-            (self, self.request, self.getContent()), IWidgets)
-        for attrName in ('mode', 'ignoreRequest', 'ignoreContext',
-                         'ignoreReadonly'):
+        self.widgets = getMultiAdapter((self, self.request, self.getContent()), IWidgets)
+        for attrName in (
+            'mode',
+            'ignoreRequest',
+            'ignoreContext',
+            'ignoreReadonly',
+        ):
             value = getattr(self.parentForm.widgets, attrName)
             setattr(self.widgets, attrName, value)
         if prefix is not None:
@@ -79,7 +83,8 @@ class TileForm(AutoExtensibleForm):
         """See interfaces.IInputForm"""
         if self.tileType and self.tileId and self.name:
             tile = self.context.restrictedTraverse(
-                '@@%s/%s' % (self.tileType.__name__, self.tileId,))
+                '@@%s/%s' % (self.tileType.__name__, self.tileId,)
+            )
             url = absoluteURL(tile, self.request)
             url = url.replace('@@', '@@' + self.name.replace('_', '-') + '/')
         else:
@@ -94,8 +99,7 @@ class TileForm(AutoExtensibleForm):
         # Override to check the tile add/edit permission
         if not IDeferSecurityCheck.providedBy(self.request):
             if not checkPermission(self.tileType.add_permission, self.context):
-                raise Unauthorized(
-                    "You are not allowed to add this kind of tile")
+                raise Unauthorized("You are not allowed to add this kind of tile")
 
         super(TileForm, self).update()
 
@@ -108,8 +112,7 @@ class TileForm(AutoExtensibleForm):
         # Override to set the widgets prefix before widgets are updated
         # Note: updateWidgets(prefix=...) is not yet supported by
         # z3c.form 2.5.1 used by Plone 4.2
-        self.widgets = getMultiAdapter(
-            (self, self.request, self.getContent()), IWidgets)
+        self.widgets = getMultiAdapter((self, self.request, self.getContent()), IWidgets)
         self.widgets.prefix = prefix or self.tileType.__name__
         self.widgets.mode = self.mode
         self.widgets.ignoreContext = self.ignoreContext
