@@ -32,15 +32,12 @@ class TestTileDrafting(unittest.TestCase):
 
         # Log in
         self.browser.addHeader(
-            'Authorization',
-            'Basic {0}:{1}'.format(SITE_OWNER_NAME, SITE_OWNER_PASSWORD, )
+            'Authorization', 'Basic {0}:{1}'.format(SITE_OWNER_NAME, SITE_OWNER_PASSWORD,),
         )
 
         # Add a new persistent tile using the @@add-tile view
         self.browser.open('{0}/@@add-tile'.format(self.portal_url))
-        self.browser.getControl(name='tiletype').value = [
-            'plone.app.tiles.demo.persistent'
-        ]
+        self.browser.getControl(name='tiletype').value = ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='form.button.Create').click()
 
         # This data manager counts how many times set() is called so we

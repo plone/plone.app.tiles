@@ -45,8 +45,7 @@ class DefaultEditForm(TileForm, form.Form):
         self.request['disable_border'] = True
 
     def update(self):
-        if 'buttons.save' in self.request.form or \
-           'buttons.cancel' in self.request.form:
+        if 'buttons.save' in self.request.form or 'buttons.cancel' in self.request.form:
             self.ignoreRequest = False
 
         super(DefaultEditForm, self).update()
@@ -62,11 +61,9 @@ class DefaultEditForm(TileForm, form.Form):
         # interface on the request is handled in
         # plone.z3cform.traversal.FormWidgetTraversal
         if IDeferSecurityCheck.providedBy(self.request):
-            tile = self.context.unrestrictedTraverse(
-                '@@%s/%s' % (typeName, tileId,))
+            tile = self.context.unrestrictedTraverse('@@%s/%s' % (typeName, tileId,))
         else:
-            tile = self.context.restrictedTraverse(
-                '@@%s/%s' % (typeName, tileId,))
+            tile = self.context.restrictedTraverse('@@%s/%s' % (typeName, tileId,))
 
         dataManager = ITileDataManager(tile)
         return AcquirableDictionary(dataManager.get()).__of__(self.context)
@@ -89,8 +86,7 @@ class DefaultEditForm(TileForm, form.Form):
         typeName = self.tileType.__name__
 
         # Traverse to a new tile in the context, with no data
-        tile = self.context.restrictedTraverse(
-            '@@%s/%s' % (typeName, self.tileId,))
+        tile = self.context.restrictedTraverse('@@%s/%s' % (typeName, self.tileId,))
 
         dataManager = ITileDataManager(tile)
         new_data = {}

@@ -60,8 +60,8 @@ class TestTileDrafting(unittest.TestCase):
 
         # Log in
         self.browser.addHeader(
-            'Authorization',
-            'Basic %s:%s' % (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,))
+            'Authorization', 'Basic %s:%s' % (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,),
+        )
 
         #
         # Step 1 - Create a new document and add, edit, remove and re-add tiles
@@ -69,9 +69,7 @@ class TestTileDrafting(unittest.TestCase):
 
         # Open the add form for a Document
 
-        self.browser.open(
-            self.portal_url +
-            '/++add++Page')
+        self.browser.open(self.portal_url + '/++add++Page')
 
         editFormURL = self.browser.url
         baseURL = '/'.join(editFormURL.split('/')[:-1])
@@ -80,10 +78,8 @@ class TestTileDrafting(unittest.TestCase):
 
         cookies = self.browser.cookies.forURL(baseURL)
 
-        targetKey = urlparse.unquote(
-            cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urlparse.unquote(
-            cookies['plone.app.drafts.path'].replace('"', ''))
+        targetKey = urlparse.unquote(cookies['plone.app.drafts.targetKey'].replace('"', ''))
+        cookiePath = urlparse.unquote(cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
         self.assertEqual(baseURL, 'http://nohost' + cookiePath)
@@ -92,15 +88,14 @@ class TestTileDrafting(unittest.TestCase):
         # an AJAX request for the same e.g. in a pop-up dialogue box
 
         self.browser.open(baseURL + '/@@add-tile')
-        self.browser.getControl(
-            name='tiletype').value = ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='tiletype').value = ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='form.button.Create').click()
 
         # Fill in the data and save
         self.browser.getControl(
-            name='plone.app.tiles.demo.persistent.message').value = 'Test message'  # noqa: E501
-        self.browser.getControl(
-            name='plone.app.tiles.demo.persistent.counter').value = '1'
+            name='plone.app.tiles.demo.persistent.message'
+        ).value = 'Test message'  # noqa: E501
+        self.browser.getControl(name='plone.app.tiles.demo.persistent.counter').value = '1'
         # XXX
         # XXX: This is as far we get with dexterit draft test
         # XXX: Next we should have a way to update draft instead
@@ -111,8 +106,7 @@ class TestTileDrafting(unittest.TestCase):
         # We should now have a draft for this item with the relevant
         # annotations
 
-        draftName = urlparse.unquote(
-            cookies['plone.app.drafts.draftName'].replace('"', ''))
+        draftName = urlparse.unquote(cookies['plone.app.drafts.draftName'].replace('"', ''))
 
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
@@ -122,42 +116,44 @@ class TestTileDrafting(unittest.TestCase):
         self.failIf(annotationsKey in folderAnnotations)
         self.failUnless(annotationsKey in draftAnnotations)
 
-        self.assertEqual('Test message',
-                         draftAnnotations[annotationsKey]['message'])
+        self.assertEqual('Test message', draftAnnotations[annotationsKey]['message'])
         self.assertEqual(1, draftAnnotations[annotationsKey]['counter'])
 
         # Edit the tile, still on the add form
-        self.browser.open(baseURL + '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1')  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa
-        self.browser.getControl(name='plone.app.tiles.demo.persistent.message').value = 'New message'  # noqa
+        self.browser.open(
+            baseURL + '/@@edit-tile/plone.app.tiles.demo.persistent/tile-1'
+        )  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa  # noqa
+        self.browser.getControl(
+            name='plone.app.tiles.demo.persistent.message'
+        ).value = 'New message'  # noqa
         self.browser.getControl(label='Save').click()
 
         # Verify annotations
-        self.assertEqual('New message',
-                         draftAnnotations[annotationsKey]['message'])
+        self.assertEqual('New message', draftAnnotations[annotationsKey]['message'])
         self.assertEqual(1, draftAnnotations[annotationsKey]['counter'])
 
         # Remove the tile
         self.browser.open(baseURL + '/@@delete-tile')
         self.browser.getControl(name='id').value = 'tile-1'
-        self.browser.getControl(name='tiletype').value = \
-            ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='tiletype').value = ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEqual('tile-1',
-                         self.browser.getControl(name='deleted.id').value)
-        self.assertEqual('plone.app.tiles.demo.persistent',
-                         self.browser.getControl(name='deleted.type').value)
+        self.assertEqual('tile-1', self.browser.getControl(name='deleted.id').value)
+        self.assertEqual(
+            'plone.app.tiles.demo.persistent', self.browser.getControl(name='deleted.type').value,
+        )
 
         # Verify annotations
         self.assertEqual(None, draftAnnotations.get(annotationsKey))
 
         # Add a new tile
         self.browser.open(baseURL + '/@@add-tile')
-        self.browser.getControl(name='tiletype').value = \
-            ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='tiletype').value = ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='form.button.Create').click()
 
-        self.browser.getControl(name='plone.app.tiles.demo.persistent.message').value = 'Test message'  # noqa
+        self.browser.getControl(
+            name='plone.app.tiles.demo.persistent.message'
+        ).value = 'Test message'  # noqa
         self.browser.getControl(name='plone.app.tiles.demo.persistent.counter').value = '1'  # noqa
         self.browser.getControl(label='Save').click()
 
@@ -176,8 +172,7 @@ class TestTileDrafting(unittest.TestCase):
 
         # The draft should have disappeared
 
-        self.assertEqual(None, drafts.getDraft(SITE_OWNER_NAME, targetKey,
-                                               draftName))
+        self.assertEqual(None, drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName))
 
         #
         # Step 2 - Edit the content object and a tile, but cancel
@@ -196,37 +191,33 @@ class TestTileDrafting(unittest.TestCase):
         # Get the values of the drafting cookies
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urlparse.unquote(
-            cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urlparse.unquote(
-            cookies['plone.app.drafts.path'].replace('"', ''))
+        targetKey = urlparse.unquote(cookies['plone.app.drafts.targetKey'].replace('"', ''))
+        cookiePath = urlparse.unquote(cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
         self.assertEqual(baseURL, 'http://nohost' + cookiePath)
 
-        self.assertEqual(0,
-                         len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
+        self.assertEqual(0, len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
         # Edit the tile
         self.browser.open(baseURL + '/@@edit-tile/plone.app.tiles.demo.persistent/tile-2')  # noqa
-        self.browser.getControl(name='plone.app.tiles.demo.persisten.message').value = 'Third message'  # noqa
+        self.browser.getControl(
+            name='plone.app.tiles.demo.persisten.message'
+        ).value = 'Third message'  # noqa
         self.browser.getControl(label='Save').click()
 
         # A draft should now have been created
 
-        draftName = urlparse.unquote(
-            cookies['plone.app.drafts.draftName'].replace('"', ''))
+        draftName = urlparse.unquote(cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
 
         # The data should have been updated on the draft, but not the context
 
-        self.assertEqual('Third message',
-                         draftAnnotations[annotationsKey]['message'])
+        self.assertEqual('Third message', draftAnnotations[annotationsKey]['message'])
         self.assertEqual(1, draftAnnotations[annotationsKey]['counter'])
 
-        self.assertEqual('Test message',
-                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual('Test message', contextAnnotations[annotationsKey]['message'])
         self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # Cancel editing
@@ -241,8 +232,7 @@ class TestTileDrafting(unittest.TestCase):
         context = self.portal['new-title']
         contextAnnotations = IAnnotations(context)
 
-        self.assertEqual('Test message',
-                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual('Test message', contextAnnotations[annotationsKey]['message'])
         self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # The draft should be discarded, too
@@ -252,8 +242,7 @@ class TestTileDrafting(unittest.TestCase):
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
 
-        self.assertEqual(0,
-                         len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
+        self.assertEqual(0, len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
         #
         # Step 3 - Edit the content object and save
@@ -265,10 +254,8 @@ class TestTileDrafting(unittest.TestCase):
         contextAnnotations = IAnnotations(context)
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urlparse.unquote(
-            cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urlparse.unquote(
-            cookies['plone.app.drafts.path'].replace('"', ''))
+        targetKey = urlparse.unquote(cookies['plone.app.drafts.targetKey'].replace('"', ''))
+        cookiePath = urlparse.unquote(cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
         # Edit the tile
@@ -277,18 +264,15 @@ class TestTileDrafting(unittest.TestCase):
         self.browser.getControl(label='Save').click()
 
         # A draft should now have been created
-        draftName = urlparse.unquote(
-            cookies['plone.app.drafts.draftName'].replace('"', ''))
+        draftName = urlparse.unquote(cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
 
         # The data should have been updated on the draft, but not the context
-        self.assertEqual('Third message',
-                         draftAnnotations[annotationsKey]['message'])
+        self.assertEqual('Third message', draftAnnotations[annotationsKey]['message'])
         self.assertEqual(1, draftAnnotations[annotationsKey]['counter'])
 
-        self.assertEqual('Test message',
-                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual('Test message', contextAnnotations[annotationsKey]['message'])
         self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # Save the edit form
@@ -299,8 +283,7 @@ class TestTileDrafting(unittest.TestCase):
         context = self.portal['new-title']
         contextAnnotations = IAnnotations(context)
 
-        self.assertEqual('Third message',
-                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual('Third message', contextAnnotations[annotationsKey]['message'])
         self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # The draft should have been discarded as well
@@ -310,8 +293,7 @@ class TestTileDrafting(unittest.TestCase):
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
 
-        self.assertEqual(0,
-                         len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
+        self.assertEqual(0, len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
         #
         # Step 4 - Edit the content object, remove the tile, but cancel
@@ -323,39 +305,33 @@ class TestTileDrafting(unittest.TestCase):
         contextAnnotations = IAnnotations(context)
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urlparse.unquote(
-            cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urlparse.unquote(
-            cookies['plone.app.drafts.path'].replace('"', ''))
+        targetKey = urlparse.unquote(cookies['plone.app.drafts.targetKey'].replace('"', ''))
+        cookiePath = urlparse.unquote(cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
         # Remove the tile
 
         self.browser.open(baseURL + '/@@delete-tile')
         self.browser.getControl(name='id').value = 'tile-2'
-        self.browser.getControl(name='tiletype').value = \
-            ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='tiletype').value = ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEqual('tile-2',
-                         self.browser.getControl(name='deleted.id').value)
-        self.assertEqual('plone.app.tiles.demo.persistent',
-                         self.browser.getControl(name='deleted.type').value)
+        self.assertEqual('tile-2', self.browser.getControl(name='deleted.id').value)
+        self.assertEqual(
+            'plone.app.tiles.demo.persistent', self.browser.getControl(name='deleted.type').value,
+        )
 
         # Draft should have been created
-        draftName = urlparse.unquote(
-            cookies['plone.app.drafts.draftName'].replace('"', ''))
+        draftName = urlparse.unquote(cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
 
         # Verify that the deletion has happened on the draft (only)
 
         self.assertEqual(None, draftAnnotations.get(annotationsKey))
-        self.assertEqual(set([u'plone.tiles.data.tile-2']),
-                         draft._proxyAnnotationsDeleted)
+        self.assertEqual(set([u'plone.tiles.data.tile-2']), draft._proxyAnnotationsDeleted)
 
-        self.assertEqual('Third message',
-                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual('Third message', contextAnnotations[annotationsKey]['message'])
         self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # Cancel editing
@@ -369,8 +345,7 @@ class TestTileDrafting(unittest.TestCase):
         context = self.portal['new-title']
         contextAnnotations = IAnnotations(context)
 
-        self.assertEqual('Third message',
-                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual('Third message', contextAnnotations[annotationsKey]['message'])
         self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # The draft should have been discarded as well
@@ -380,8 +355,7 @@ class TestTileDrafting(unittest.TestCase):
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
 
-        self.assertEqual(0,
-                         len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
+        self.assertEqual(0, len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
 
         #
         # Step 5 - Edit the content object, remove the tile, and save
@@ -393,28 +367,24 @@ class TestTileDrafting(unittest.TestCase):
         contextAnnotations = IAnnotations(context)
 
         cookies = self.browser.cookies.forURL(baseURL)
-        targetKey = urlparse.unquote(
-            cookies['plone.app.drafts.targetKey'].replace('"', ''))
-        cookiePath = urlparse.unquote(
-            cookies['plone.app.drafts.path'].replace('"', ''))
+        targetKey = urlparse.unquote(cookies['plone.app.drafts.targetKey'].replace('"', ''))
+        cookiePath = urlparse.unquote(cookies['plone.app.drafts.path'].replace('"', ''))
         draftName = None
 
         # Remove the tile
 
         self.browser.open(baseURL + '/@@delete-tile')
         self.browser.getControl(name='id').value = 'tile-2'
-        self.browser.getControl(name='tiletype').value = \
-            ['plone.app.tiles.demo.persistent']
+        self.browser.getControl(name='tiletype').value = ['plone.app.tiles.demo.persistent']
         self.browser.getControl(name='confirm').click()
 
-        self.assertEqual('tile-2',
-                         self.browser.getControl(name='deleted.id').value)
-        self.assertEqual('plone.app.tiles.demo.persistent',
-                         self.browser.getControl(name='deleted.type').value)
+        self.assertEqual('tile-2', self.browser.getControl(name='deleted.id').value)
+        self.assertEqual(
+            'plone.app.tiles.demo.persistent', self.browser.getControl(name='deleted.type').value,
+        )
 
         # Draft should have been created
-        draftName = urlparse.unquote(
-            cookies['plone.app.drafts.draftName'].replace('"', ''))
+        draftName = urlparse.unquote(cookies['plone.app.drafts.draftName'].replace('"', ''))
         draft = drafts.getDraft(SITE_OWNER_NAME, targetKey, draftName)
         draftAnnotations = IAnnotations(draft)
 
@@ -422,11 +392,9 @@ class TestTileDrafting(unittest.TestCase):
 
         self.assertEqual(None, draftAnnotations.get(annotationsKey))
 
-        self.assertEqual(set([u'plone.tiles.data.tile-2']),
-                         draft._proxyAnnotationsDeleted)
+        self.assertEqual(set([u'plone.tiles.data.tile-2']), draft._proxyAnnotationsDeleted)
 
-        self.assertEqual('Third message',
-                         contextAnnotations[annotationsKey]['message'])
+        self.assertEqual('Third message', contextAnnotations[annotationsKey]['message'])
         self.assertEqual(1, contextAnnotations[annotationsKey]['counter'])
 
         # Save the edit form
@@ -446,5 +414,4 @@ class TestTileDrafting(unittest.TestCase):
         self.assertFalse(DRAFT_NAME_KEY in cookies)
         self.assertFalse(PATH_KEY in cookies)
 
-        self.assertEqual(0,
-                         len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))
+        self.assertEqual(0, len(drafts.getDrafts(SITE_OWNER_NAME, targetKey)))

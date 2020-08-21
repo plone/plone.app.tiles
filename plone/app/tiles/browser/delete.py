@@ -53,8 +53,7 @@ class DefaultDeleteForm(TileForm, form.Form):
         typeName = self.tileType.__name__
 
         # Traverse to the tile about to be removed
-        tile = self.context.restrictedTraverse(
-            '@@%s/%s' % (typeName, self.tileId,))
+        tile = self.context.restrictedTraverse('@@%s/%s' % (typeName, self.tileId,))
         # Look up the URL - we need to do this before we've deleted the data to
         # correctly account for transient tiles
         tileURL = absoluteURL(tile, self.request)
@@ -68,8 +67,7 @@ class DefaultDeleteForm(TileForm, form.Form):
         # Skip form rendering for AJAX requests
         if self.request.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             IStatusMessage(self.request).addStatusMessage(
-                _(u"Tile deleted at ${url}", mapping={'url': tileURL}),
-                type=u'info'
+                _(u"Tile deleted at ${url}", mapping={'url': tileURL}), type=u'info',
             )
             self.template = lambda: u''
             return

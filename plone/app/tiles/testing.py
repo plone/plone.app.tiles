@@ -20,6 +20,7 @@ except pkg_resources.DistributionNotFound:
     HAS_DRAFTS = False
 else:
     import plone.app.drafts
+
     HAS_DRAFTS = True
 
 
@@ -51,7 +52,7 @@ class PloneAppTiles(PloneSandboxLayer):
             behaviors=(
                 'plone.app.dexterity.behaviors.metadata.IBasic',
                 'plone.app.drafts.interfaces.IDraftable',
-            )
+            ),
         )
         types_tool._setObject('Page', fti)
 
@@ -74,12 +75,14 @@ class PloneAppTiles(PloneSandboxLayer):
 
     def testTearDown(self):
         from plone.uuid.interfaces import IUUIDGenerator
+
         provideUtility(self._uuidGenerator, provides=IUUIDGenerator)
+
 
 PLONE_APP_TILES_FIXTURE = PloneAppTiles()
 PLONE_APP_TILES_INTEGRATION_TESTING = IntegrationTesting(
-    bases=(PLONE_APP_TILES_FIXTURE,),
-    name="PloneAppTilesLayer:Integration")
+    bases=(PLONE_APP_TILES_FIXTURE,), name="PloneAppTilesLayer:Integration"
+)
 PLONE_APP_TILES_FUNCTIONAL_TESTING = FunctionalTesting(
-    bases=(PLONE_APP_TILES_FIXTURE,),
-    name="PloneAppTilesLayer:Functional")
+    bases=(PLONE_APP_TILES_FIXTURE,), name="PloneAppTilesLayer:Functional"
+)

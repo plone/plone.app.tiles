@@ -2,7 +2,6 @@
 *.mo
 *.py?
 *.sw?
-/setup.cfg
 /build
 /.coverage
 /.installed.cfg
@@ -12,7 +11,6 @@
 /Sauce-Connect.jar
 /bin/
 /buildout-cache/
-/buildout.cfg
 /develop-eggs/
 /dist/
 /htmlcov/

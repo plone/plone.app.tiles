@@ -18,6 +18,7 @@ from zope.interface import implementer
 
 try:
     from plone.namedfile import NamedBlobFile
+
     HAS_BLOBS = True
 except ImportError:
     HAS_BLOBS = False
@@ -25,8 +26,11 @@ except ImportError:
 try:
     pkg_resources.get_distribution('z3c.relationfield')
 except pkg_resources.DistributionNotFound:
+
     class RelationValue(object):
         pass
+
+
 else:
     from z3c.relationfield import RelationValue
 
@@ -52,10 +56,9 @@ def install(portal_modifier, ids=None):
         portal_modifier.register(m['id'], wrapper)
 
 
-manage_CleanTileAnnotationsAddForm = \
-    PageTemplateFile('www/CleanTileAnnotations.pt',
-                     globals(),
-                     __name__='manage_CleanTileAnnotationsAddForm')
+manage_CleanTileAnnotationsAddForm = PageTemplateFile(
+    'www/CleanTileAnnotations.pt', globals(), __name__='manage_CleanTileAnnotationsAddForm',
+)
 
 
 def manage_addCleanTileAnnotations(self, id, title=None, REQUEST=None):
@@ -68,8 +71,10 @@ def manage_addCleanTileAnnotations(self, id, title=None, REQUEST=None):
         REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
 
-ANNOTATION_KEY_PREFIXES = [ANNOTATIONS_KEY_PREFIX,  # plone.tiles default
-                           'plone.tiles.scale']  # collective.cover scales
+ANNOTATION_KEY_PREFIXES = [
+    ANNOTATIONS_KEY_PREFIX,  # plone.tiles default
+    'plone.tiles.scale',
+]  # collective.cover scales
 MAPPING_TYPES = [dict, PersistentMapping]
 ITERABLE_TYPES = [list, tuple, set, frozenset, PersistentList]
 CLEANABLE_TYPES = [Blob, NamedFile, RelationValue]
