@@ -4,7 +4,8 @@ Changelog
 3.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix ModuleNotFoundError: No module named 'App.class_init' on Zope 5.
+  [agitator]
 
 
 3.2.0 (2020-08-21)
