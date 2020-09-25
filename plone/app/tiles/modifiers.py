@@ -2,7 +2,7 @@
 import pkg_resources
 
 from Acquisition import aq_base
-from App.class_init import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.CMFEditions.Modifiers import ConditionalTalesModifier
 from Products.CMFEditions.interfaces.IModifier import ICloneModifier
 from Products.CMFEditions.interfaces.IModifier import IConditionalTalesModifier
