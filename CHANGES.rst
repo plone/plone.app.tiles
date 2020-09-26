@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.2.1 (unreleased)
+3.2.1 (2020-09-26)
 ------------------
 
 - Fix ModuleNotFoundError: No module named 'App.class_init' on Zope 5.
