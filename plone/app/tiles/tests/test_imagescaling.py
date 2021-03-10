@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import six
 import unittest
 
 from DateTime import DateTime
@@ -38,8 +39,12 @@ class TestImageScaling(unittest.TestCase):
         dm.set(data)
 
         images = self.portal.restrictedTraverse('@@plone.app.tiles.demo.persistent/mytile/@@images')
+        if six.PY2:
+            assertRegex = self.assertRegexpMatches
+        else:
+            assertRegex = self.assertRegex
 
-        self.assertRegex(
+        assertRegex(
             images.tag('image', width=10),
             r'<img src="http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png" '
             r'alt="foo" title="foo" height="10" width="10" />'
@@ -48,7 +53,7 @@ class TestImageScaling(unittest.TestCase):
         scale = images.scale('image', scale='mini')
         self.assertEqual(scale.data.data[:4], b'\x89PNG')
         self.assertEqual(scale.data.getImageSize(), (200, 200))
-        self.assertRegex(
+        assertRegex(
             scale.url,
             r'http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png'
         )
