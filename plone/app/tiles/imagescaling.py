@@ -64,6 +64,7 @@ class ImageScale(BaseImageScale):
             name = info['fieldname']
         self.__name__ = '%s.%s' % (name, extension)
         self.url = '%s/@@images/%s' % (url, self.__name__)
+        self.srcset = info.get("srcset", [])
 
     def index_html(self):
         """ download the image """
@@ -149,7 +150,7 @@ class ImageScaling(BaseImageScaling):
                 mtime += v._p_mtime
         return mtime
 
-    def scale(self, fieldname=None, scale=None, height=None, width=None, **parameters):
+    def scale(self, fieldname=None, scale=None, height=None, width=None, direction="thumbnail", **parameters):
         if fieldname is None:
             fieldname = IPrimaryFieldInfo(self.context).fieldname
         if scale is not None:
@@ -159,7 +160,7 @@ class ImageScaling(BaseImageScaling):
             width, height = available[scale]
         storage = AnnotationStorage(self.context, self.modified)
         info = storage.scale(
-            factory=self.create, fieldname=fieldname, height=height, width=width, **parameters
+            factory=self.create, fieldname=fieldname, height=height, width=width, direction=direction, **parameters
         )
         if info is not None:
             info['fieldname'] = fieldname
