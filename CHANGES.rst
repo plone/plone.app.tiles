@@ -4,7 +4,12 @@ Changelog
 3.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+Bug fixes:
+
+- Fix imagescaling: missing srcset initialization, and
+  wrong scale arguments (according to latest p.namedfile).
+  Add test for imagescaling.
+  [mamico]
 
 
 3.2.1 (2020-09-26)

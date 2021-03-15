@@ -90,18 +90,19 @@ class TestTileDrafting(unittest.TestCase):
             self.browser.getControl(name=name).value = str(counter)
             self.browser.getControl(label='Save').click()
 
-            # Set should have been called twice, once for each field
-            self.assertEqual(SetCountingDataManager.set_called, 2)
+            # Set should have been called three times, once for each field
+            self.assertEqual(SetCountingDataManager.set_called, 3)
 
+            SetCountingDataManager.set_called = 0
             url = self.browser.url.replace('@@', '@@edit-tile/')
             self.browser.open(url)
             name = 'plone.app.tiles.demo.persistent.message'
             self.browser.getControl(name=name).value = 'blah'
             self.browser.getControl(label='Save').click()
 
-            # Should have been called three times now,
+            # Should have been called twice now,
             # because the counter field has not changed.
-            self.assertEqual(SetCountingDataManager.set_called, 3)
+            self.assertEqual(SetCountingDataManager.set_called, 2)
         finally:
             # Make sure our useless data manager gets deregistered so it
             # doesn't break everything
@@ -125,7 +126,7 @@ class TestTileDrafting(unittest.TestCase):
         # Check the default.
         content = form.getContent()
         # Comparing two dicts is apparently not done in Python 3.  So we split.
-        self.assertEqual(list(content.keys()), ["message", "counter"])
+        self.assertEqual(list(content.keys()), ["message", "counter", "image"])
         self.assertIsNone(content["message"])
         self.assertIsNone(content["counter"])
 
@@ -136,7 +137,7 @@ class TestTileDrafting(unittest.TestCase):
         form.handleSave(form=form, action=None)
         content = form.getContent()
         # Comparing two dicts is apparently not done in Python 3.  So we split.
-        self.assertEqual(list(content.keys()), ["message", "counter"])
+        self.assertEqual(list(content.keys()), ["message", "counter", "image"])
         self.assertEqual(content["message"], "hello")
         self.assertEqual(content["counter"], 1)
 
@@ -148,7 +149,7 @@ class TestTileDrafting(unittest.TestCase):
         form.set_dummy_data({"message": NOT_CHANGED, "counter": 2})
         form.handleSave(form=form, action=None)
         content = form.getContent()
-        self.assertEqual(list(content.keys()), ["message", "counter"])
+        self.assertEqual(list(content.keys()), ["message", "counter", "image"])
         self.assertEqual(content["message"], "hello")
         self.assertEqual(content["counter"], 2)
 
@@ -157,6 +158,6 @@ class TestTileDrafting(unittest.TestCase):
         form.set_dummy_data({"message": "bye"})
         form.handleSave(form=form, action=None)
         content = form.getContent()
-        self.assertEqual(list(content.keys()), ["message", "counter"])
+        self.assertEqual(list(content.keys()), ["message", "counter", "image"])
         self.assertEqual(content["message"], "bye")
         self.assertEqual(content["counter"], 2)
