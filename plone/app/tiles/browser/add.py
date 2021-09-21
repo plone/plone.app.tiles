@@ -12,6 +12,7 @@ from zope.event import notify
 from zope.lifecycleevent import ObjectAddedEvent
 from zope.lifecycleevent import ObjectCreatedEvent
 from zope.traversing.browser.absoluteurl import absoluteURL
+from zope.publisher.browser import BrowserPage
 import logging
 
 logger = logging.getLogger('plone.app.tiles')
@@ -96,7 +97,7 @@ class DefaultAddForm(TileForm, form.Form):
         self.actions["cancel"].addClass("standalone")
 
 
-class DefaultAddView(layout.FormWrapper):
+class DefaultAddView(layout.FormWrapper, BrowserPage):
     """This is the default add view as looked up by the @@add-tile traversal
     view. It is an unnamed adapter on  (context, request, tileType).
 

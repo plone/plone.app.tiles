@@ -11,6 +11,9 @@ Bug fixes:
   Add test for imagescaling.
   [mamico]
 
+- Fix class security declaration warnings for add/edit/delete views
+  [petschki]
+
 
 3.2.1 (2020-09-26)
 ------------------

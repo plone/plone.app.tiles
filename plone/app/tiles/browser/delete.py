@@ -11,6 +11,7 @@ from z3c.form import form
 from zope.event import notify
 from zope.lifecycleevent import ObjectRemovedEvent
 from zope.traversing.browser import absoluteURL
+from zope.publisher.browser import BrowserPage
 import logging
 
 logger = logging.getLogger('plone.app.tiles')
@@ -94,7 +95,7 @@ class DefaultDeleteForm(TileForm, form.Form):
         self.actions["cancel"].addClass("standalone")
 
 
-class DefaultDeleteView(layout.FormWrapper):
+class DefaultDeleteView(layout.FormWrapper, BrowserPage):
     """This is the default delete view as looked up by the @@delete-tile
     traveral view. It is an unnamed adapter on  (context, request, tileType).
 

@@ -11,6 +11,7 @@ from z3c.form import form, button
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.traversing.browser.absoluteurl import absoluteURL
+from zope.publisher.browser import BrowserPage
 import logging
 
 logger = logging.getLogger('plone.app.tiles')
@@ -125,7 +126,7 @@ class DefaultEditForm(TileForm, form.Form):
         self.actions["cancel"].addClass("standalone")
 
 
-class DefaultEditView(layout.FormWrapper):
+class DefaultEditView(layout.FormWrapper, BrowserPage):
     """This is the default edit view as looked up by the @@edit-tile traveral
     view. It is an unnamed adapter on  (context, request, tileType).
 
