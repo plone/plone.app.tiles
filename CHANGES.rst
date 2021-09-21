@@ -4,6 +4,11 @@ Changelog
 3.2.2 (unreleased)
 ------------------
 
+Features:
+
+- test with github actions
+  [petschki]
+
 Bug fixes:
 
 - Fix imagescaling: missing srcset initialization, and
