@@ -14,7 +14,7 @@ from zope.traversing.browser import absoluteURL
 from zope.publisher.browser import BrowserPage
 import logging
 
-logger = logging.getLogger('plone.app.tiles')
+logger = logging.getLogger("plone.app.tiles")
 
 
 class DefaultDeleteForm(TileForm, form.Form):
@@ -34,17 +34,17 @@ class DefaultDeleteForm(TileForm, form.Form):
 
     def __init__(self, context, request):
         super(DefaultDeleteForm, self).__init__(context, request)
-        self.request['disable_border'] = True
+        self.request["disable_border"] = True
 
     # UI
 
     @property
     def label(self):
-        return _(u"Delete ${name}", mapping={'name': self.tileType.title})
+        return _(u"Delete ${name}", mapping={"name": self.tileType.title})
 
     # Buttons/actions
 
-    @button.buttonAndHandler(_('Delete'), name='delete')
+    @button.buttonAndHandler(_("Delete"), name="delete")
     def handleDelete(self, action):
         data, errors = self.extractData()
         if errors:
@@ -54,7 +54,13 @@ class DefaultDeleteForm(TileForm, form.Form):
         typeName = self.tileType.__name__
 
         # Traverse to the tile about to be removed
-        tile = self.context.restrictedTraverse('@@%s/%s' % (typeName, self.tileId,))
+        tile = self.context.restrictedTraverse(
+            "@@%s/%s"
+            % (
+                typeName,
+                self.tileId,
+            )
+        )
         # Look up the URL - we need to do this before we've deleted the data to
         # correctly account for transient tiles
         tileURL = absoluteURL(tile, self.request)
@@ -66,11 +72,12 @@ class DefaultDeleteForm(TileForm, form.Form):
         logger.debug(u"Tile deleted at {0}".format(tileURL))
 
         # Skip form rendering for AJAX requests
-        if self.request.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        if self.request.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest":
             IStatusMessage(self.request).addStatusMessage(
-                _(u"Tile deleted at ${url}", mapping={'url': tileURL}), type=u'info',
+                _(u"Tile deleted at ${url}", mapping={"url": tileURL}),
+                type=u"info",
             )
-            self.template = lambda: u''
+            self.template = lambda: u""
             return
 
         try:
@@ -83,10 +90,10 @@ class DefaultDeleteForm(TileForm, form.Form):
     def nextURL(self, tile):
         raise NotImplementedError
 
-    @button.buttonAndHandler(_(u'Cancel'), name='cancel')
+    @button.buttonAndHandler(_(u"Cancel"), name="cancel")
     def handleCancel(self, action):
-        url = appendJSONData(self.action, '#', {'action': "cancel"})
-        url = url.replace('@@' + self.name.replace('_', '-') + '/', '@@')
+        url = appendJSONData(self.action, "#", {"action": "cancel"})
+        url = url.replace("@@" + self.name.replace("_", "-") + "/", "@@")
         self.request.response.redirect(url)
 
     def updateActions(self):
@@ -104,13 +111,13 @@ class DefaultDeleteView(layout.FormWrapper, BrowserPage):
     """
 
     form = DefaultDeleteForm
-    index = ViewPageTemplateFile('tileformlayout.pt')
+    index = ViewPageTemplateFile("tileformlayout.pt")
 
     # Set by sub-path traversal in @@delete-tile - we delegate to the form
 
     @property
     def tileId(self):
-        return getattr(self.form_instance, 'tileId', None)
+        return getattr(self.form_instance, "tileId", None)
 
     @tileId.setter
     def tileId(self, value):
@@ -122,5 +129,5 @@ class DefaultDeleteView(layout.FormWrapper, BrowserPage):
 
         # Configure the form instance
         if self.form_instance is not None:
-            if getattr(self.form_instance, 'tileType', None) is None:
+            if getattr(self.form_instance, "tileType", None) is None:
                 self.form_instance.tileType = tileType

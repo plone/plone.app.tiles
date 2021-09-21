@@ -24,7 +24,7 @@ except ImportError:
     HAS_BLOBS = False
 
 try:
-    pkg_resources.get_distribution('z3c.relationfield')
+    pkg_resources.get_distribution("z3c.relationfield")
 except pkg_resources.DistributionNotFound:
 
     class RelationValue(object):
@@ -36,44 +36,44 @@ else:
 
 
 def install(portal_modifier, ids=None):
-    """Registers modifiers in the modifier registry (at tool install time).
-    """
+    """Registers modifiers in the modifier registry (at tool install time)."""
     for m in modifiers:
-        id_ = m['id']
+        id_ = m["id"]
         if ids is not None and id_ not in ids:
             continue
         if id_ in portal_modifier.objectIds():
             continue
-        title = m['title']
-        modifier = m['modifier']()
-        wrapper = m['wrapper'](id_, modifier, title)
-        enabled = m['enabled']
+        title = m["title"]
+        modifier = m["modifier"]()
+        wrapper = m["wrapper"](id_, modifier, title)
+        enabled = m["enabled"]
         if IConditionalTalesModifier.providedBy(wrapper):
-            wrapper.edit(enabled, m['condition'])
+            wrapper.edit(enabled, m["condition"])
         else:
             wrapper.edit(enabled)
 
-        portal_modifier.register(m['id'], wrapper)
+        portal_modifier.register(m["id"], wrapper)
 
 
 manage_CleanTileAnnotationsAddForm = PageTemplateFile(
-    'www/CleanTileAnnotations.pt', globals(), __name__='manage_CleanTileAnnotationsAddForm',
+    "www/CleanTileAnnotations.pt",
+    globals(),
+    __name__="manage_CleanTileAnnotationsAddForm",
 )
 
 
 def manage_addCleanTileAnnotations(self, id, title=None, REQUEST=None):
-    """Add a skip parent pointers modifier
-    """
+    """Add a skip parent pointers modifier"""
     modifier = CleanTileAnnotations()
     self._setObject(id, ConditionalTalesModifier(id, modifier, title))
 
     if REQUEST is not None:
-        REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
+        REQUEST["RESPONSE"].redirect(self.absolute_url() + "/manage_main")
 
 
 ANNOTATION_KEY_PREFIXES = [
     ANNOTATIONS_KEY_PREFIX,  # plone.tiles default
-    'plone.tiles.scale',
+    "plone.tiles.scale",
 ]  # collective.cover scales
 MAPPING_TYPES = [dict, PersistentMapping]
 ITERABLE_TYPES = [list, tuple, set, frozenset, PersistentList]
@@ -169,14 +169,14 @@ InitializeClass(CleanTileAnnotations)
 
 modifiers = (
     {
-        'id': 'CleanTileAnnotations',
-        'title': 'Skip storing blobs or relations on tile annotations',
-        'enabled': True,
-        'condition': 'python:True',
-        'wrapper': ConditionalTalesModifier,
-        'modifier': CleanTileAnnotations,
-        'form': manage_CleanTileAnnotationsAddForm,
-        'factory': manage_addCleanTileAnnotations,
-        'icon': 'www/modifier.gif',
+        "id": "CleanTileAnnotations",
+        "title": "Skip storing blobs or relations on tile annotations",
+        "enabled": True,
+        "condition": "python:True",
+        "wrapper": ConditionalTalesModifier,
+        "modifier": CleanTileAnnotations,
+        "form": manage_CleanTileAnnotationsAddForm,
+        "factory": manage_addCleanTileAnnotations,
+        "icon": "www/modifier.gif",
     },
 )

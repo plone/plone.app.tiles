@@ -23,14 +23,14 @@ try:
 except ImportError:
     HAS_PLONE_PROTECT = False
 
-IMAGESCALES_KEY = '_plone.scales'
+IMAGESCALES_KEY = "_plone.scales"
 
 
 class AnnotationStorage(BaseAnnotationStorage):
-    """ An abstract storage for image scale data using annotations and
-        implementing :class:`IImageScaleStorage`. Image data is stored as an
-        annotation on the object container, i.e. the image. This is needed
-        since not all images are themselves annotatable. """
+    """An abstract storage for image scale data using annotations and
+    implementing :class:`IImageScaleStorage`. Image data is stored as an
+    annotation on the object container, i.e. the image. This is needed
+    since not all images are themselves annotatable."""
 
     @property
     def storage(self):
@@ -44,7 +44,7 @@ class AnnotationStorage(BaseAnnotationStorage):
 
 
 class ImageScale(BaseImageScale):
-    """ view used for rendering image scales """
+    """view used for rendering image scales"""
 
     def __init__(self, context, request, **info):
         self.context = context
@@ -57,37 +57,37 @@ class ImageScale(BaseImageScale):
                 self.data = self.context.data[self.fieldname]
 
         url = self.context.url
-        extension = self.data.contentType.split('/')[-1].lower()
-        if 'uid' in info:
-            name = info['uid']
+        extension = self.data.contentType.split("/")[-1].lower()
+        if "uid" in info:
+            name = info["uid"]
         else:
-            name = info['fieldname']
-        self.__name__ = '%s.%s' % (name, extension)
-        self.url = '%s/@@images/%s' % (url, self.__name__)
+            name = info["fieldname"]
+        self.__name__ = "%s.%s" % (name, extension)
+        self.url = "%s/@@images/%s" % (url, self.__name__)
         self.srcset = info.get("srcset", [])
 
     def index_html(self):
-        """ download the image """
+        """download the image"""
         # validate access
         set_headers(self.data, self.request.response)
         return stream_data(self.data)
 
 
 class ImageScaling(BaseImageScaling):
-    """ view used for generating (and storing) image scales """
+    """view used for generating (and storing) image scales"""
 
     def publishTraverse(self, request, name):
-        """ used for traversal via publisher, i.e. when using as a url """
-        stack = request.get('TraversalRequestNameStack')
+        """used for traversal via publisher, i.e. when using as a url"""
+        stack = request.get("TraversalRequestNameStack")
         image = None
         if stack:
             # field and scale name were given...
             scale = stack.pop()
             image = self.scale(name, scale)  # this is aq-wrapped
-        elif '-' in name:
+        elif "-" in name:
             # we got a uid...
-            if '.' in name:
-                name, ext = name.rsplit('.', 1)
+            if "." in name:
+                name, ext = name.rsplit(".", 1)
             storage = AnnotationStorage(self.context)
             info = storage.get(name)
             if info is not None:
@@ -95,29 +95,33 @@ class ImageScaling(BaseImageScaling):
                 return scale_view
         else:
             # otherwise `name` must refer to a field...
-            if '.' in name:
-                name, ext = name.rsplit('.', 1)
+            if "." in name:
+                name, ext = name.rsplit(".", 1)
             value = getattr(self.context, name)
-            scale_view = ImageScale(self.context, self.request, data=value, fieldname=name)
+            scale_view = ImageScale(
+                self.context, self.request, data=value, fieldname=name
+            )
             return scale_view
         if image is not None:
             return image
         raise NotFound(self, name, self.request)
 
-    def create(self, fieldname, direction='thumbnail', height=None, width=None, **parameters):
-        """ factory for image scales, see `IImageScaleStorage.scale` """
+    def create(
+        self, fieldname, direction="thumbnail", height=None, width=None, **parameters
+    ):
+        """factory for image scales, see `IImageScaleStorage.scale`"""
         orig_value = self.context.data.get(fieldname)
         if orig_value is None:
             return
         if height is None and width is None:
-            _, format = orig_value.contentType.split('/', 1)
+            _, format = orig_value.contentType.split("/", 1)
             return None, format, (orig_value._width, orig_value._height)
-        if hasattr(aq_base(orig_value), 'open'):
+        if hasattr(aq_base(orig_value), "open"):
             fp = orig_value.open()
             orig_data = fp.read()
             fp.close()
         else:
-            orig_data = getattr(aq_base(orig_value), 'data', orig_value)
+            orig_data = getattr(aq_base(orig_value), "data", orig_value)
         if not orig_data:
             return
         try:
@@ -131,26 +135,38 @@ class ImageScaling(BaseImageScaling):
             raise
         except Exception:
             exception(
-                'could not scale "%r" of %r', orig_value, self.context.context.absolute_url(),
+                'could not scale "%r" of %r',
+                orig_value,
+                self.context.context.absolute_url(),
             )
             return
         if result is not None:
             data, format, dimensions = result
-            mimetype = 'image/%s' % format.lower()
-            value = orig_value.__class__(data, contentType=mimetype, filename=orig_value.filename)
+            mimetype = "image/%s" % format.lower()
+            value = orig_value.__class__(
+                data, contentType=mimetype, filename=orig_value.filename
+            )
             value.fieldname = fieldname
             return value, format, dimensions
 
     def modified(self):
-        """ provide a callable to return the modification time of content
-            items, so stored image scales can be invalidated """
+        """provide a callable to return the modification time of content
+        items, so stored image scales can be invalidated"""
         mtime = 0
         for k, v in self.context.data.items():
             if INamedImage.providedBy(v):
                 mtime += v._p_mtime
         return mtime
 
-    def scale(self, fieldname=None, scale=None, height=None, width=None, direction="thumbnail", **parameters):
+    def scale(
+        self,
+        fieldname=None,
+        scale=None,
+        height=None,
+        width=None,
+        direction="thumbnail",
+        **parameters
+    ):
         if fieldname is None:
             fieldname = IPrimaryFieldInfo(self.context).fieldname
         if scale is not None:
@@ -160,9 +176,14 @@ class ImageScaling(BaseImageScaling):
             width, height = available[scale]
         storage = AnnotationStorage(self.context, self.modified)
         info = storage.scale(
-            factory=self.create, fieldname=fieldname, height=height, width=width, direction=direction, **parameters
+            factory=self.create,
+            fieldname=fieldname,
+            height=height,
+            width=width,
+            direction=direction,
+            **parameters
         )
         if info is not None:
-            info['fieldname'] = fieldname
+            info["fieldname"] = fieldname
             scale_view = ImageScale(self.context, self.request, **info)
             return scale_view

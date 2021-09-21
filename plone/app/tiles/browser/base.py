@@ -17,8 +17,7 @@ except ImportError:
 
 
 class TileFormLayout(object):
-    """Layout view giving access to macro slots
-    """
+    """Layout view giving access to macro slots"""
 
     def __init__(self, context, request):
         self.context = context
@@ -33,18 +32,20 @@ class TileFormGroup(Group):
     """TileForm group class, which prefixes group form fields similarly
     to TileForm"""
 
-    prefix = ''
+    prefix = ""
 
     def updateWidgets(self, prefix=None):
         # Override to set the widgets prefix before widgets are updated
         # Note: updateWidgets(prefix=...) is not yet supported by
         # z3c.form 2.5.1 used by Plone 4.2
-        self.widgets = getMultiAdapter((self, self.request, self.getContent()), IWidgets)
+        self.widgets = getMultiAdapter(
+            (self, self.request, self.getContent()), IWidgets
+        )
         for attrName in (
-            'mode',
-            'ignoreRequest',
-            'ignoreContext',
-            'ignoreReadonly',
+            "mode",
+            "ignoreRequest",
+            "ignoreContext",
+            "ignoreReadonly",
         ):
             value = getattr(self.parentForm.widgets, attrName)
             setattr(self.widgets, attrName, value)
@@ -69,24 +70,28 @@ class TileForm(AutoExtensibleForm):
     group_class = TileFormGroup
 
     # We set prefix dynamically in updateWidgets
-    prefix = ''
+    prefix = ""
     # Note: We used to not want the tile edit screens to use a form prefix, so
     # that we could pass simple things on the edit screen and have them be
     # interpreted by transient tiles, but this was deprecated without no
     # obvious reason in 85bff714b161eca07b66736780f293940f4f1d92
 
     # Name is used to form the form action url
-    name = ''
+    name = ""
 
     @property
     def action(self):
         """See interfaces.IInputForm"""
         if self.tileType and self.tileId and self.name:
             tile = self.context.restrictedTraverse(
-                '@@%s/%s' % (self.tileType.__name__, self.tileId,)
+                "@@%s/%s"
+                % (
+                    self.tileType.__name__,
+                    self.tileId,
+                )
             )
             url = absoluteURL(tile, self.request)
-            url = url.replace('@@', '@@' + self.name.replace('_', '-') + '/')
+            url = url.replace("@@", "@@" + self.name.replace("_", "-") + "/")
         else:
             url = self.request.getURL()
         return url
@@ -105,14 +110,16 @@ class TileForm(AutoExtensibleForm):
 
     def render(self):
         if self.request.response.getStatus() in (301, 302):
-            return ''
+            return ""
         return super(TileForm, self).render()
 
     def updateWidgets(self, prefix=None):
         # Override to set the widgets prefix before widgets are updated
         # Note: updateWidgets(prefix=...) is not yet supported by
         # z3c.form 2.5.1 used by Plone 4.2
-        self.widgets = getMultiAdapter((self, self.request, self.getContent()), IWidgets)
+        self.widgets = getMultiAdapter(
+            (self, self.request, self.getContent()), IWidgets
+        )
         self.widgets.prefix = prefix or self.tileType.__name__
         self.widgets.mode = self.mode
         self.widgets.ignoreContext = self.ignoreContext

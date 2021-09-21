@@ -48,22 +48,28 @@ class TestTileDrafting(unittest.TestCase):
     layer = PLONE_APP_TILES_FUNCTIONAL_TESTING
 
     def setUp(self):
-        self.portal = self.layer['portal']
+        self.portal = self.layer["portal"]
         self.portal_url = self.portal.absolute_url()
 
-        app = self.layer['app']
+        app = self.layer["app"]
         self.browser = Browser(app)
         self.browser.handleErrors = False
 
         # Log in
         self.browser.addHeader(
-            'Authorization', 'Basic {0}:{1}'.format(SITE_OWNER_NAME, SITE_OWNER_PASSWORD,),
+            "Authorization",
+            "Basic {0}:{1}".format(
+                SITE_OWNER_NAME,
+                SITE_OWNER_PASSWORD,
+            ),
         )
 
         # Add a new persistent tile using the @@add-tile view
-        self.browser.open('{0}/@@add-tile'.format(self.portal_url))
-        self.browser.getControl(name='tiletype').value = ['plone.app.tiles.demo.persistent']
-        self.browser.getControl(name='form.button.Create').click()
+        self.browser.open("{0}/@@add-tile".format(self.portal_url))
+        self.browser.getControl(name="tiletype").value = [
+            "plone.app.tiles.demo.persistent"
+        ]
+        self.browser.getControl(name="form.button.Create").click()
 
     def test_data_manager_add_form(self):
         """Test that appropriate IDataManagers are used when processing tile
@@ -82,23 +88,23 @@ class TestTileDrafting(unittest.TestCase):
 
         try:
             # Fill in the data and save
-            name = 'plone.app.tiles.demo.persistent.message'
-            message = 'Test message'
+            name = "plone.app.tiles.demo.persistent.message"
+            message = "Test message"
             self.browser.getControl(name=name).value = message
             counter = 1
-            name = 'plone.app.tiles.demo.persistent.counter'
+            name = "plone.app.tiles.demo.persistent.counter"
             self.browser.getControl(name=name).value = str(counter)
-            self.browser.getControl(label='Save').click()
+            self.browser.getControl(label="Save").click()
 
             # Set should have been called three times, once for each field
             self.assertEqual(SetCountingDataManager.set_called, 3)
 
             SetCountingDataManager.set_called = 0
-            url = self.browser.url.replace('@@', '@@edit-tile/')
+            url = self.browser.url.replace("@@", "@@edit-tile/")
             self.browser.open(url)
-            name = 'plone.app.tiles.demo.persistent.message'
-            self.browser.getControl(name=name).value = 'blah'
-            self.browser.getControl(label='Save').click()
+            name = "plone.app.tiles.demo.persistent.message"
+            self.browser.getControl(name=name).value = "blah"
+            self.browser.getControl(label="Save").click()
 
             # Should have been called twice now,
             # because the counter field has not changed.

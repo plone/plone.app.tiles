@@ -15,7 +15,7 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 from zope.publisher.browser import BrowserPage
 import logging
 
-logger = logging.getLogger('plone.app.tiles')
+logger = logging.getLogger("plone.app.tiles")
 
 
 class DefaultAddForm(TileForm, form.Form):
@@ -35,17 +35,17 @@ class DefaultAddForm(TileForm, form.Form):
 
     def __init__(self, context, request):
         super(DefaultAddForm, self).__init__(context, request)
-        self.request['disable_border'] = True
+        self.request["disable_border"] = True
 
     # UI
 
     @property
     def label(self):
-        return _(u"Add ${name}", mapping={'name': self.tileType.title})
+        return _(u"Add ${name}", mapping={"name": self.tileType.title})
 
     # Buttons/actions
 
-    @button.buttonAndHandler(_('Save'), name='save')
+    @button.buttonAndHandler(_("Save"), name="save")
     def handleAdd(self, action):
 
         data, errors = self.extractData()
@@ -59,7 +59,13 @@ class DefaultAddForm(TileForm, form.Form):
         tileId = generator()
 
         # Traverse to a new tile in the context, with no data
-        tile = self.context.restrictedTraverse('@@%s/%s' % (typeName, tileId,))
+        tile = self.context.restrictedTraverse(
+            "@@%s/%s"
+            % (
+                typeName,
+                tileId,
+            )
+        )
 
         dataManager = ITileDataManager(tile)
         new_data = {}
@@ -86,9 +92,9 @@ class DefaultAddForm(TileForm, form.Form):
     def nextURL(self, tile):
         raise NotImplementedError
 
-    @button.buttonAndHandler(_(u'Cancel'), name='cancel')
+    @button.buttonAndHandler(_(u"Cancel"), name="cancel")
     def handleCancel(self, action):
-        url = appendJSONData(self.context.absolute_url(), '#', {'action': "cancel"})
+        url = appendJSONData(self.context.absolute_url(), "#", {"action": "cancel"})
         self.request.response.redirect(url)
 
     def updateActions(self):
@@ -106,13 +112,13 @@ class DefaultAddView(layout.FormWrapper, BrowserPage):
     """
 
     form = DefaultAddForm
-    index = ViewPageTemplateFile('tileformlayout.pt')
+    index = ViewPageTemplateFile("tileformlayout.pt")
 
     # Set by sub-path traversal in @@add-tile - we delegate to the form
 
     @property
     def tileId(self):
-        return getattr(self.form_instance, 'tileId', None)
+        return getattr(self.form_instance, "tileId", None)
 
     @tileId.setter
     def tileId(self, value):
@@ -124,5 +130,5 @@ class DefaultAddView(layout.FormWrapper, BrowserPage):
 
         # Configure the form instance
         if self.form_instance is not None:
-            if getattr(self.form_instance, 'tileType', None) is None:
+            if getattr(self.form_instance, "tileType", None) is None:
                 self.form_instance.tileType = tileType
