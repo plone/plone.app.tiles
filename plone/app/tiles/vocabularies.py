@@ -38,7 +38,9 @@ class AvailableTilesVocabulary(RegisteredTilesVocabulary):
 
         items = []
         for item in vocabulary:
-            if queryMultiAdapter((context, request), name=item.token) is not None:  # noqa
+            if (
+                queryMultiAdapter((context, request), name=item.token) is not None
+            ):  # noqa
                 items.append(item)
         return SimpleVocabulary(items)
 

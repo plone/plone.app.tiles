@@ -19,7 +19,7 @@ from zope.intid.interfaces import IIntIds
 
 
 class Tile(PersistentTile):
-    __name__ = u'test.tile'
+    __name__ = u"test.tile"
 
 
 class TestModifiers(unittest.TestCase):
@@ -27,35 +27,43 @@ class TestModifiers(unittest.TestCase):
     layer = PLONE_APP_TILES_INTEGRATION_TESTING
 
     def setUp(self):
-        self.portal = self.layer['portal']
-        self.request = self.layer['request']
+        self.portal = self.layer["portal"]
+        self.request = self.layer["request"]
         # we need to have the Manager role to be able to add things
         # to the portal root
-        setRoles(self.portal, TEST_USER_ID, ['Manager',])
+        setRoles(
+            self.portal,
+            TEST_USER_ID,
+            [
+                "Manager",
+            ],
+        )
 
     def testCleanTileDataModifier(self):
         # Create page and tile
-        page = createContentInContainer(self.portal, 'Page')
-        related = createContentInContainer(self.portal, 'Page')
+        page = createContentInContainer(self.portal, "Page")
+        related = createContentInContainer(self.portal, "Page")
         tile = Tile(page, self.request)
-        tile.id = 'mytile'
+        tile.id = "mytile"
 
         # Set tile data
         data = {
-            'boolean': True,
-            'blob': NamedBlobFile('dummy test data', filename=u'test.txt'),
-            'iterable': PersistentList(
+            "boolean": True,
+            "blob": NamedBlobFile("dummy test data", filename=u"test.txt"),
+            "iterable": PersistentList(
                 [
-                    NamedBlobFile('dummy test data', filename=u'test.txt'),
-                    NamedBlobFile('dummy test data', filename=u'test.txt'),
+                    NamedBlobFile("dummy test data", filename=u"test.txt"),
+                    NamedBlobFile("dummy test data", filename=u"test.txt"),
                 ]
             ),
-            'mapping': PersistentMapping(
-                {'blob': NamedBlobFile('dummy test data', filename=u'test.txt'),}
+            "mapping": PersistentMapping(
+                {
+                    "blob": NamedBlobFile("dummy test data", filename=u"test.txt"),
+                }
             ),
-            'relation': RelationValue(getUtility(IIntIds).getId(page)),
+            "relation": RelationValue(getUtility(IIntIds).getId(page)),
         }
-        data['relation'].from_object = related
+        data["relation"].from_object = related
         dm = ITileDataManager(tile)
         dm.set(data)
 
@@ -79,29 +87,29 @@ class TestModifiers(unittest.TestCase):
 
         # Get tile data from the clone
         clone_tile = Tile(clone, self.request)
-        clone_tile.id = 'mytile'
+        clone_tile.id = "mytile"
         clone_dm = ITileDataManager(clone_tile)
         clone_data = clone_dm.get()
 
         # Test that blobs and relations has been cloned with None
-        self.assertIn('boolean', clone_data)
-        self.assertIn('blob', clone_data)
-        self.assertIn('iterable', clone_data)
-        self.assertIn('mapping', clone_data)
-        self.assertIn('relation', clone_data)
-        self.assertEqual(clone_data['boolean'], True)
-        self.assertEqual(clone_data['blob'], None)
-        self.assertEqual(clone_data['iterable'], [None, None])
-        self.assertEqual(clone_data['mapping'], {'blob': None})
-        self.assertEqual(clone_data['relation'], None)
+        self.assertIn("boolean", clone_data)
+        self.assertIn("blob", clone_data)
+        self.assertIn("iterable", clone_data)
+        self.assertIn("mapping", clone_data)
+        self.assertIn("relation", clone_data)
+        self.assertEqual(clone_data["boolean"], True)
+        self.assertEqual(clone_data["blob"], None)
+        self.assertEqual(clone_data["iterable"], [None, None])
+        self.assertEqual(clone_data["mapping"], {"blob": None})
+        self.assertEqual(clone_data["relation"], None)
 
         # Test that retriever will set values from working copy
         modifier.afterRetrieveModifier(page, clone)
 
         # Test that data equals after retrieve
         clone_data = clone_dm.get()
-        self.assertEqual(clone_data['boolean'], data['boolean'])
-        self.assertEqual(clone_data['blob'], data['blob'])
-        self.assertEqual(clone_data['iterable'], data['iterable'])
-        self.assertEqual(clone_data['mapping'], data['mapping'])
-        self.assertEqual(clone_data['relation'], data['relation'])
+        self.assertEqual(clone_data["boolean"], data["boolean"])
+        self.assertEqual(clone_data["blob"], data["blob"])
+        self.assertEqual(clone_data["iterable"], data["iterable"])
+        self.assertEqual(clone_data["mapping"], data["mapping"])
+        self.assertEqual(clone_data["relation"], data["relation"])

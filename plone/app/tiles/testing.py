@@ -15,7 +15,7 @@ import plone.app.tiles
 import pkg_resources
 
 try:
-    pkg_resources.get_distribution('plone.app.drafts')
+    pkg_resources.get_distribution("plone.app.drafts")
 except pkg_resources.DistributionNotFound:
     HAS_DRAFTS = False
 else:
@@ -34,27 +34,27 @@ class PloneAppTiles(PloneSandboxLayer):
         if HAS_DRAFTS:
             self.loadZCML(package=plone.app.drafts)
         self.loadZCML(package=plone.app.tiles)
-        self.loadZCML(package=plone.app.tiles, name='demo.zcml')
+        self.loadZCML(package=plone.app.tiles, name="demo.zcml")
 
     def setUpPloneSite(self, portal):
-        applyProfile(portal, 'plone.app.dexterity:default')
-        applyProfile(portal, 'plone.app.relationfield:default')
+        applyProfile(portal, "plone.app.dexterity:default")
+        applyProfile(portal, "plone.app.relationfield:default")
         if HAS_DRAFTS:
-            applyProfile(portal, 'plone.app.drafts:default')
-        applyProfile(portal, 'plone.app.tiles:default')
+            applyProfile(portal, "plone.app.drafts:default")
+        applyProfile(portal, "plone.app.tiles:default")
         self.registerFTI(portal)
 
     def registerFTI(self, portal):
-        types_tool = getToolByName(portal, 'portal_types')
+        types_tool = getToolByName(portal, "portal_types")
         fti = DexterityFTI(
-            'Page',
+            "Page",
             global_allow=True,
             behaviors=(
-                'plone.app.dexterity.behaviors.metadata.IBasic',
-                'plone.app.drafts.interfaces.IDraftable',
+                "plone.app.dexterity.behaviors.metadata.IBasic",
+                "plone.app.drafts.interfaces.IDraftable",
             ),
         )
-        types_tool._setObject('Page', fti)
+        types_tool._setObject("Page", fti)
 
     # Temporarily set up a more predictable UUID generator so that we can
     # rely on the uuids in tests
@@ -68,7 +68,7 @@ class PloneAppTiles(PloneSandboxLayer):
 
             def __call__(self):
                 self.counter += 1
-                return 'tile-%d' % self.counter
+                return "tile-%d" % self.counter
 
         self._uuidGenerator = getUtility(IUUIDGenerator)
         provideUtility(FauxUUIDGenerator(), provides=IUUIDGenerator)

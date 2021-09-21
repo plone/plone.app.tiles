@@ -5,17 +5,16 @@ from zope.i18nmessageid import MessageFactory
 from zope.publisher.interfaces.browser import IBrowserView
 
 
-_ = MessageFactory('plone')
+_ = MessageFactory("plone")
 
 
-REGISTERED_TILES_VOCABULARY = 'plone.app.tiles.RegisteredTiles'
-AVAILABLE_TILES_VOCABULARY = 'plone.app.tiles.AvailableTiles'
-ALLOWED_TILES_VOCABULARY = 'plone.app.tiles.AllowedTiles'
+REGISTERED_TILES_VOCABULARY = "plone.app.tiles.RegisteredTiles"
+AVAILABLE_TILES_VOCABULARY = "plone.app.tiles.AvailableTiles"
+ALLOWED_TILES_VOCABULARY = "plone.app.tiles.AllowedTiles"
 
 
 class ITilesFormLayer(IPloneFormLayer):
-    """Request layer installed via browserlayer.xml
-    """
+    """Request layer installed via browserlayer.xml"""
 
 
 class ITileAddView(IBrowserView):
@@ -46,5 +45,4 @@ class ITileDeleteView(IBrowserView):
 
 
 class ITileBaseSchema(model.Schema):
-    """ Base interfaces from which all Plone tiles should inherit.
-    """
+    """Base interfaces from which all Plone tiles should inherit."""

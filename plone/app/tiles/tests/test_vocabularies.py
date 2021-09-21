@@ -24,21 +24,21 @@ class TestVocabularies(unittest.TestCase):
 
     def testRegisteredTilesVocabulary(self):
         factory = getUtility(IVocabularyFactory, name=REGISTERED_TILES_VOCABULARY)
-        vocabulary = factory(self.layer['portal'])
+        vocabulary = factory(self.layer["portal"])
         self.assertEqual(len(vocabulary), 2)
 
     def testAvailableTilesVocabulary(self):
         factory = getUtility(IVocabularyFactory, name=AVAILABLE_TILES_VOCABULARY)
-        vocabulary = factory(self.layer['portal'])
+        vocabulary = factory(self.layer["portal"])
         self.assertEqual(len(vocabulary), 2)
 
     def testAllowedTilesVocabulary(self):
         logout()
         factory = getUtility(IVocabularyFactory, name=ALLOWED_TILES_VOCABULARY)
-        vocabulary = factory(self.layer['portal'])
+        vocabulary = factory(self.layer["portal"])
         self.assertEqual(len(vocabulary), 0)
 
-        setRoles(self.layer['portal'], TEST_USER_ID, ['Editor'])
-        login(self.layer['portal'], TEST_USER_NAME)
-        vocabulary = factory(self.layer['portal'])
+        setRoles(self.layer["portal"], TEST_USER_ID, ["Editor"])
+        login(self.layer["portal"], TEST_USER_NAME)
+        vocabulary = factory(self.layer["portal"])
         self.assertEqual(len(vocabulary), 2)

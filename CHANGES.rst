@@ -4,12 +4,20 @@ Changelog
 3.2.2 (unreleased)
 ------------------
 
+Features:
+
+- test with github actions
+  [petschki]
+
 Bug fixes:
 
 - Fix imagescaling: missing srcset initialization, and
   wrong scale arguments (according to latest p.namedfile).
   Add test for imagescaling.
   [mamico]
+
+- Fix class security declaration warnings for add/edit/delete views
+  [petschki]
 
 
 3.2.1 (2020-09-26)

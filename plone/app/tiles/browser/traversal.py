@@ -48,11 +48,15 @@ class TileTraverser(object):
             raise KeyError(tile_name)
 
         view = queryMultiAdapter(
-            (self.context, self.request, tile_info), self.targetInterface, name=tile_name,
+            (self.context, self.request, tile_info),
+            self.targetInterface,
+            name=tile_name,
         )
 
         if view is None:
-            view = queryMultiAdapter((self.context, self.request, tile_info), self.targetInterface)
+            view = queryMultiAdapter(
+                (self.context, self.request, tile_info), self.targetInterface
+            )
 
         if view is None:
             raise KeyError(tile_name)
@@ -97,37 +101,48 @@ class AddTile(TileTraverser):
                 # tile actions
                 # TODO: read from registry
                 tiletype.actions = [
-                    {'name': 'edit', 'url': '@@edit-tile', 'title': _('Edit'),},
-                    {'name': 'remove', 'url': '@@delete-tile', 'title': _('Remove'),},
+                    {
+                        "name": "edit",
+                        "url": "@@edit-tile",
+                        "title": _("Edit"),
+                    },
+                    {
+                        "name": "remove",
+                        "url": "@@delete-tile",
+                        "title": _("Remove"),
+                    },
                 ]
                 tiles.append(tiletype)
 
-        tiles.sort(key=attrgetter('title'))
+        tiles.sort(key=attrgetter("title"))
         return tiles
 
     def __call__(self):
         self.errors = {}
-        self.request['disable_border'] = True
-        if 'form.button.Create' in self.request:
-            newTileType = self.request.get('tiletype', None)
+        self.request["disable_border"] = True
+        if "form.button.Create" in self.request:
+            newTileType = self.request.get("tiletype", None)
             if newTileType is None:
-                self.errors['tiletype'] = _(u"You must select the type of " + u"tile to create")
+                self.errors["tiletype"] = _(
+                    u"You must select the type of " + u"tile to create"
+                )
 
             if len(self.errors) == 0:
                 # Redirect to tile add form with additional query
                 query = self.request.form.copy()
-                del query['tiletype']
-                del query['form.button.Create']
+                del query["tiletype"]
+                del query["form.button.Create"]
                 encoded = urlencode(query)
                 if encoded:
                     self.request.response.redirect(
-                        "%s/@@add-tile/%s?%s" % (self.context.absolute_url(), newTileType, encoded)
+                        "%s/@@add-tile/%s?%s"
+                        % (self.context.absolute_url(), newTileType, encoded)
                     )
                 else:
                     self.request.response.redirect(
                         "%s/@@add-tile/%s" % (self.context.absolute_url(), newTileType)
                     )
-                return ''
+                return ""
 
         return self.index()
 
@@ -161,8 +176,7 @@ class EditTile(TileTraverser):
         raise KeyError("Please traverse to @@edit-tile/tilename/id")
 
     def publishTraverse(self, request, name):
-        """Allow traversal to @@<view>/tilename/tileid
-        """
+        """Allow traversal to @@<view>/tilename/tileid"""
 
         # 1. Look up the view, but keep this view as the traversal context in
         # anticipation of an id
@@ -172,7 +186,7 @@ class EditTile(TileTraverser):
 
         # 2. Set the id and return the view we looked up in the previous
         # traversal step.
-        elif getattr(self.view, 'tileId', None) is None:
+        elif getattr(self.view, "tileId", None) is None:
             self.view.tileId = name
             return self.view
 
@@ -198,8 +212,7 @@ class DeleteTile(TileTraverser):
         raise KeyError("Please traverse to @@delete-tile/tilename/id")
 
     def publishTraverse(self, request, name):
-        """Allow traversal to @@<view>/tilename/tileid
-        """
+        """Allow traversal to @@<view>/tilename/tileid"""
         # 1. Look up the view, but keep this view as the traversal context in
 
         # anticipation of an id
@@ -209,7 +222,7 @@ class DeleteTile(TileTraverser):
 
         # 2. Set the id and return the view we looked up in the previous
         # traversal step.
-        elif getattr(self.view, 'tileId', None) is None:
+        elif getattr(self.view, "tileId", None) is None:
             self.view.tileId = name
             return self.view
 

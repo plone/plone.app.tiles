@@ -13,7 +13,7 @@ except ImportError:
     import simplejson as json
 
 
-_safe = '@+'
+_safe = "@+"
 
 
 def getEditTileURL(tile, request):
@@ -33,35 +33,41 @@ def getEditTileURL(tile, request):
 
     url = str(getMultiAdapter((context, request), IAbsoluteURL))
 
-    tileFragment = "@@edit-tile/" + urlparse.quote(name.encode('utf-8'), _safe)
+    tileFragment = "@@edit-tile/" + urlparse.quote(name.encode("utf-8"), _safe)
     if id:
-        tileFragment += '/' + urlparse.quote(id.encode('utf-8'), _safe)
+        tileFragment += "/" + urlparse.quote(id.encode("utf-8"), _safe)
 
-    url = '%s/%s' % (url, tileFragment,)
+    url = "%s/%s" % (
+        url,
+        tileFragment,
+    )
 
     if not IPersistentTile.providedBy(tile):
         data = ITileDataManager(tile).get()
         if data:
             tileType = queryUtility(ITileType, name=name)
             if tileType is not None and tileType.schema is not None:
-                if '?' in url:
-                    url += '&' + '_tiledata=' + json.dumps(data)
+                if "?" in url:
+                    url += "&" + "_tiledata=" + json.dumps(data)
                 else:
-                    url += '?' + '_tiledata=' + json.dumps(data)
+                    url += "?" + "_tiledata=" + json.dumps(data)
     return url
 
 
-def appendJSONData(url, key='#', data=None):
+def appendJSONData(url, key="#", data=None):
     """Append JSON data (e.g a dict) to the given URL and return the new
     URL. ``key`` is the url parameter key.
     """
     if data is None:
         return url
-    elif key == '#' or not key:
-        return url + '#' + urlparse.quote(json.dumps(data))
+    elif key == "#" or not key:
+        return url + "#" + urlparse.quote(json.dumps(data))
     else:
-        quoted = "%s=%s" % (key, urlparse.quote(json.dumps(data)),)
-        if '?' in url:
-            return url + '&' + quoted
+        quoted = "%s=%s" % (
+            key,
+            urlparse.quote(json.dumps(data)),
+        )
+        if "?" in url:
+            return url + "&" + quoted
         else:
-            return url + '?' + quoted
+            return url + "?" + quoted

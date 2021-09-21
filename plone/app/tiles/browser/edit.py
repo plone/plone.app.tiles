@@ -11,9 +11,10 @@ from z3c.form import form, button
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.traversing.browser.absoluteurl import absoluteURL
+from zope.publisher.browser import BrowserPage
 import logging
 
-logger = logging.getLogger('plone.app.tiles')
+logger = logging.getLogger("plone.app.tiles")
 
 
 class AcquirableDictionary(dict, Implicit):
@@ -42,10 +43,10 @@ class DefaultEditForm(TileForm, form.Form):
 
     def __init__(self, context, request):
         super(DefaultEditForm, self).__init__(context, request)
-        self.request['disable_border'] = True
+        self.request["disable_border"] = True
 
     def update(self):
-        if 'buttons.save' in self.request.form or 'buttons.cancel' in self.request.form:
+        if "buttons.save" in self.request.form or "buttons.cancel" in self.request.form:
             self.ignoreRequest = False
 
         super(DefaultEditForm, self).update()
@@ -61,9 +62,21 @@ class DefaultEditForm(TileForm, form.Form):
         # interface on the request is handled in
         # plone.z3cform.traversal.FormWidgetTraversal
         if IDeferSecurityCheck.providedBy(self.request):
-            tile = self.context.unrestrictedTraverse('@@%s/%s' % (typeName, tileId,))
+            tile = self.context.unrestrictedTraverse(
+                "@@%s/%s"
+                % (
+                    typeName,
+                    tileId,
+                )
+            )
         else:
-            tile = self.context.restrictedTraverse('@@%s/%s' % (typeName, tileId,))
+            tile = self.context.restrictedTraverse(
+                "@@%s/%s"
+                % (
+                    typeName,
+                    tileId,
+                )
+            )
 
         dataManager = ITileDataManager(tile)
         return AcquirableDictionary(dataManager.get()).__of__(self.context)
@@ -72,11 +85,11 @@ class DefaultEditForm(TileForm, form.Form):
 
     @property
     def label(self):
-        return _(u"Edit ${name}", mapping={'name': self.tileType.title})
+        return _(u"Edit ${name}", mapping={"name": self.tileType.title})
 
     # Buttons/actions
 
-    @button.buttonAndHandler(_('Save'), name='save')
+    @button.buttonAndHandler(_("Save"), name="save")
     def handleSave(self, action):
         data, errors = self.extractData()
         if errors:
@@ -86,7 +99,13 @@ class DefaultEditForm(TileForm, form.Form):
         typeName = self.tileType.__name__
 
         # Traverse to a new tile in the context, with no data
-        tile = self.context.restrictedTraverse('@@%s/%s' % (typeName, self.tileId,))
+        tile = self.context.restrictedTraverse(
+            "@@%s/%s"
+            % (
+                typeName,
+                self.tileId,
+            )
+        )
 
         dataManager = ITileDataManager(tile)
         # Get the current data and apply changes to it.
@@ -113,10 +132,10 @@ class DefaultEditForm(TileForm, form.Form):
     def nextURL(self, tile):
         raise NotImplementedError
 
-    @button.buttonAndHandler(_(u'Cancel'), name='cancel')
+    @button.buttonAndHandler(_(u"Cancel"), name="cancel")
     def handleCancel(self, action):
-        url = appendJSONData(self.action, '#', {'action': "cancel"})
-        url = url.replace('@@' + self.name.replace('_', '-') + '/', '@@')
+        url = appendJSONData(self.action, "#", {"action": "cancel"})
+        url = url.replace("@@" + self.name.replace("_", "-") + "/", "@@")
         self.request.response.redirect(url)
 
     def updateActions(self):
@@ -125,7 +144,7 @@ class DefaultEditForm(TileForm, form.Form):
         self.actions["cancel"].addClass("standalone")
 
 
-class DefaultEditView(layout.FormWrapper):
+class DefaultEditView(layout.FormWrapper, BrowserPage):
     """This is the default edit view as looked up by the @@edit-tile traveral
     view. It is an unnamed adapter on  (context, request, tileType).
 
@@ -134,13 +153,13 @@ class DefaultEditView(layout.FormWrapper):
     """
 
     form = DefaultEditForm
-    index = ViewPageTemplateFile('tileformlayout.pt')
+    index = ViewPageTemplateFile("tileformlayout.pt")
 
     # Set by sub-path traversal in @@edit-tile - we delegate to the form
 
     @property
     def tileId(self):
-        return getattr(self.form_instance, 'tileId', None)
+        return getattr(self.form_instance, "tileId", None)
 
     @tileId.setter
     def tileId(self, value):
@@ -152,5 +171,5 @@ class DefaultEditView(layout.FormWrapper):
 
         # Configure the form instance
         if self.form_instance is not None:
-            if getattr(self.form_instance, 'tileType', None) is None:
+            if getattr(self.form_instance, "tileType", None) is None:
                 self.form_instance.tileType = tileType

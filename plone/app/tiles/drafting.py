@@ -32,7 +32,7 @@ def draftingTileDataContext(context, request, tile):
     """
     # When drafted content with tiles is saved, IDrafting is provided
     if IDrafting.providedBy(request):
-        if request.method == 'POST':
+        if request.method == "POST":
             draft = getCurrentDraft(request, create=True)
         else:
             draft = getCurrentDraft(request, create=False)
@@ -42,7 +42,7 @@ def draftingTileDataContext(context, request, tile):
     # When tile is previewed during drafted content is edited, heuristics...
     else:
         # Manually configure draft user id, if we are still in traverse
-        if getattr(request, 'PUBLISHED', None) is None:
+        if getattr(request, "PUBLISHED", None) is None:
             IAnnotations(request)[USERID_KEY] = request.cookies.get(USERID_KEY)
 
         # No active draft for the request
@@ -51,13 +51,13 @@ def draftingTileDataContext(context, request, tile):
             return context
 
         # Not referring from an edit form
-        referrer = request.get('HTTP_REFERER', '')
+        referrer = request.get("HTTP_REFERER", "")
         path = urlparse(referrer).path
         if (
             not IDisplayFormDrafting.providedBy(request)
-            and not path.endswith('/edit')
-            and not path.endswith('/@@edit')
-            and not path.split('/')[-1].startswith('++add++')
+            and not path.endswith("/edit")
+            and not path.endswith("/@@edit")
+            and not path.split("/")[-1].startswith("++add++")
         ):
             return context
 
@@ -69,8 +69,7 @@ def draftingTileDataContext(context, request, tile):
 @implementer(IDraftSyncer)
 @adapter(IDraft, Interface)
 class TileDataDraftSyncer(object):
-    """Copy draft persistent tile data to the real object on save
-    """
+    """Copy draft persistent tile data to the real object on save"""
 
     def __init__(self, draft, target):
         self.draft = draft
@@ -85,8 +84,10 @@ class TileDataDraftSyncer(object):
             if key.startswith(ANNOTATIONS_KEY_PREFIX):
                 targetAnnotations[key] = value
 
-        annotationsDeleted = getattr(self.draft, '_proxyAnnotationsDeleted', set())
+        annotationsDeleted = getattr(self.draft, "_proxyAnnotationsDeleted", set())
 
         for key in annotationsDeleted:
-            if key.startswith(ANNOTATIONS_KEY_PREFIX) and key in targetAnnotations:  # noqa
+            if (
+                key.startswith(ANNOTATIONS_KEY_PREFIX) and key in targetAnnotations
+            ):  # noqa
                 del targetAnnotations[key]
