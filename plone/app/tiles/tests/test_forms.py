@@ -132,7 +132,10 @@ class TestTileDrafting(unittest.TestCase):
         # Check the default.
         content = form.getContent()
         # Comparing two dicts is apparently not done in Python 3.  So we split.
-        self.assertEqual(list(content.keys()), ["message", "counter", "image"])
+        self.assertListEqual(
+            sorted(list(content.keys())),
+            sorted(["message", "counter", "image"]),
+        )
         self.assertIsNone(content["message"])
         self.assertIsNone(content["counter"])
 
@@ -143,7 +146,10 @@ class TestTileDrafting(unittest.TestCase):
         form.handleSave(form=form, action=None)
         content = form.getContent()
         # Comparing two dicts is apparently not done in Python 3.  So we split.
-        self.assertEqual(list(content.keys()), ["message", "counter", "image"])
+        self.assertListEqual(
+            sorted(list(content.keys())),
+            sorted(["message", "counter", "image"]),
+        )
         self.assertEqual(content["message"], "hello")
         self.assertEqual(content["counter"], 1)
 
@@ -155,7 +161,10 @@ class TestTileDrafting(unittest.TestCase):
         form.set_dummy_data({"message": NOT_CHANGED, "counter": 2})
         form.handleSave(form=form, action=None)
         content = form.getContent()
-        self.assertEqual(list(content.keys()), ["message", "counter", "image"])
+        self.assertListEqual(
+            sorted(list(content.keys())),
+            sorted(["message", "counter", "image"]),
+        )
         self.assertEqual(content["message"], "hello")
         self.assertEqual(content["counter"], 2)
 
@@ -164,6 +173,9 @@ class TestTileDrafting(unittest.TestCase):
         form.set_dummy_data({"message": "bye"})
         form.handleSave(form=form, action=None)
         content = form.getContent()
-        self.assertEqual(list(content.keys()), ["message", "counter", "image"])
+        self.assertListEqual(
+            sorted(list(content.keys())),
+            sorted(["message", "counter", "image"]),
+        )
         self.assertEqual(content["message"], "bye")
         self.assertEqual(content["counter"], 2)
