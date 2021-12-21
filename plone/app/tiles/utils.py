@@ -7,6 +7,7 @@ from zope.component import getMultiAdapter
 from zope.component import queryUtility
 from zope.traversing.browser.interfaces import IAbsoluteURL
 
+
 try:
     import json
 except ImportError:

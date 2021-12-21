@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-import six
-import unittest
-
 from DateTime import DateTime
-from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
 from plone.app.tiles.demo import PersistentTile
 from plone.app.tiles.testing import PLONE_APP_TILES_INTEGRATION_TESTING
 from plone.namedfile.file import NamedImage
 from plone.namedfile.tests import getFile
 from plone.tiles.interfaces import ITileDataManager
+
+import six
+import unittest
 
 
 class MockNamedImage(NamedImage):

@@ -7,6 +7,7 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.browser.edit import DefaultEditForm
+from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
 from plone.testing.z2 import Browser
 from plone.tiles.interfaces import ITileType
 from z3c.form.datamanager import DictionaryField
@@ -15,7 +16,6 @@ from zope.component import getGlobalSiteManager
 from zope.component import provideAdapter
 from zope.component import queryUtility
 
-from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
 
 try:
     import unittest2 as unittest

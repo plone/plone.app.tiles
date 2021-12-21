@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 from Acquisition import Implicit
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.tiles import _ as _
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.utils import appendJSONData
 from plone.tiles.interfaces import ITileDataManager
 from plone.z3cform import layout
 from plone.z3cform.interfaces import IDeferSecurityCheck
-from z3c.form import form, button
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from z3c.form import button
+from z3c.form import form
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
-from zope.traversing.browser.absoluteurl import absoluteURL
 from zope.publisher.browser import BrowserPage
+from zope.traversing.browser.absoluteurl import absoluteURL
+
 import logging
+
 
 logger = logging.getLogger("plone.app.tiles")
 

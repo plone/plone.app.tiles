@@ -6,8 +6,10 @@ from plone.testing.z2 import Browser
 from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from zExceptions import NotFound
 from zope.annotation.interfaces import IAnnotations
+
 import pkg_resources
 import re
+
 
 try:
     pkg_resources.get_distribution("plone.app.drafts")

@@ -8,6 +8,7 @@ from zope.component import getMultiAdapter
 from zope.security import checkPermission
 from zope.traversing.browser.absoluteurl import absoluteURL
 
+
 try:
     from plone.app.drafts.interfaces import ICurrentDraftManagement
 

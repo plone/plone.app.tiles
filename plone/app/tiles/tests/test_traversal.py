@@ -2,6 +2,7 @@
 from plone.app.tiles.demo import TransientTile
 from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
 
+
 try:
     import unittest2 as unittest
 except ImportError:

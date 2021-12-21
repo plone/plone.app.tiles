@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Image scale support for tile images."""
 from Acquisition import aq_base
-from ZODB.POSException import ConflictError
 from logging import exception
 from persistent.dict import PersistentDict
 from plone.namedfile.interfaces import INamedImage
@@ -13,8 +12,10 @@ from plone.rfc822.interfaces import IPrimaryFieldInfo
 from plone.scale.scale import scaleImage
 from plone.scale.storage import AnnotationStorage as BaseAnnotationStorage
 from plone.tiles.interfaces import ITileDataManager
+from ZODB.POSException import ConflictError
 from zope.interface import alsoProvides
 from zope.publisher.interfaces import NotFound
+
 
 try:
     from plone.protect.interfaces import IDisableCSRFProtection

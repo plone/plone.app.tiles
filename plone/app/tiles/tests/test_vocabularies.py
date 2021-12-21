@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from plone.app.testing import TEST_USER_ID
-from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import login
 from plone.app.testing import logout
 from plone.app.testing import setRoles
-from zope.component import getUtility
-from zope.schema.interfaces import IVocabularyFactory
-
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import TEST_USER_NAME
 from plone.app.tiles.interfaces import ALLOWED_TILES_VOCABULARY
 from plone.app.tiles.interfaces import AVAILABLE_TILES_VOCABULARY
 from plone.app.tiles.interfaces import REGISTERED_TILES_VOCABULARY
 from plone.app.tiles.testing import PLONE_APP_TILES_INTEGRATION_TESTING
+from zope.component import getUtility
+from zope.schema.interfaces import IVocabularyFactory
+
 
 try:
     import unittest2 as unittest

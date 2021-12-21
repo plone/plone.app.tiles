@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from plone.namedfile.field import NamedImage
 from plone import tiles
+from plone.namedfile.field import NamedImage
 from plone.supermodel.model import fieldset
 from zope import schema
 from zope.interface import Interface

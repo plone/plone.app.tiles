@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import pkg_resources
-
 from plone.app.testing import SITE_OWNER_NAME
 from plone.app.testing import SITE_OWNER_PASSWORD
 from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
@@ -9,6 +7,9 @@ from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from six.moves.urllib import parse as urlparse
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
+
+import pkg_resources
+
 
 try:
     pkg_resources.get_distribution("plone.app.drafts")

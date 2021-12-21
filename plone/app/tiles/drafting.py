@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from plone.app.drafts.interfaces import ICurrentDraftManagement
 from plone.app.drafts.interfaces import IDraft
-from plone.app.drafts.interfaces import IDraftSyncer
 from plone.app.drafts.interfaces import IDrafting
+from plone.app.drafts.interfaces import IDraftSyncer
 from plone.app.drafts.interfaces import USERID_KEY
 from plone.app.drafts.proxy import DraftProxy
 from plone.app.drafts.utils import getCurrentDraft
@@ -13,8 +13,9 @@ from plone.tiles.interfaces import ITileDataContext
 from six.moves.urllib.parse import urlparse
 from zope.annotation.interfaces import IAnnotations
 from zope.component import adapter
-from zope.interface import Interface
 from zope.interface import implementer
+from zope.interface import Interface
+
 
 try:
     from plone.app.drafts.dexterity import IDisplayFormDrafting

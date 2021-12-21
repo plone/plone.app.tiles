@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-import pickle
-import unittest
-
 from persistent.list import PersistentList
 from persistent.mapping import PersistentMapping
-from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
 from plone.app.tiles.modifiers import CleanTileAnnotations
 from plone.app.tiles.testing import PLONE_APP_TILES_INTEGRATION_TESTING
 from plone.dexterity.utils import createContentInContainer
@@ -16,6 +13,9 @@ from six import BytesIO
 from z3c.relationfield import RelationValue
 from zope.component import getUtility
 from zope.intid.interfaces import IIntIds
+
+import pickle
+import unittest
 
 
 class Tile(PersistentTile):

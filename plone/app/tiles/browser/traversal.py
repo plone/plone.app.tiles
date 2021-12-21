@@ -7,6 +7,7 @@ from plone.app.tiles.interfaces import ITileDeleteView
 from plone.app.tiles.interfaces import ITileEditView
 from plone.memoize.view import memoize
 from plone.tiles.interfaces import ITileType
+from six.moves.urllib.parse import urlencode
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 from zope.component import queryMultiAdapter
@@ -16,7 +17,6 @@ from zope.interface import Interface
 from zope.publisher.interfaces import IPublishTraverse
 from zope.schema.interfaces import IVocabularyFactory
 from zope.security import checkPermission
-from six.moves.urllib.parse import urlencode
 
 
 @implementer(IPublishTraverse)

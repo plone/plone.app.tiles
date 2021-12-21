@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles import _
+from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.utils import appendJSONData
 from plone.tiles.interfaces import ITileDataManager
 from plone.z3cform import layout
@@ -10,9 +10,11 @@ from z3c.form import button
 from z3c.form import form
 from zope.event import notify
 from zope.lifecycleevent import ObjectRemovedEvent
-from zope.traversing.browser import absoluteURL
 from zope.publisher.browser import BrowserPage
+from zope.traversing.browser import absoluteURL
+
 import logging
+
 
 logger = logging.getLogger("plone.app.tiles")
 

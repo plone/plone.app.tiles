@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from AccessControl.security import checkPermission
-from zope.globalrequest import getRequest
-from zope.component import getUtilitiesFor
-from zope.interface import implementer
-from zope.component import queryMultiAdapter
-from zope.schema.interfaces import IVocabularyFactory
-from zope.schema.vocabulary import SimpleVocabulary
-from zope.schema.vocabulary import SimpleTerm
 from plone.tiles.interfaces import ITileType
+from zope.component import getUtilitiesFor
+from zope.component import queryMultiAdapter
+from zope.globalrequest import getRequest
+from zope.interface import implementer
+from zope.schema.interfaces import IVocabularyFactory
+from zope.schema.vocabulary import SimpleTerm
+from zope.schema.vocabulary import SimpleVocabulary
 
 
 @implementer(IVocabularyFactory)

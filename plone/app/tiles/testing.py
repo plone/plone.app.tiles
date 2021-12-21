@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
-from Products.CMFCore.utils import getToolByName
-from plone.app.testing import PLONE_FIXTURE
-from plone.app.testing import IntegrationTesting
-from plone.app.testing import FunctionalTesting
-from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
+from plone.app.testing import FunctionalTesting
+from plone.app.testing import IntegrationTesting
+from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import PloneSandboxLayer
 from plone.dexterity.fti import DexterityFTI
+from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 from zope.component import provideUtility
+
+import pkg_resources
 import plone.app.dexterity
 import plone.app.relationfield
 import plone.app.tiles
 
-import pkg_resources
 
 try:
     pkg_resources.get_distribution("plone.app.drafts")

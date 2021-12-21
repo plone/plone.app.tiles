@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
-import pkg_resources
-
-from Acquisition import aq_base
 from AccessControl.class_init import InitializeClass
-from Products.CMFEditions.Modifiers import ConditionalTalesModifier
-from Products.CMFEditions.interfaces.IModifier import ICloneModifier
-from Products.CMFEditions.interfaces.IModifier import IConditionalTalesModifier
-from Products.CMFEditions.interfaces.IModifier import ISaveRetrieveModifier
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from ZODB.blob import Blob
+from Acquisition import aq_base
 from persistent.list import PersistentList
 from persistent.mapping import PersistentMapping
 from plone.namedfile import NamedFile
 from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
+from Products.CMFEditions.interfaces.IModifier import ICloneModifier
+from Products.CMFEditions.interfaces.IModifier import IConditionalTalesModifier
+from Products.CMFEditions.interfaces.IModifier import ISaveRetrieveModifier
+from Products.CMFEditions.Modifiers import ConditionalTalesModifier
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from ZODB.blob import Blob
 from zope.annotation import IAnnotations
 from zope.interface import implementer
+
+import pkg_resources
+
 
 try:
     from plone.namedfile import NamedBlobFile
@@ -29,7 +30,6 @@ except pkg_resources.DistributionNotFound:
 
     class RelationValue(object):
         pass
-
 
 else:
     from z3c.relationfield import RelationValue
