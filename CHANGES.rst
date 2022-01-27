@@ -4,7 +4,10 @@ Changelog
 3.2.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed getting original image from tile.
+  Until now, the ``images`` view tried to get the field from the tile instead of the tile data.
+  This only worked when you had explicitly added a property with this field name on the tile.
+  [maurits]
 
 
 3.2.3 (2022-01-28)

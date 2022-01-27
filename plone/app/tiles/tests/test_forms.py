@@ -8,7 +8,6 @@ from plone.app.testing import TEST_USER_NAME
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.browser.edit import DefaultEditForm
 from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
-from plone.testing.z2 import Browser
 from plone.tiles.interfaces import ITileType
 from z3c.form.datamanager import DictionaryField
 from z3c.form.interfaces import NOT_CHANGED
@@ -21,6 +20,11 @@ try:
     import unittest2 as unittest
 except ImportError:
     import unittest
+try:
+    from plone.testing.zope import Browser
+except ImportError:
+    # BBB Plone 5.1
+    from plone.testing.z2 import Browser
 
 
 class WrappedEditForm(DefaultEditForm):
@@ -97,7 +101,7 @@ class TestTileDrafting(unittest.TestCase):
             self.browser.getControl(label="Save").click()
 
             # Set should have been called three times, once for each field
-            self.assertEqual(SetCountingDataManager.set_called, 3)
+            self.assertEqual(SetCountingDataManager.set_called, 4)
 
             SetCountingDataManager.set_called = 0
             url = self.browser.url.replace("@@", "@@edit-tile/")
@@ -108,7 +112,7 @@ class TestTileDrafting(unittest.TestCase):
 
             # Should have been called twice now,
             # because the counter field has not changed.
-            self.assertEqual(SetCountingDataManager.set_called, 2)
+            self.assertEqual(SetCountingDataManager.set_called, 3)
         finally:
             # Make sure our useless data manager gets deregistered so it
             # doesn't break everything
@@ -134,7 +138,7 @@ class TestTileDrafting(unittest.TestCase):
         # Comparing two dicts is apparently not done in Python 3.  So we split.
         self.assertListEqual(
             sorted(list(content.keys())),
-            sorted(["message", "counter", "image"]),
+            sorted(["message", "counter", "image", "image2"]),
         )
         self.assertIsNone(content["message"])
         self.assertIsNone(content["counter"])
@@ -148,7 +152,7 @@ class TestTileDrafting(unittest.TestCase):
         # Comparing two dicts is apparently not done in Python 3.  So we split.
         self.assertListEqual(
             sorted(list(content.keys())),
-            sorted(["message", "counter", "image"]),
+            sorted(["message", "counter", "image", "image2"]),
         )
         self.assertEqual(content["message"], "hello")
         self.assertEqual(content["counter"], 1)
@@ -163,7 +167,7 @@ class TestTileDrafting(unittest.TestCase):
         content = form.getContent()
         self.assertListEqual(
             sorted(list(content.keys())),
-            sorted(["message", "counter", "image"]),
+            sorted(["message", "counter", "image", "image2"]),
         )
         self.assertEqual(content["message"], "hello")
         self.assertEqual(content["counter"], 2)
@@ -175,7 +179,7 @@ class TestTileDrafting(unittest.TestCase):
         content = form.getContent()
         self.assertListEqual(
             sorted(list(content.keys())),
-            sorted(["message", "counter", "image"]),
+            sorted(["message", "counter", "image", "image2"]),
         )
         self.assertEqual(content["message"], "bye")
         self.assertEqual(content["counter"], 2)

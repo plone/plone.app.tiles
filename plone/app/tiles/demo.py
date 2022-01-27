@@ -23,6 +23,7 @@ class IPersistentTileData(Interface):
     message = schema.TextLine(title=u"Persisted message")
     counter = schema.Int(title=u"Counter")
     image = NamedImage(title=u"Image", required=False)
+    image2 = NamedImage(title=u"Image2", required=False)
 
     fieldset("counter", label=u"Counter", fields=["counter"])
 
@@ -35,6 +36,9 @@ class PersistentTile(tiles.PersistentTile):
 
     @property
     def image(self):
+        # Explicitly define an image property to ease getting the original.
+        # Note that we only do this for the first image, not the second,
+        # so we can try out multiple ways of getting an image.
         return self.data["image"]
 
     def __call__(self):
