@@ -18,6 +18,56 @@ from ZPublisher.HTTPRangeSupport import parseRange
 import os
 
 
+
+def _shared_getFile(tile_view):
+    """Get a file from a tile.
+
+    This is used by both Download and DisplayFile.
+    I had this as method on the Download class,
+    and then defined DisplayFile like this:
+
+        class DisplayFile(NamedfileDisplayFile):
+            _getFile = Download._getFile
+
+    This works on Python 3, but on Python 2 you get this error:
+
+        TypeError: unbound method _getFile() must be called with Download
+        instance as first argument (got nothing instead)
+
+    I did not want to bother with multiple inheritance,
+    so I made this a function that both classes call.
+    """
+    if not tile_view.fieldname:
+        info = IPrimaryFieldInfo(tile_view.context, None)
+        if info is None:
+            # Ensure that we have at least a fieldname
+            raise NotFound(tile_view, '', tile_view.request)
+        tile_view.fieldname = info.fieldname
+
+        # respect field level security as defined in plone.autoform
+        # check if attribute access would be allowed!
+        try:
+            guarded_getitem(tile_view.context.data, tile_view.fieldname)
+        except KeyError:
+            guarded_getattr(tile_view.context, tile_view.fieldname, None)
+
+        file = info.value
+    else:
+        context = getattr(tile_view.context, 'aq_explicit', tile_view.context)
+        try:
+            file = guarded_getitem(context.data, tile_view.fieldname)
+        except KeyError:
+            file = None
+        if file is None:
+            file = guarded_getattr(context, tile_view.fieldname, None)
+
+    if file is None:
+        raise NotFound(tile_view, tile_view.fieldname, tile_view.request)
+
+    return file
+
+
+
 @implementer(IPublishTraverse)
 class Download(NamedfileDownload):
     """Download a file, via ../context/@@download/fieldname/filename
@@ -34,34 +84,7 @@ class Download(NamedfileDownload):
     """
 
     def _getFile(self):
-        if not self.fieldname:
-            info = IPrimaryFieldInfo(self.context, None)
-            if info is None:
-                # Ensure that we have at least a fieldname
-                raise NotFound(self, '', self.request)
-            self.fieldname = info.fieldname
-
-            # respect field level security as defined in plone.autoform
-            # check if attribute access would be allowed!
-            try:
-                guarded_getitem(self.context.data, self.fieldname)
-            except KeyError:
-                guarded_getattr(self.context, self.fieldname, None)
-
-            file = info.value
-        else:
-            context = getattr(self.context, 'aq_explicit', self.context)
-            try:
-                file = guarded_getitem(context.data, self.fieldname)
-            except KeyError:
-                file = None
-            if file is None:
-                file = guarded_getattr(context, self.fieldname, None)
-
-        if file is None:
-            raise NotFound(self, self.fieldname, self.request)
-
-        return file
+        return _shared_getFile(self)
 
 
 class DisplayFile(NamedfileDisplayFile):
@@ -73,4 +96,6 @@ class DisplayFile(NamedfileDisplayFile):
     For tiles, this needs to combine our Download class above
     with the NamedfileDisplayFile class.
     """
-    _getFile = Download._getFile
+
+    def _getFile(self):
+        return _shared_getFile(self)
