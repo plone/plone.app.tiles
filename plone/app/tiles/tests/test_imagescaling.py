@@ -121,3 +121,36 @@ class TestImageScaling(unittest.TestCase):
             # BBB Plone 5.1: it is an open file, not bytes.
             orig = orig.read()
         self.assertEqual(self.browser.contents, orig)
+
+    def test_download_original_with_property(self):
+        # On the tile we have explicitly defined an image property.
+        self.browser.open(self.base_url + "/@@download/image")
+        orig = getFile("image.png")
+        if hasattr(orig, "read"):
+            # BBB Plone 5.1: it is an open file, not bytes.
+            orig = orig.read()
+        self.assertEqual(self.browser.contents, orig)
+
+    def test_download_original_without_property(self):
+        self.browser.open(self.base_url + "/@@download/image2")
+        orig = getFile("image.png")
+        if hasattr(orig, "read"):
+            # BBB Plone 5.1: it is an open file, not bytes.
+            orig = orig.read()
+        self.assertEqual(self.browser.contents, orig)
+
+    def test_display_file_with_property(self):
+        self.browser.open(self.base_url + "/@@display-file/image")
+        orig = getFile("image.png")
+        if hasattr(orig, "read"):
+            # BBB Plone 5.1: it is an open file, not bytes.
+            orig = orig.read()
+        self.assertEqual(self.browser.contents, orig)
+
+    def test_display_file_without_property(self):
+        self.browser.open(self.base_url + "/@@display-file/image2")
+        orig = getFile("image.png")
+        if hasattr(orig, "read"):
+            # BBB Plone 5.1: it is an open file, not bytes.
+            orig = orig.read()
+        self.assertEqual(self.browser.contents, orig)
