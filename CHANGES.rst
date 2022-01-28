@@ -4,7 +4,9 @@ Changelog
 3.2.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Removed ``plone.namedfile[blobs]`` from the ``test`` extra.
+  This has been empty since ``plone.namedfile`` 2.0, used since Plone 4.3.0.
+  [maurits]
 
 
 3.2.2 (2021-12-21)
