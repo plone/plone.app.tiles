@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.2.3 (unreleased)
+3.2.3 (2022-01-28)
 ------------------
 
 - Removed ``plone.namedfile[blobs]`` from the ``test`` extra.
