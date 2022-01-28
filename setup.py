@@ -49,7 +49,7 @@ setup(
         "six",
         "zope.annotation",
         "zope.i18nmessageid",
-        "plone.namedfile",
+        "plone.namedfile >= 2.0",
         "plone.memoize",
         "plone.registry",
         "plone.tiles",
@@ -77,7 +77,6 @@ setup(
             "plone.app.testing",
             "plone.dexterity",
             "plone.app.dexterity",
-            "plone.namedfile[blobs]",
         ],
     },
 )
