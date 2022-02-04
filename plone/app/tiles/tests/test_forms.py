@@ -100,7 +100,7 @@ class TestTileDrafting(unittest.TestCase):
             self.browser.getControl(name=name).value = str(counter)
             self.browser.getControl(label="Save").click()
 
-            # Set should have been called three times, once for each field
+            # Set should have been called once for each field.
             self.assertEqual(SetCountingDataManager.set_called, 4)
 
             SetCountingDataManager.set_called = 0
@@ -110,7 +110,7 @@ class TestTileDrafting(unittest.TestCase):
             self.browser.getControl(name=name).value = "blah"
             self.browser.getControl(label="Save").click()
 
-            # Should have been called twice now,
+            # Should have been called one less now,
             # because the counter field has not changed.
             self.assertEqual(SetCountingDataManager.set_called, 3)
         finally:
