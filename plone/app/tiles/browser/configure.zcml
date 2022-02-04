@@ -3,6 +3,20 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="plone.app.tiles">
 
+    <browser:page
+        name="download"
+        for="plone.tiles.interfaces.IPersistentTile"
+        class=".download.Download"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        name="display-file"
+        for="plone.tiles.interfaces.IPersistentTile"
+        class=".download.DisplayFile"
+        permission="zope2.View"
+        />
+
     <!-- Layout -->
     <browser:page
         for="*"

@@ -98,7 +98,10 @@ class ImageScaling(BaseImageScaling):
             # otherwise `name` must refer to a field...
             if "." in name:
                 name, ext = name.rsplit(".", 1)
-            value = getattr(self.context, name)
+            try:
+                value = getattr(self.context, name)
+            except AttributeError:
+                value = self.context.data[name]
             scale_view = ImageScale(
                 self.context, self.request, data=value, fieldname=name
             )
