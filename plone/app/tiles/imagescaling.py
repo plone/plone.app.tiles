@@ -1,32 +1,32 @@
 # -*- coding: utf-8 -*-
 """Image scale support for tile images."""
 from Acquisition import aq_base
-from logging import exception
+from DateTime import DateTime
 from persistent.dict import PersistentDict
+from plone.tiles.interfaces import IPersistentTile
 from plone.namedfile.interfaces import INamedImage
+from plone.namedfile.interfaces import IStableImageScale
 from plone.namedfile.scaling import ImageScale as BaseImageScale
 from plone.namedfile.scaling import ImageScaling as BaseImageScaling
 from plone.namedfile.utils import set_headers
 from plone.namedfile.utils import stream_data
-from plone.rfc822.interfaces import IPrimaryFieldInfo
-from plone.scale.scale import scaleImage
 from plone.scale.storage import AnnotationStorage as BaseAnnotationStorage
+from plone.scale.storage import IImageScaleStorage
 from plone.tiles.interfaces import ITileDataManager
-from ZODB.POSException import ConflictError
+from zope.component import adapter
+from zope.component import getMultiAdapter
 from zope.interface import alsoProvides
+from zope.interface import Interface
+from zope.interface import provider
 from zope.publisher.interfaces import NotFound
 
-
-try:
-    from plone.protect.interfaces import IDisableCSRFProtection
-
-    HAS_PLONE_PROTECT = True
-except ImportError:
-    HAS_PLONE_PROTECT = False
 
 IMAGESCALES_KEY = "_plone.scales"
 
 
+# For the storage, we adapt a context and an optional 'modified' callable.
+@provider(IImageScaleStorage)
+@adapter(IPersistentTile, Interface)
 class AnnotationStorage(BaseAnnotationStorage):
     """An abstract storage for image scale data using annotations and
     implementing :class:`IImageScaleStorage`. Image data is stored as an
@@ -77,117 +77,75 @@ class ImageScale(BaseImageScale):
 class ImageScaling(BaseImageScaling):
     """view used for generating (and storing) image scales"""
 
+    _scale_view_class = ImageScale
+
+    def get_field_data(self, name):
+        try:
+            return getattr(self.context, name)
+        except AttributeError:
+            return self.context.data[name]
+
     def publishTraverse(self, request, name):
         """used for traversal via publisher, i.e. when using as a url"""
         stack = request.get("TraversalRequestNameStack")
         image = None
-        if stack:
+        if stack and stack[-1] not in self._ignored_stacks:
             # field and scale name were given...
             scale = stack.pop()
-            image = self.scale(name, scale)  # this is aq-wrapped
+            image = self.scale(name, scale)  # this is an aq-wrapped scale_view
+            if image:
+                return image
         elif "-" in name:
             # we got a uid...
             if "." in name:
                 name, ext = name.rsplit(".", 1)
-            storage = AnnotationStorage(self.context)
+            storage = getMultiAdapter((self.context, None), IImageScaleStorage)
             info = storage.get(name)
-            if info is not None:
-                scale_view = ImageScale(self.context, self.request, **info)
-                return scale_view
+            if info is None:
+                raise NotFound(self, name, self.request)
+            scale_view = self._scale_view_class(self.context, self.request, **info)
+            alsoProvides(scale_view, IStableImageScale)
+            return scale_view
         else:
             # otherwise `name` must refer to a field...
             if "." in name:
                 name, ext = name.rsplit(".", 1)
-            try:
-                value = getattr(self.context, name)
-            except AttributeError:
-                value = self.context.data[name]
-            scale_view = ImageScale(
-                self.context, self.request, data=value, fieldname=name
+            # This is the original code from plone.namedfile.
+            # value = getattr(self.context, name)
+            # This is now the only difference left that is needed for tiles.
+            # TODO: we should make this customizable in plone.namedfile
+            # with a new get_field_data method.
+            value = self.get_field_data(name)
+            scale_view = self._scale_view_class(
+                self.context,
+                self.request,
+                data=value,
+                fieldname=name,
             )
             return scale_view
-        if image is not None:
-            return image
         raise NotFound(self, name, self.request)
 
-    def create(
-        self, fieldname, direction="thumbnail", height=None, width=None, **parameters
-    ):
-        """factory for image scales, see `IImageScaleStorage.scale`"""
-        orig_value = self.context.data.get(fieldname)
-        if orig_value is None:
-            return
-        if height is None and width is None:
-            _, format = orig_value.contentType.split("/", 1)
-            return None, format, (orig_value._width, orig_value._height)
-        if hasattr(aq_base(orig_value), "open"):
-            fp = orig_value.open()
-            orig_data = fp.read()
-            fp.close()
-        else:
-            orig_data = getattr(aq_base(orig_value), "data", orig_value)
-        if not orig_data:
-            return
-        try:
-            result = scaleImage(
-                orig_data, direction=direction, height=height, width=width, **parameters
-            )
-            # Disable Plone 5 implicit CSRF to allow scaling on GET
-            if HAS_PLONE_PROTECT:
-                alsoProvides(self.request, IDisableCSRFProtection)
-        except (ConflictError, KeyboardInterrupt):
-            raise
-        except Exception:
-            exception(
-                'could not scale "%r" of %r',
-                orig_value,
-                self.context.context.absolute_url(),
-            )
-            return
-        if result is not None:
-            data, format, dimensions = result
-            mimetype = "image/%s" % format.lower()
-            value = orig_value.__class__(
-                data, contentType=mimetype, filename=orig_value.filename
-            )
-            value.fieldname = fieldname
-            return value, format, dimensions
-
-    def modified(self):
+    def modified(self, fieldname=None):
         """provide a callable to return the modification time of content
-        items, so stored image scales can be invalidated"""
+        items, so stored image scales can be invalidated
+
+        Note: the context (a tile) has no _p_mtime,
+        so we need the _p_mtime of its context.
+        """
+        context = aq_base(self.context)
+        if fieldname is not None:
+            field = context.data.get(fieldname)
+            field_p_mtime = getattr(field, "_p_mtime", None)
+            date = DateTime(field_p_mtime or context.context._p_mtime)
+            return date.millis()
+        # We sum the modified time of various fields, which seems strange.
+        # Maybe we should take the most recent one instead.
+        # But it has been this way for a while, so let's keep it a bit longer.
+        # Also, this part is not yet covered by the tests.
         mtime = 0
         for k, v in self.context.data.items():
             if INamedImage.providedBy(v):
                 mtime += v._p_mtime
-        return mtime
-
-    def scale(
-        self,
-        fieldname=None,
-        scale=None,
-        height=None,
-        width=None,
-        direction="thumbnail",
-        **parameters
-    ):
-        if fieldname is None:
-            fieldname = IPrimaryFieldInfo(self.context).fieldname
-        if scale is not None:
-            available = self.getAvailableSizes()
-            if scale not in available:
-                return None
-            width, height = available[scale]
-        storage = AnnotationStorage(self.context, self.modified)
-        info = storage.scale(
-            factory=self.create,
-            fieldname=fieldname,
-            height=height,
-            width=width,
-            direction=direction,
-            **parameters
-        )
-        if info is not None:
-            info["fieldname"] = fieldname
-            scale_view = ImageScale(self.context, self.request, **info)
-            return scale_view
+        if mtime:
+            return mtime
+        return DateTime(context.context._p_mtime).millis
