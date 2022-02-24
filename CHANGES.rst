@@ -1,10 +1,12 @@
 Changelog
 =========
 
-3.3.1 (unreleased)
-------------------
+4.0.0a1 (unreleased)
+--------------------
 
-- Nothing changed yet.
+- Drop support for Python 2 and Plone 5.1.
+  Plone 5.2 and 6.0 are supported, on Python 3.
+  See `issue 49 <https://github.com/plone/plone.app.tiles/issues/49>.  [maurits]
 
 
 3.3.0 (2022-02-04)
