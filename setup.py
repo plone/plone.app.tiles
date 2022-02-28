@@ -47,7 +47,7 @@ setup(
         "six",
         "zope.annotation",
         "zope.i18nmessageid",
-        "plone.namedfile >= 6.0.0a2",
+        "plone.namedfile >= 6.0.0a3",
         "plone.memoize",
         "plone.registry",
         "plone.tiles",
