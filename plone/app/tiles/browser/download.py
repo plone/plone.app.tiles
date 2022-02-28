@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
-from AccessControl import Unauthorized
 from plone.namedfile.browser import Download as NamedfileDownload
 from plone.namedfile.browser import DisplayFile as NamedfileDisplayFile
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl.ZopeGuards import guarded_getitem
-from plone.namedfile.utils import set_headers
-from plone.namedfile.utils import stream_data
 from plone.rfc822.interfaces import IPrimaryFieldInfo
-from Products.Five.browser import BrowserView
-from zope.annotation.interfaces import IAnnotations
 from zope.interface import implementer
 from zope.publisher.interfaces import IPublishTraverse
 from zope.publisher.interfaces import NotFound
-from ZPublisher.HTTPRangeSupport import expandRanges
-from ZPublisher.HTTPRangeSupport import parseRange
-
-import os
-
 
 
 def _shared_getFile(tile_view):
@@ -65,7 +55,6 @@ def _shared_getFile(tile_view):
         raise NotFound(tile_view, tile_view.fieldname, tile_view.request)
 
     return file
-
 
 
 @implementer(IPublishTraverse)
