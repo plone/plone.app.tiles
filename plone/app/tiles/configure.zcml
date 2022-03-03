@@ -43,6 +43,7 @@
 
   <!-- Image scale support for tile images -->
   <adapter factory=".imagescaling.AnnotationStorage" />
+  <adapter factory=".imagescaling.TileImageScalingFactory" />
   <browser:page
     name="images"
     for="plone.tiles.interfaces.IPersistentTile"

@@ -8,14 +8,17 @@ from plone.tiles.interfaces import IPersistentTile
 from plone.namedfile.interfaces import INamedImage
 from plone.namedfile.scaling import ImageScale as BaseImageScale
 from plone.namedfile.scaling import ImageScaling as BaseImageScaling
+from plone.namedfile.scaling import DefaultImageScalingFactory
 from plone.namedfile.utils import set_headers
 from plone.namedfile.utils import stream_data
 from plone.scale.storage import AnnotationStorage as BaseAnnotationStorage
 from plone.scale.storage import IImageScaleStorage
+from plone.scale.interfaces import IImageScaleFactory
 from plone.tiles.interfaces import ITileDataManager
 from zExceptions import Unauthorized
 from zope.component import adapter
 from zope.interface import Interface
+from zope.interface import implementer
 from zope.interface import provider
 
 
@@ -70,6 +73,20 @@ class ImageScale(BaseImageScale):
         # validate access
         set_headers(self.data, self.request.response)
         return stream_data(self.data)
+
+
+@implementer(IImageScaleFactory)
+@adapter(IPersistentTile)
+class TileImageScalingFactory(DefaultImageScalingFactory):
+    def get_original_value(self):
+        return self.context.data.get(self.fieldname)
+
+    def url(self):
+        return "{}/@@{}/{}".format(
+            self.context.context.absolute_url(),
+            self.context.__name__,
+            self.context.id,
+        )
 
 
 class ImageScaling(BaseImageScaling):

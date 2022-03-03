@@ -4,6 +4,10 @@ Changelog
 4.0.0a1 (unreleased)
 --------------------
 
+- Register our own ``IImageScaleFactory`` factory for persistent tiles.
+  This fixes scaling images on tiles when the tile does not have the workaround of defining a property for the image field.
+  [maurits]
+
 - Register our ``AnnotationStorage`` as ``IImageScaleStorage`` factory.
   We require ``plone.namedfile >= 6.0.0a2`` for this.
   Fixes `issue 49 <https://github.com/plone/plone.app.tiles/issues/48>.  [maurits]
