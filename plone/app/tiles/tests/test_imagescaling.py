@@ -64,7 +64,9 @@ class TestImageScaling(unittest.TestCase):
         )
         self.base_url = self.portal.absolute_url() + "/@@plone.app.tiles.demo.persistent/mytile"
 
-    def testImageScaling(self):
+    def testImageScalingViaProperty(self):
+        # The 'image' field is available as property on the demo tile.
+        # This makes the tile enough like a standard context.
         images = self.portal.restrictedTraverse(
             "@@plone.app.tiles.demo.persistent/mytile/@@images"
         )
@@ -98,8 +100,47 @@ class TestImageScaling(unittest.TestCase):
         self.browser.open(self.base_url + "/@@images/image/mini")
         self.assertEqual(self.browser.contents, scale.data.data)
 
+    def testImageScalingViaData(self):
+        # The 'image2' field is NOT available as attribute on the demo tile.
+        # This trips up some of the code in plone.namedfile.
+        images = self.portal.restrictedTraverse(
+            "@@plone.app.tiles.demo.persistent/mytile/@@images"
+        )
+        if six.PY2:
+            assertRegex = self.assertRegexpMatches
+        else:
+            assertRegex = self.assertRegex
+
+        # Test the tag method.
+        tag = images.tag("image2", width=10)
+        self.assertTrue(tag)
+        assertRegex(
+            tag,
+            r'<img src="http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png" '
+            r'alt="foo" title="foo" height="10" width="10" />',
+        )
+
+        # Test the scale method.
+        scale = images.scale("image2", scale="mini")
+        self.assertEqual(scale.data.data[:4], b"\x89PNG")
+        self.assertEqual(scale.data.getImageSize(), (200, 200))
+        assertRegex(
+            scale.url,
+            r"http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png",
+        )
+        transaction.commit()
+
+        # Visit the unique scale in the browser.
+        self.browser.open(scale.url)
+        self.assertEqual(self.browser.contents, scale.data.data)
+
+        # Visit the general scale in the browser.
+        self.browser.open(self.base_url + "/@@images/image2/mini")
+        self.assertEqual(self.browser.contents, scale.data.data)
+
     def test_browse_scale(self):
         self.browser.open(self.base_url + "/@@images/image/thumb")
+        self.browser.open(self.base_url + "/@@images/image2/thumb")
 
     def test_browse_original_with_property(self):
         # On the tile we have explicitly defined an image property,
