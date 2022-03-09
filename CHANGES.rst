@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.0.0a1 (unreleased)
+4.0.0a1 (2022-03-09)
 --------------------
 
 - Register our own ``IImageScaleFactory`` factory for persistent tiles.
