@@ -10,11 +10,11 @@ Changelog
 
 - Register our ``AnnotationStorage`` as ``IImageScaleStorage`` factory.
   We require ``plone.namedfile >= 6.0.0a2`` for this.
-  Fixes `issue 49 <https://github.com/plone/plone.app.tiles/issues/48>.  [maurits]
+  Fixes `issue 48 <https://github.com/plone/plone.app.tiles/issues/48>`_.  [maurits]
 
 - Drop support for Python 2 and Plone 5.1.
   Plone 5.2 and 6.0 are supported, on Python 3.
-  See `issue 49 <https://github.com/plone/plone.app.tiles/issues/49>.  [maurits]
+  See `issue 49 <https://github.com/plone/plone.app.tiles/issues/49>`_.  [maurits]
 
 
 3.3.0 (2022-02-04)
