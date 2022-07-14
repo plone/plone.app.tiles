@@ -4,7 +4,9 @@ Changelog
 4.0.0a2 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Accept a fieldname in ``get_original_value`` in our scaling code.
+  Needed for recent plone.namedfile versions.
+  [maurits]
 
 
 4.0.0a1 (2022-03-09)

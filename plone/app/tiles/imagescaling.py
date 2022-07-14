@@ -78,8 +78,10 @@ class ImageScale(BaseImageScale):
 @implementer(IImageScaleFactory)
 @adapter(IPersistentTile)
 class TileImageScalingFactory(DefaultImageScalingFactory):
-    def get_original_value(self):
-        return self.context.data.get(self.fieldname)
+    def get_original_value(self, fieldname=None):
+        fieldname = fieldname or self.fieldname
+        if fieldname is not None:
+            return self.context.data.get(fieldname)
 
     def url(self):
         return "{}/@@{}/{}".format(
