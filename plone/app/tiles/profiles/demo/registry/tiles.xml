@@ -13,7 +13,7 @@
     </value>
   </record>
 
-  <records prefix="plone.app.mosaic.app_tiles.plone.app.tiles.demo.persistent"
+  <records prefix="plone.app.mosaic.app_tiles.plone_app_tiles_demo_persistent"
            interface="plone.app.mosaic.interfaces.ITile">
     <value key="name">plone.app.tiles.demo.persistent</value>
     <value key="label">Demo persistent</value>
@@ -26,7 +26,7 @@
     <value key="weight">40</value>
   </records>
 
-  <records prefix="plone.app.mosaic.app_tiles.plone.app.tiles.demo.transient"
+  <records prefix="plone.app.mosaic.app_tiles.plone_app_tiles_demo_transient"
            interface="plone.app.mosaic.interfaces.ITile">
     <value key="name">plone.app.tiles.demo.transient</value>
     <value key="label">Demo transient</value>
