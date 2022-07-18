@@ -4,6 +4,10 @@ Changelog
 4.0.0a2 (unreleased)
 --------------------
 
+- Register our demo tiles when you explicitly load ``demo.zcml``.
+  Add them to the list in ``plone.app.tiles`` and ``plone.app.mosaic``.
+  [maurits]
+
 - Accept a fieldname in ``get_original_value`` in our scaling code.
   Needed for recent plone.namedfile versions.
   [maurits]

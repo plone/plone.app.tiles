@@ -76,4 +76,7 @@
 
   <subscriber handler=".handlers.notifyModified" />
 
+  <!-- To try out the demo tiles, uncomment this: -->
+  <!-- <include package="plone.app.tiles" file="demo.zcml"/> -->
+
 </configure>
