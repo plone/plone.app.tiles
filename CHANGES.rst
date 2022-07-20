@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.0.0a2 (unreleased)
+4.0.0a2 (2022-07-20)
 --------------------
 
 - Register our demo tiles when you explicitly load ``demo.zcml``.
