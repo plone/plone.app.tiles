@@ -8,17 +8,11 @@ from plone.app.tiles.demo import PersistentTile
 from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
 from plone.namedfile.file import NamedImage
 from plone.namedfile.tests import getFile
+from plone.testing.zope import Browser
 from plone.tiles.interfaces import ITileDataManager
 
-import six
 import transaction
 import unittest
-
-try:
-    from plone.testing.zope import Browser
-except ImportError:
-    # BBB Plone 5.1
-    from plone.testing.z2 import Browser
 
 
 class MockNamedImage(NamedImage):
@@ -64,67 +58,76 @@ class TestImageScaling(unittest.TestCase):
         )
         self.base_url = self.portal.absolute_url() + "/@@plone.app.tiles.demo.persistent/mytile"
 
-    def testImageScalingViaProperty(self):
+    def testImageScalingScaleByNameViaProperty(self):
         # The 'image' field is available as property on the demo tile.
         # This makes the tile enough like a standard context.
         images = self.portal.restrictedTraverse(
             "@@plone.app.tiles.demo.persistent/mytile/@@images"
         )
-        if six.PY2:
-            assertRegex = self.assertRegexpMatches
-        else:
-            assertRegex = self.assertRegex
+        scale = images.scale("image", scale="thumb")
+        self.assertIsNotNone(scale)
+        self.assertEqual(scale.data.data[:4], b"\x89PNG")
+        # Note: the original image is 200x200.
+        self.assertEqual(scale.data.getImageSize(), (128, 128))
+        self.assertRegex(
+            scale.url,
+            r"http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png",
+        )
+        transaction.commit()
 
-        # Test the tag method.
-        assertRegex(
+        # Visit the unique scale in the browser.
+        self.browser.open(scale.url)
+        self.assertEqual(self.browser.contents, scale.data.data)
+
+        # Visit the general scale in the browser.
+        self.browser.open(self.base_url + "/@@images/image/thumb")
+        self.assertEqual(self.browser.contents, scale.data.data)
+
+    def testImageScalingScaleByWidthViaProperty(self):
+        # The 'image' field is available as property on the demo tile.
+        # This makes the tile enough like a standard context.
+        images = self.portal.restrictedTraverse(
+            "@@plone.app.tiles.demo.persistent/mytile/@@images"
+        )
+        scale = images.scale("image", width=10)
+        self.assertIsNotNone(scale)
+        self.assertEqual(scale.data.data[:4], b"\x89PNG")
+        # Note: the original image is 200x200.
+        self.assertEqual(scale.data.getImageSize(), (10, 10))
+        self.assertRegex(
+            scale.url,
+            r"http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png",
+        )
+        transaction.commit()
+
+        # Visit the unique scale in the browser.
+        self.browser.open(scale.url)
+        self.assertEqual(self.browser.contents, scale.data.data)
+
+    def testImageScalingTagViaProperty(self):
+        # The 'image' field is available as property on the demo tile.
+        # This makes the tile enough like a standard context.
+        images = self.portal.restrictedTraverse(
+            "@@plone.app.tiles.demo.persistent/mytile/@@images"
+        )
+        self.assertRegex(
             images.tag("image", width=10),
             r'<img src="http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png" '
             r'alt="foo" title="foo" height="10" width="10" />',
         )
 
-        # Test the scale method.
-        scale = images.scale("image", scale="mini")
-        self.assertEqual(scale.data.data[:4], b"\x89PNG")
-        self.assertEqual(scale.data.getImageSize(), (200, 200))
-        assertRegex(
-            scale.url,
-            r"http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png",
-        )
-        transaction.commit()
-
-        # Visit the unique scale in the browser.
-        self.browser.open(scale.url)
-        self.assertEqual(self.browser.contents, scale.data.data)
-
-        # Visit the general scale in the browser.
-        self.browser.open(self.base_url + "/@@images/image/mini")
-        self.assertEqual(self.browser.contents, scale.data.data)
-
-    def testImageScalingViaData(self):
+    def testImageScalingScaleByNameViaData(self):
         # The 'image2' field is NOT available as attribute on the demo tile.
         # This trips up some of the code in plone.namedfile.
         images = self.portal.restrictedTraverse(
             "@@plone.app.tiles.demo.persistent/mytile/@@images"
         )
-        if six.PY2:
-            assertRegex = self.assertRegexpMatches
-        else:
-            assertRegex = self.assertRegex
-
-        # Test the tag method.
-        tag = images.tag("image2", width=10)
-        self.assertTrue(tag)
-        assertRegex(
-            tag,
-            r'<img src="http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png" '
-            r'alt="foo" title="foo" height="10" width="10" />',
-        )
-
-        # Test the scale method.
-        scale = images.scale("image2", scale="mini")
+        scale = images.scale("image2", scale="thumb")
+        self.assertIsNotNone(scale)
         self.assertEqual(scale.data.data[:4], b"\x89PNG")
-        self.assertEqual(scale.data.getImageSize(), (200, 200))
-        assertRegex(
+        # Note: the original image is 200x200.
+        self.assertEqual(scale.data.getImageSize(), (128, 128))
+        self.assertRegex(
             scale.url,
             r"http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png",
         )
@@ -135,8 +138,47 @@ class TestImageScaling(unittest.TestCase):
         self.assertEqual(self.browser.contents, scale.data.data)
 
         # Visit the general scale in the browser.
-        self.browser.open(self.base_url + "/@@images/image2/mini")
+        self.browser.open(self.base_url + "/@@images/image2/thumb")
         self.assertEqual(self.browser.contents, scale.data.data)
+
+    def testImageScalingScaleByWidthViaData(self):
+        # The 'image2' field is NOT available as attribute on the demo tile.
+        # This trips up some of the code in plone.namedfile.
+        images = self.portal.restrictedTraverse(
+            "@@plone.app.tiles.demo.persistent/mytile/@@images"
+        )
+        scale = images.scale("image2", width=10)
+        self.assertIsNotNone(scale)
+        self.assertEqual(scale.data.data[:4], b"\x89PNG")
+        self.assertEqual(scale.data.getImageSize(), (10, 10))
+        self.assertRegex(
+            scale.url,
+            r"http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png",
+        )
+        transaction.commit()
+
+        # Visit the unique scale in the browser.
+        self.browser.open(scale.url)
+        self.assertEqual(self.browser.contents, scale.data.data)
+
+    def testImageScalingTagViaData(self):
+        # The 'image2' field is NOT available as attribute on the demo tile.
+        # This trips up some of the code in plone.namedfile.
+        images = self.portal.restrictedTraverse(
+            "@@plone.app.tiles.demo.persistent/mytile/@@images"
+        )
+
+        # Test the tag method.
+        tag = images.tag("image2", width=10)
+        self.assertTrue(tag)
+        # Note: if this gives the original width and height, this means the
+        # original image was not actually found.  plone.scale may search on the
+        # context instead of the tile.
+        self.assertRegex(
+            tag,
+            r'<img src="http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@images/[a-z0-9-]+\.png" '
+            r'alt="foo" title="foo" height="10" width="10" />',
+        )
 
     def test_browse_scale(self):
         self.browser.open(self.base_url + "/@@images/image/thumb")
@@ -147,9 +189,6 @@ class TestImageScaling(unittest.TestCase):
         # which is why the following has always worked.
         self.browser.open(self.base_url + "/@@images/image")
         orig = getFile("image.png")
-        if hasattr(orig, "read"):
-            # BBB Plone 5.1: it is an open file, not bytes.
-            orig = orig.read()
         self.assertEqual(self.browser.contents, orig)
 
     def test_browse_original_without_property(self):
@@ -157,40 +196,25 @@ class TestImageScaling(unittest.TestCase):
         # on the tile, so getting the original failed for a long time.
         self.browser.open(self.base_url + "/@@images/image2")
         orig = getFile("image.png")
-        if hasattr(orig, "read"):
-            # BBB Plone 5.1: it is an open file, not bytes.
-            orig = orig.read()
         self.assertEqual(self.browser.contents, orig)
 
     def test_download_original_with_property(self):
         # On the tile we have explicitly defined an image property.
         self.browser.open(self.base_url + "/@@download/image")
         orig = getFile("image.png")
-        if hasattr(orig, "read"):
-            # BBB Plone 5.1: it is an open file, not bytes.
-            orig = orig.read()
         self.assertEqual(self.browser.contents, orig)
 
     def test_download_original_without_property(self):
         self.browser.open(self.base_url + "/@@download/image2")
         orig = getFile("image.png")
-        if hasattr(orig, "read"):
-            # BBB Plone 5.1: it is an open file, not bytes.
-            orig = orig.read()
         self.assertEqual(self.browser.contents, orig)
 
     def test_display_file_with_property(self):
         self.browser.open(self.base_url + "/@@display-file/image")
         orig = getFile("image.png")
-        if hasattr(orig, "read"):
-            # BBB Plone 5.1: it is an open file, not bytes.
-            orig = orig.read()
         self.assertEqual(self.browser.contents, orig)
 
     def test_display_file_without_property(self):
         self.browser.open(self.base_url + "/@@display-file/image2")
         orig = getFile("image.png")
-        if hasattr(orig, "read"):
-            # BBB Plone 5.1: it is an open file, not bytes.
-            orig = orig.read()
         self.assertEqual(self.browser.contents, orig)
