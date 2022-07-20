@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<registry>
+
+  <!-- Add our tile to the plone.app.tiles lists -->
+  <record name="plone.app.tiles">
+    <field type="plone.registry.field.List">
+      <title>Tiles</title>
+      <value_type type="plone.registry.field.TextLine" />
+    </field>
+    <value purge="false">
+      <element>plone.app.tiles.demo.persistent</element>
+      <element>plone.app.tiles.demo.transient</element>
+    </value>
+  </record>
+
+  <records prefix="plone.app.mosaic.app_tiles.plone_app_tiles_demo_persistent"
+           interface="plone.app.mosaic.interfaces.ITile">
+    <value key="name">plone.app.tiles.demo.persistent</value>
+    <value key="label">Demo persistent</value>
+    <value key="category">advanced</value>
+    <value key="tile_type">app</value>
+    <value key="read_only">false</value>
+    <value key="settings">true</value>
+    <value key="favorite">false</value>
+    <value key="rich_text">false</value>
+    <value key="weight">40</value>
+  </records>
+
+  <records prefix="plone.app.mosaic.app_tiles.plone_app_tiles_demo_transient"
+           interface="plone.app.mosaic.interfaces.ITile">
+    <value key="name">plone.app.tiles.demo.transient</value>
+    <value key="label">Demo transient</value>
+    <value key="category">advanced</value>
+    <value key="tile_type">app</value>
+    <value key="read_only">false</value>
+    <!-- <value key="settings">true</value> -->
+    <!-- <value key="favorite">false</value> -->
+    <!-- <value key="rich_text">false</value> -->
+    <!-- <value key="weight">30</value> -->
+  </records>
+</registry>
