@@ -4,7 +4,7 @@ Changelog
 4.0.0a3 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Add support for Plone 6 on Python 3.10 and 3.11.  [maurits]
 
 
 4.0.0a2 (2022-07-20)
