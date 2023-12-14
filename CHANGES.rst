@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.0.1 (unreleased)
+4.0.1 (2023-12-14)
 ------------------
 
 - Use ``ScalesDict`` instead of ``PersistentDict`` to store scales in persistent tiles.
