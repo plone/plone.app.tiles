@@ -4,7 +4,10 @@ Changelog
 4.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use ``ScalesDict`` instead of ``PersistentDict`` to store scales in persistent tiles.
+  This avoids ``plone.protect`` warning about write-on-read.
+  Migrate the storage on-the-fly, just like ``plone.scale`` does.
+  [maurits]
 
 
 4.0.0 (2022-12-02)

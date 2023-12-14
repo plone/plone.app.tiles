@@ -3,7 +3,7 @@
 from AccessControl.ZopeGuards import guarded_getattr
 from Acquisition import aq_base
 from DateTime import DateTime
-from persistent.dict import PersistentDict
+from plone.scale.storage import ScalesDict
 from plone.tiles.interfaces import IPersistentTile
 from plone.namedfile.interfaces import INamedImage
 from plone.namedfile.scaling import ImageScale as BaseImageScale
@@ -11,6 +11,7 @@ from plone.namedfile.scaling import ImageScaling as BaseImageScaling
 from plone.namedfile.scaling import DefaultImageScalingFactory
 from plone.namedfile.utils import set_headers
 from plone.namedfile.utils import stream_data
+from plone.protect.utils import safeWrite
 from plone.scale.storage import AnnotationStorage as BaseAnnotationStorage
 from plone.scale.storage import IImageScaleStorage
 from plone.scale.interfaces import IImageScaleFactory
@@ -40,9 +41,18 @@ class AnnotationStorage(BaseAnnotationStorage):
         manager = ITileDataManager(tile)
         data = manager.get()
         if IMAGESCALES_KEY not in data:
-            data[IMAGESCALES_KEY] = PersistentDict()
+            data[IMAGESCALES_KEY] = ScalesDict()
             manager.set(data)
-        return data[IMAGESCALES_KEY]
+            safeWrite(tile)
+        scales = data[IMAGESCALES_KEY]
+        if not isinstance(scales, ScalesDict):
+            # migrate from PersistentDict to ScalesDict
+            new_scales = ScalesDict(scales)
+            data[IMAGESCALES_KEY] = new_scales
+            manager.set(data)
+            safeWrite(tile)
+            return new_scales
+        return scales
 
 
 class ImageScale(BaseImageScale):
