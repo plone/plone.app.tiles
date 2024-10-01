@@ -11,7 +11,9 @@
     <body>
 
       <div>
-        <metal:content define-slot="content">
+        <metal:content define-slot="content"
+                       i18n:ignore=""
+        >
       Tile dummy content
         </metal:content>
       </div>

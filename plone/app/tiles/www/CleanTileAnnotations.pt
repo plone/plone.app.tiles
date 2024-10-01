@@ -6,10 +6,11 @@
 >tabs</p>
 
 
-<h2>Add Clean Tile Annotations Modifier</h2>
+<h2 i18n:ignore="">Add Clean Tile Annotations Modifier</h2>
 
 <form action="manage_addCleanTileAnnotations"
       method="post"
+      i18n:ignore=""
 >
 
   <table border="0">
