@@ -41,7 +41,7 @@ class PersistentTile(tiles.PersistentTile):
         return self.data["image"]
 
     def __call__(self):
-        return "<html><body><b>Persistent tile %s #%d</b></body></html>" % (
+        return "<html><body><b>Persistent tile {} #{}</b></body></html>".format(
             self.data["message"],
             self.data["counter"],
         )
