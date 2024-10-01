@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone import tiles
 from plone.namedfile.field import NamedImage
 from plone.supermodel.model import fieldset
@@ -8,7 +7,7 @@ from zope.interface import Interface
 
 class ITransientTileData(Interface):
 
-    message = schema.TextLine(title=u"Test string")
+    message = schema.TextLine(title="Test string")
 
 
 class TransientTile(tiles.Tile):
@@ -20,12 +19,12 @@ class TransientTile(tiles.Tile):
 
 class IPersistentTileData(Interface):
 
-    message = schema.TextLine(title=u"Persisted message")
-    counter = schema.Int(title=u"Counter")
-    image = NamedImage(title=u"Image", required=False)
-    image2 = NamedImage(title=u"Image2", required=False)
+    message = schema.TextLine(title="Persisted message")
+    counter = schema.Int(title="Counter")
+    image = NamedImage(title="Image", required=False)
+    image2 = NamedImage(title="Image2", required=False)
 
-    fieldset("counter", label=u"Counter", fields=["counter"])
+    fieldset("counter", label="Counter", fields=["counter"])
 
 
 class PersistentTile(tiles.PersistentTile):

@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 from plone.tiles.interfaces import IPersistentTile
 from plone.tiles.interfaces import ITileDataManager
 from plone.tiles.interfaces import ITileType
-from six.moves.urllib import parse as urlparse
+from urllib import parse as urlparse
 from zope.component import getMultiAdapter
 from zope.component import queryUtility
 from zope.traversing.browser.interfaces import IAbsoluteURL
@@ -38,7 +37,7 @@ def getEditTileURL(tile, request):
     if id:
         tileFragment += "/" + urlparse.quote(id.encode("utf-8"), _safe)
 
-    url = "%s/%s" % (
+    url = "{}/{}".format(
         url,
         tileFragment,
     )
@@ -64,7 +63,7 @@ def appendJSONData(url, key="#", data=None):
     elif key == "#" or not key:
         return url + "#" + urlparse.quote(json.dumps(data))
     else:
-        quoted = "%s=%s" % (
+        quoted = "{}={}".format(
             key,
             urlparse.quote(json.dumps(data)),
         )

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.drafts.interfaces import ICurrentDraftManagement
 from plone.app.drafts.interfaces import IDraft
 from plone.app.drafts.interfaces import IDrafting
@@ -10,7 +9,7 @@ from plone.app.tiles.interfaces import ITilesFormLayer
 from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from plone.tiles.interfaces import ITile
 from plone.tiles.interfaces import ITileDataContext
-from six.moves.urllib.parse import urlparse
+from urllib.parse import urlparse
 from zope.annotation.interfaces import IAnnotations
 from zope.component import adapter
 from zope.interface import implementer
@@ -21,7 +20,7 @@ try:
     from plone.app.drafts.dexterity import IDisplayFormDrafting
 except ImportError:
 
-    class IDisplayFormDrafting(object):
+    class IDisplayFormDrafting:
         pass
 
 
@@ -69,7 +68,7 @@ def draftingTileDataContext(context, request, tile):
 
 @implementer(IDraftSyncer)
 @adapter(IDraft, Interface)
-class TileDataDraftSyncer(object):
+class TileDataDraftSyncer:
     """Copy draft persistent tile data to the real object on save"""
 
     def __init__(self, draft, target):

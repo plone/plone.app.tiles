@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-from plone.namedfile.browser import Download as NamedfileDownload
-from plone.namedfile.browser import DisplayFile as NamedfileDisplayFile
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl.ZopeGuards import guarded_getitem
+from plone.namedfile.browser import DisplayFile as NamedfileDisplayFile
+from plone.namedfile.browser import Download as NamedfileDownload
 from plone.rfc822.interfaces import IPrimaryFieldInfo
 from zope.interface import implementer
 from zope.publisher.interfaces import IPublishTraverse
@@ -31,7 +30,7 @@ def _shared_getFile(tile_view):
         info = IPrimaryFieldInfo(tile_view.context, None)
         if info is None:
             # Ensure that we have at least a fieldname
-            raise NotFound(tile_view, '', tile_view.request)
+            raise NotFound(tile_view, "", tile_view.request)
         tile_view.fieldname = info.fieldname
 
         # respect field level security as defined in plone.autoform
@@ -43,7 +42,7 @@ def _shared_getFile(tile_view):
 
         file = info.value
     else:
-        context = getattr(tile_view.context, 'aq_explicit', tile_view.context)
+        context = getattr(tile_view.context, "aq_explicit", tile_view.context)
         try:
             file = guarded_getitem(context.data, tile_view.fieldname)
         except KeyError:

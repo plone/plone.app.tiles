@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.CMFCore.permissions import ManagePortal
 from zope.i18nmessageid import MessageFactory
 

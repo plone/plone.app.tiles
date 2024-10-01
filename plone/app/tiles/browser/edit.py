@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Acquisition import Implicit
 from plone.app.tiles import _ as _
 from plone.app.tiles.browser.base import TileForm
@@ -45,14 +44,14 @@ class DefaultEditForm(TileForm, form.Form):
     ignoreRequest = True
 
     def __init__(self, context, request):
-        super(DefaultEditForm, self).__init__(context, request)
+        super().__init__(context, request)
         self.request["disable_border"] = True
 
     def update(self):
         if "buttons.save" in self.request.form or "buttons.cancel" in self.request.form:
             self.ignoreRequest = False
 
-        super(DefaultEditForm, self).update()
+        super().update()
 
     def getContent(self):
         typeName = self.tileType.__name__
@@ -88,7 +87,7 @@ class DefaultEditForm(TileForm, form.Form):
 
     @property
     def label(self):
-        return _(u"Edit ${name}", mapping={"name": self.tileType.title})
+        return _("Edit ${name}", mapping={"name": self.tileType.title})
 
     # Buttons/actions
 
@@ -123,7 +122,7 @@ class DefaultEditForm(TileForm, form.Form):
         tileURL = absoluteURL(tile, self.request)
 
         notify(ObjectModifiedEvent(tile))
-        logger.debug(u"Tile edited at {0}".format(tileURL))
+        logger.debug(f"Tile edited at {tileURL}")
 
         try:
             url = self.nextURL(tile)
@@ -135,20 +134,20 @@ class DefaultEditForm(TileForm, form.Form):
     def nextURL(self, tile):
         raise NotImplementedError
 
-    @button.buttonAndHandler(_(u"Cancel"), name="cancel")
+    @button.buttonAndHandler(_("Cancel"), name="cancel")
     def handleCancel(self, action):
         url = appendJSONData(self.action, "#", {"action": "cancel"})
         url = url.replace("@@" + self.name.replace("_", "-") + "/", "@@")
         self.request.response.redirect(url)
 
     def updateActions(self):
-        super(DefaultEditForm, self).updateActions()
+        super().updateActions()
         self.actions["save"].addClass("context")
         self.actions["cancel"].addClass("standalone")
 
 
 class DefaultEditView(layout.FormWrapper, BrowserPage):
-    """This is the default edit view as looked up by the @@edit-tile traveral
+    """This is the default edit view as looked up by the @@edit-tile traversal
     view. It is an unnamed adapter on  (context, request, tileType).
 
     Note that this is registered in ZCML as a simple <adapter />, but we
@@ -169,7 +168,7 @@ class DefaultEditView(layout.FormWrapper, BrowserPage):
         self.form_instance.tileId = value
 
     def __init__(self, context, request, tileType):
-        super(DefaultEditView, self).__init__(context, request)
+        super().__init__(context, request)
         self.tileType = tileType
 
         # Configure the form instance

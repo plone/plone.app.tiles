@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from AccessControl.security import checkPermission
 from plone.tiles.interfaces import ITileType
 from zope.component import getUtilitiesFor
@@ -11,7 +10,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 
 @implementer(IVocabularyFactory)
-class RegisteredTilesVocabulary(object):
+class RegisteredTilesVocabulary:
     """Return vocabulary of all tiles registered"""
 
     def __init__(self, context=None):
@@ -33,7 +32,7 @@ class AvailableTilesVocabulary(RegisteredTilesVocabulary):
 
     def __call__(self, context=None):
         context = context or self.context
-        vocabulary = super(AvailableTilesVocabulary, self).__call__(context)
+        vocabulary = super().__call__(context)
         request = getRequest()
 
         items = []
@@ -51,7 +50,7 @@ class AllowedTilesVocabulary(AvailableTilesVocabulary):
 
     def __call__(self, context=None):
         context = self.context or context
-        vocabulary = super(AllowedTilesVocabulary, self).__call__(context)
+        vocabulary = super().__call__(context)
 
         if context is None:
             return vocabulary

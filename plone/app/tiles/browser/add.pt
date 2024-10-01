@@ -1,61 +1,92 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      tal:omit-tag=""
       i18n:domain="plone"
-      tal:omit-tag="">
-<metal:block use-macro="context/@@tile-form-layout/macros/master">
-  <metal:block fill-slot="main">
+>
+  <metal:block use-macro="context/@@tile-form-layout/macros/master">
+    <metal:block fill-slot="main">
 
-    <h1 class="documentFirstHeading" i18n:translate="heading_add_new_tile">Create tile</h1>
+      <h1 class="documentFirstHeading"
+          i18n:translate="heading_add_new_tile"
+      >Create tile</h1>
 
-    <p class="documentDescription" i18n:translate="description_add_new_tile">
+      <p class="documentDescription"
+         i18n:translate="description_add_new_tile"
+      >
       Select the type of tile you want to create
-    </p>
+      </p>
 
-    <metal:tiletypes define-macro="tiletypes">
+      <metal:tiletypes define-macro="tiletypes">
 
-      <form name="add-tile" method="post"
-        tal:attributes="action python:context.absolute_url() + '/@@add-tile'">
+        <form method="post"
+              name="add-tile"
+              tal:attributes="
+                action python:context.absolute_url() + '/@@add-tile';
+              "
+        >
 
           <div class="field">
             <label i18n:translate="label_tile_type">Tile type</label>
             <div class="error"
-              tal:condition="view/errors/type | nothing"
-              tal:content="view/errors/type | nothing">Error</div>
+                 tal:condition="view/errors/type | nothing"
+                 tal:content="view/errors/type | nothing"
+            >Error</div>
 
             <ul class="nav nav-pills">
               <li tal:repeat="tiletype view/tileTypes">
 
                 <div class="deco-toolbar-btn plone-tiletype"
-                  tal:define="name tiletype/__name__;
-                    id python:name.replace('.', '-');
-                    currentSelection request/tiletype | nothing"
-                  tal:attributes="id string:plone-tiletype-${id};">
+                     tal:define="
+                       name tiletype/__name__;
+                       id python:name.replace('.', '-');
+                       currentSelection request/tiletype | nothing;
+                     "
+                     tal:attributes="
+                       id string:plone-tiletype-${id};
+                     "
+                >
 
                   <img tal:condition="tiletype/icon"
-                    tal:attributes="src string:${context/portal_url}/${tiletype/icon}" />
+                       tal:attributes="
+                         src string:${context/portal_url}/${tiletype/icon};
+                       "
+                  />
 
-                  <input type="radio" name="tiletype"
-                    tal:attributes="value name;
-                      id string:form-field-${id};
-                      selected python:name == currentSelection and 'selected' or None" />
-                  <label tal:attributes="for string:form-field-${id};">
+                  <input name="tiletype"
+                         type="radio"
+                         tal:attributes="
+                           value name;
+                           id string:form-field-${id};
+                           selected python:name == currentSelection and 'selected' or None;
+                         "
+                  />
+                  <label tal:attributes="
+                           for string:form-field-${id};
+                         ">
                     <span tal:replace="tiletype/title">Tile type title</span>
                   </label>
 
-                  <p class="plone-tiletype-description" tal:content="tiletype/description">
+                  <p class="plone-tiletype-description"
+                     tal:content="tiletype/description"
+                  >
                     Type description
                   </p>
 
-                  <ul style="display:none" class="plone-tiletype-actions">
+                  <ul class="plone-tiletype-actions"
+                      style="display:none"
+                  >
                     <li tal:repeat="action tiletype/actions">
                       <a href="#"
-                        tal:attributes="href python:action.get('url','#');
-                          class python:action['name']
+                         tal:content="action/title"
+                         tal:attributes="
+                           href python:action.get('url','#');
+                           class python:action['name']
                               and 'plone-tiletype-action-' + action['name']
-                              or ''"
-                        tal:content="action/title">Action</a>
+                              or '';
+                         "
+                      >Action</a>
                     </li>
                   </ul>
 
@@ -63,16 +94,20 @@
 
               </li>
             </ul>
-        </div>
+          </div>
 
-        <div class="formControls">
-          <input class="standalone" type="submit" value="Create"
-            name="form.button.Create" i18n:attributes="value label_create" />
-        </div>
-      </form>
+          <div class="formControls">
+            <input class="standalone"
+                   name="form.button.Create"
+                   type="submit"
+                   value="Create"
+                   i18n:attributes="value label_create"
+            />
+          </div>
+        </form>
 
-    </metal:tiletypes>
+      </metal:tiletypes>
 
+    </metal:block>
   </metal:block>
-</metal:block>
 </html>

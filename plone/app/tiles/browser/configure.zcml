@@ -1,109 +1,110 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
-    i18n_domain="plone.app.tiles">
+    i18n_domain="plone.app.tiles"
+    >
 
-    <browser:page
-        name="download"
-        for="plone.tiles.interfaces.IPersistentTile"
-        class=".download.Download"
-        permission="zope2.View"
-        />
+  <browser:page
+      name="download"
+      for="plone.tiles.interfaces.IPersistentTile"
+      class=".download.Download"
+      permission="zope2.View"
+      />
 
-    <browser:page
-        name="display-file"
-        for="plone.tiles.interfaces.IPersistentTile"
-        class=".download.DisplayFile"
-        permission="zope2.View"
-        />
+  <browser:page
+      name="display-file"
+      for="plone.tiles.interfaces.IPersistentTile"
+      class=".download.DisplayFile"
+      permission="zope2.View"
+      />
 
-    <!-- Layout -->
-    <browser:page
-        for="*"
-        name="tile-form-layout"
-        class=".base.TileFormLayout"
-        template="layout.pt"
-        permission="zope2.View"
-        />
+  <!-- Layout -->
+  <browser:page
+      name="tile-form-layout"
+      for="*"
+      class=".base.TileFormLayout"
+      template="layout.pt"
+      permission="zope2.View"
+      />
 
-    <!-- tile wrapper
+  <!-- tile wrapper
          also "main_template" for tiles -->
-    <browser:page
-        name="tile-wrapper"
-        for="*"
-        permission="zope2.View"
-        template="wrapper.pt"
-        />
+  <browser:page
+      name="tile-wrapper"
+      for="*"
+      template="wrapper.pt"
+      permission="zope2.View"
+      />
 
-    <!-- Traversal views -->
-    <browser:page
-        name="add-tile"
-        for="zope.annotation.interfaces.IAnnotatable"
+  <!-- Traversal views -->
+  <browser:page
+      name="add-tile"
+      for="zope.annotation.interfaces.IAnnotatable"
+      class=".traversal.AddTile"
+      template="add.pt"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      name="edit-tile"
+      for="zope.annotation.interfaces.IAnnotatable"
+      class=".traversal.EditTile"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      name="delete-tile"
+      for="zope.annotation.interfaces.IAnnotatable"
+      class=".traversal.DeleteTile"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <!-- Standard add view and form - invoked from the @@add-tile traversal view -->
+  <adapter
+      factory=".add.DefaultAddView"
+      provides="..interfaces.ITileAddView"
+      for="zope.annotation.interfaces.IAnnotatable
+           zope.publisher.interfaces.browser.IDefaultBrowserLayer
+           plone.tiles.interfaces.ITileType"
+      />
+
+  <class class=".add.DefaultAddView">
+    <require
         permission="cmf.ModifyPortalContent"
-        class=".traversal.AddTile"
-        template="add.pt"
+        interface="zope.publisher.interfaces.browser.IBrowserPage"
         />
+  </class>
 
-    <browser:page
-        name="edit-tile"
-        for="zope.annotation.interfaces.IAnnotatable"
+  <!-- Standard edit view and form - invoked from the @@edit-tile traversal view -->
+  <adapter
+      factory=".edit.DefaultEditView"
+      provides="..interfaces.ITileEditView"
+      for="zope.annotation.interfaces.IAnnotatable
+           zope.publisher.interfaces.browser.IDefaultBrowserLayer
+           plone.tiles.interfaces.ITileType"
+      />
+
+  <class class=".edit.DefaultEditView">
+    <require
         permission="cmf.ModifyPortalContent"
-        class=".traversal.EditTile"
+        interface="zope.publisher.interfaces.browser.IBrowserPage"
         />
+  </class>
 
-    <browser:page
-        name="delete-tile"
-        for="zope.annotation.interfaces.IAnnotatable"
-        class=".traversal.DeleteTile"
+  <!-- Standard delete view and form - invoked from the @@delete-tile traversal view -->
+  <adapter
+      factory=".delete.DefaultDeleteView"
+      provides="..interfaces.ITileDeleteView"
+      for="zope.annotation.interfaces.IAnnotatable
+           zope.publisher.interfaces.browser.IDefaultBrowserLayer
+           plone.tiles.interfaces.ITileType"
+      />
+
+  <class class=".delete.DefaultDeleteView">
+    <require
         permission="cmf.ModifyPortalContent"
+        interface="zope.publisher.interfaces.browser.IBrowserPage"
         />
-
-    <!-- Standard add view and form - invoked from the @@add-tile traversal view -->
-    <adapter
-        for="zope.annotation.interfaces.IAnnotatable
-             zope.publisher.interfaces.browser.IDefaultBrowserLayer
-             plone.tiles.interfaces.ITileType"
-        provides="..interfaces.ITileAddView"
-        factory=".add.DefaultAddView"
-        />
-
-    <class class=".add.DefaultAddView">
-        <require
-            permission="cmf.ModifyPortalContent"
-            interface="zope.publisher.interfaces.browser.IBrowserPage"
-            />
-    </class>
-
-    <!-- Standard edit view and form - invoked from the @@edit-tile traversal view -->
-    <adapter
-        for="zope.annotation.interfaces.IAnnotatable
-             zope.publisher.interfaces.browser.IDefaultBrowserLayer
-             plone.tiles.interfaces.ITileType"
-        provides="..interfaces.ITileEditView"
-        factory=".edit.DefaultEditView"
-        />
-
-    <class class=".edit.DefaultEditView">
-        <require
-            permission="cmf.ModifyPortalContent"
-            interface="zope.publisher.interfaces.browser.IBrowserPage"
-            />
-    </class>
-
-    <!-- Standard delete view and form - invoked from the @@delete-tile traversal view -->
-    <adapter
-        for="zope.annotation.interfaces.IAnnotatable
-             zope.publisher.interfaces.browser.IDefaultBrowserLayer
-             plone.tiles.interfaces.ITileType"
-        provides="..interfaces.ITileDeleteView"
-        factory=".delete.DefaultDeleteView"
-        />
-
-    <class class=".delete.DefaultDeleteView">
-        <require
-            permission="cmf.ModifyPortalContent"
-            interface="zope.publisher.interfaces.browser.IBrowserPage"
-        />
-    </class>
+  </class>
 
 </configure>

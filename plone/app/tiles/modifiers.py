@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from AccessControl.class_init import InitializeClass
 from Acquisition import aq_base
 from persistent.list import PersistentList
@@ -28,7 +27,7 @@ try:
     pkg_resources.get_distribution("z3c.relationfield")
 except pkg_resources.DistributionNotFound:
 
-    class RelationValue(object):
+    class RelationValue:
         pass
 
 else:
