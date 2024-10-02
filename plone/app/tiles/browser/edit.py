@@ -124,6 +124,11 @@ class DefaultEditForm(TileForm, form.Form):
         notify(ObjectModifiedEvent(tile))
         logger.debug(f"Tile edited at {tileURL}")
 
+        # Skip form rendering for AJAX requests
+        if self.request.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest":
+            self.template = lambda: ""
+            return
+
         try:
             url = self.nextURL(tile)
         except NotImplementedError:
