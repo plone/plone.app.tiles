@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.tiles import _
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.utils import appendJSONData
@@ -35,14 +34,14 @@ class DefaultDeleteForm(TileForm, form.Form):
     schema = None
 
     def __init__(self, context, request):
-        super(DefaultDeleteForm, self).__init__(context, request)
+        super().__init__(context, request)
         self.request["disable_border"] = True
 
     # UI
 
     @property
     def label(self):
-        return _(u"Delete ${name}", mapping={"name": self.tileType.title})
+        return _("Delete ${name}", mapping={"name": self.tileType.title})
 
     # Buttons/actions
 
@@ -71,15 +70,15 @@ class DefaultDeleteForm(TileForm, form.Form):
         dataManager.delete()
 
         notify(ObjectRemovedEvent(tile, self.context, self.tileId))
-        logger.debug(u"Tile deleted at {0}".format(tileURL))
+        logger.debug(f"Tile deleted at {tileURL}")
 
         # Skip form rendering for AJAX requests
         if self.request.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest":
             IStatusMessage(self.request).addStatusMessage(
-                _(u"Tile deleted at ${url}", mapping={"url": tileURL}),
-                type=u"info",
+                _("Tile deleted at ${url}", mapping={"url": tileURL}),
+                type="info",
             )
-            self.template = lambda: u""
+            self.template = lambda: ""
             return
 
         try:
@@ -92,21 +91,21 @@ class DefaultDeleteForm(TileForm, form.Form):
     def nextURL(self, tile):
         raise NotImplementedError
 
-    @button.buttonAndHandler(_(u"Cancel"), name="cancel")
+    @button.buttonAndHandler(_("Cancel"), name="cancel")
     def handleCancel(self, action):
         url = appendJSONData(self.action, "#", {"action": "cancel"})
         url = url.replace("@@" + self.name.replace("_", "-") + "/", "@@")
         self.request.response.redirect(url)
 
     def updateActions(self):
-        super(DefaultDeleteForm, self).updateActions()
+        super().updateActions()
         self.actions["delete"].addClass("context")
         self.actions["cancel"].addClass("standalone")
 
 
 class DefaultDeleteView(layout.FormWrapper, BrowserPage):
     """This is the default delete view as looked up by the @@delete-tile
-    traveral view. It is an unnamed adapter on  (context, request, tileType).
+    traversal view. It is an unnamed adapter on  (context, request, tileType).
 
     Note that this is registered in ZCML as a simple <adapter />, but we
     also use the <class /> directive to set up security.
@@ -126,7 +125,7 @@ class DefaultDeleteView(layout.FormWrapper, BrowserPage):
         self.form_instance.tileId = value
 
     def __init__(self, context, request, tileType):
-        super(DefaultDeleteView, self).__init__(context, request)
+        super().__init__(context, request)
         self.tileType = tileType
 
         # Configure the form instance

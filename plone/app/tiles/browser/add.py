@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.tiles import _
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.utils import appendJSONData
@@ -37,14 +36,14 @@ class DefaultAddForm(TileForm, form.Form):
     ignoreContext = True
 
     def __init__(self, context, request):
-        super(DefaultAddForm, self).__init__(context, request)
+        super().__init__(context, request)
         self.request["disable_border"] = True
 
     # UI
 
     @property
     def label(self):
-        return _(u"Add ${name}", mapping={"name": self.tileType.title})
+        return _("Add ${name}", mapping={"name": self.tileType.title})
 
     # Buttons/actions
 
@@ -83,7 +82,7 @@ class DefaultAddForm(TileForm, form.Form):
 
         notify(ObjectCreatedEvent(tile))
         notify(ObjectAddedEvent(tile, self.context, tileId))
-        logger.debug(u"Tile created at {0}".format(tileURL))
+        logger.debug(f"Tile created at {tileURL}")
 
         try:
             url = self.nextURL(tile)
@@ -95,13 +94,13 @@ class DefaultAddForm(TileForm, form.Form):
     def nextURL(self, tile):
         raise NotImplementedError
 
-    @button.buttonAndHandler(_(u"Cancel"), name="cancel")
+    @button.buttonAndHandler(_("Cancel"), name="cancel")
     def handleCancel(self, action):
         url = appendJSONData(self.context.absolute_url(), "#", {"action": "cancel"})
         self.request.response.redirect(url)
 
     def updateActions(self):
-        super(DefaultAddForm, self).updateActions()
+        super().updateActions()
         self.actions["save"].addClass("context")
         self.actions["cancel"].addClass("standalone")
 
@@ -128,7 +127,7 @@ class DefaultAddView(layout.FormWrapper, BrowserPage):
         self.form_instance.tileId = value
 
     def __init__(self, context, request, tileType):
-        super(DefaultAddView, self).__init__(context, request)
+        super().__init__(context, request)
         self.tileType = tileType
 
         # Configure the form instance

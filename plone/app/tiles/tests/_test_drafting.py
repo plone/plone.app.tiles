@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 from plone.app.testing import SITE_OWNER_NAME
 from plone.app.testing import SITE_OWNER_PASSWORD
 from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
 from plone.testing.z2 import Browser
 from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
-from six.moves.urllib import parse as urlparse
+from urllib import parse as urlparse
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 
@@ -46,7 +45,7 @@ class TestTileDrafting(unittest.TestCase):
     # by the browser is broken. The cookies are not extracted correctly
     # from the response.
     # The cookie reading works in the zope.testbrowser tests, but there
-    # the response is a zope.publiser httpresponse, while ours is a
+    # the response is a zope.publisher httpresponse, while ours is a
     # ZPublisher.HTTPResponse (older). So this might be a testbrowser
     # zope 2 integration bug.
     def test_persistent_drafting(self):
@@ -127,8 +126,8 @@ class TestTileDrafting(unittest.TestCase):
 
         # The saved data should be on the draft, and not on the container
 
-        self.failIf(annotationsKey in folderAnnotations)
-        self.failUnless(annotationsKey in draftAnnotations)
+        self.assertFalse(annotationsKey in folderAnnotations)
+        self.assertTrue(annotationsKey in draftAnnotations)
 
         self.assertEqual("Test message", draftAnnotations[annotationsKey]["message"])
         self.assertEqual(1, draftAnnotations[annotationsKey]["counter"])
@@ -181,7 +180,7 @@ class TestTileDrafting(unittest.TestCase):
         # Save the edit form
 
         self.browser.open(editFormURL)
-        self.browser.getControl(name="title").value = u"New title"
+        self.browser.getControl(name="title").value = "New title"
         self.browser.getControl(name="form.button.save").click()
 
         # The cookies should now have all expired
@@ -227,7 +226,7 @@ class TestTileDrafting(unittest.TestCase):
             baseURL + "/@@edit-tile/plone.app.tiles.demo.persistent/tile-2"
         )  # noqa
         self.browser.getControl(
-            name="plone.app.tiles.demo.persisten.message"
+            name="plone.app.tiles.demo.persistent.message"
         ).value = "Third message"  # noqa
         self.browser.getControl(label="Save").click()
 
@@ -369,9 +368,7 @@ class TestTileDrafting(unittest.TestCase):
         # Verify that the deletion has happened on the draft (only)
 
         self.assertEqual(None, draftAnnotations.get(annotationsKey))
-        self.assertEqual(
-            set([u"plone.tiles.data.tile-2"]), draft._proxyAnnotationsDeleted
-        )
+        self.assertEqual({"plone.tiles.data.tile-2"}, draft._proxyAnnotationsDeleted)
 
         self.assertEqual("Third message", contextAnnotations[annotationsKey]["message"])
         self.assertEqual(1, contextAnnotations[annotationsKey]["counter"])
@@ -441,9 +438,7 @@ class TestTileDrafting(unittest.TestCase):
 
         self.assertEqual(None, draftAnnotations.get(annotationsKey))
 
-        self.assertEqual(
-            set([u"plone.tiles.data.tile-2"]), draft._proxyAnnotationsDeleted
-        )
+        self.assertEqual({"plone.tiles.data.tile-2"}, draft._proxyAnnotationsDeleted)
 
         self.assertEqual("Third message", contextAnnotations[annotationsKey]["message"])
         self.assertEqual(1, contextAnnotations[annotationsKey]["counter"])

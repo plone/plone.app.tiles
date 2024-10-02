@@ -1,11 +1,12 @@
 Changelog
 =========
 
-4.0.2 (unreleased)
-------------------
+.. You should *NOT* be adding new change log entries to this file.
+   You should create a file in the news directory instead.
+   For helpful instructions, please see:
+   https://github.com/plone/plone.releaser/blob/master/ADD-A-NEWS-ITEM.rst
 
-- Nothing changed yet.
-
+.. towncrier release notes start
 
 4.0.1 (2023-12-14)
 ------------------
@@ -309,7 +310,7 @@ Refactoring:
   [garbas]
 - Fix to not crash when plone.app.tiles-registry contains missing tiles
   [datakurre]
-- Fix issue with wrong doctype for reponses with inline javascript
+- Fix issue with wrong doctype for responses with inline javascript
   [jpgimenez]
 - Fix issues with changed plone overlay API
   [garbas]

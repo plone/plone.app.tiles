@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <registry>
 
   <!-- Deprecated tiles list used in plone.app.tiles < 3.0 -->
@@ -7,7 +7,7 @@
       <title>Tiles</title>
       <value_type type="plone.registry.field.TextLine" />
     </field>
-    <value purge="false"/>
+    <value purge="false" />
   </record>
 
 </registry>

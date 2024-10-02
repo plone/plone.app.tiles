@@ -1,42 +1,58 @@
 <metal:page define-macro="master">
-<metal:block define-slot="top_slot" />
+  <metal:block define-slot="top_slot" />
 
-<tal:doctype tal:replace="structure string:&lt;!DOCTYPE html&gt;" />
-<html xmlns="http://www.w3.org/1999/xhtml"
-    tal:define="portal_state context/@@plone_portal_state;
-        context_state context/@@plone_context_state;
-        plone_view context/@@plone;
-        plone_layout context/@@plone_layout;
-        lang portal_state/language;
-        view nocall:view | nocall: plone_view;
-        dummy python: plone_layout.mark_view(view);
-        portal_url portal_state/portal_url;"
-    tal:attributes="lang lang;">
-<head>
-    <div tal:replace="structure provider:plone.htmlhead" />
-    <metal:headslot define-slot="head_slot" />
-    <metal:block define-slot="style_slot" />
-    <metal:block define-slot="javascript_head_slot" />
+  <tal:doctype tal:replace="structure string:&lt;!DOCTYPE html&gt;" />
+  <html xmlns="http://www.w3.org/1999/xhtml"
+        tal:define="
+          portal_state context/@@plone_portal_state;
+          context_state context/@@plone_context_state;
+          plone_view context/@@plone;
+          plone_layout context/@@plone_layout;
+          lang portal_state/language;
+          view nocall:view | nocall: plone_view;
+          dummy python: plone_layout.mark_view(view);
+          portal_url portal_state/portal_url;
+        "
+        tal:attributes="
+          lang lang;
+        "
+  >
+    <head>
+      <div tal:replace="structure provider:plone.htmlhead"></div>
+      <metal:headslot define-slot="head_slot" />
+      <metal:block define-slot="style_slot" />
+      <metal:block define-slot="javascript_head_slot" />
 
-</head>
-<body tal:define="isRTL portal_state/is_rtl;"
-    tal:attributes="dir python:isRTL and 'rtl' or 'ltr'">
-<div id="visual-portal-wrapper">
-    <div id="portal-columns" class="row">
-        <div id="portal-column-content" class="cell width-full position-0">
-            <div id="region-content" class="documentContent">
-                <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+    </head>
+    <body tal:define="
+            isRTL portal_state/is_rtl;
+          "
+          tal:attributes="
+            dir python:isRTL and 'rtl' or 'ltr';
+          "
+    >
+      <div id="visual-portal-wrapper">
+        <div class="row"
+             id="portal-columns"
+        >
+          <div class="cell width-full position-0"
+               id="portal-column-content"
+          >
+            <div class="documentContent"
+                 id="region-content"
+            >
+              <div metal:use-macro="context/global_statusmessage/macros/portal_message">
                     Portal status message
-                </div>
+              </div>
 
-                <div id="content">
-                    <metal:main define-slot="main" />
-                </div>
+              <div id="content">
+                <metal:main define-slot="main" />
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-</body>
-</html>
+    </body>
+  </html>
 </metal:page>

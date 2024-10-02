@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.z3cform.interfaces import IPloneFormLayer
 from plone.supermodel import model
 from zope.i18nmessageid import MessageFactory

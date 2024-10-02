@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from plone.app.tiles import modifiers
 from Products.CMFCore.utils import getToolByName
 

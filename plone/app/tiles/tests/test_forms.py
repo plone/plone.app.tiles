@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.testing import login
 from plone.app.testing import setRoles
 from plone.app.testing import SITE_OWNER_NAME
@@ -62,14 +61,14 @@ class TestTileDrafting(unittest.TestCase):
         # Log in
         self.browser.addHeader(
             "Authorization",
-            "Basic {0}:{1}".format(
+            "Basic {}:{}".format(
                 SITE_OWNER_NAME,
                 SITE_OWNER_PASSWORD,
             ),
         )
 
         # Add a new persistent tile using the @@add-tile view
-        self.browser.open("{0}/@@add-tile".format(self.portal_url))
+        self.browser.open(f"{self.portal_url}/@@add-tile")
         self.browser.getControl(name="tiletype").value = [
             "plone.app.tiles.demo.persistent"
         ]

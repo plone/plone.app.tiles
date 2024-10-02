@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+from io import BytesIO
 from persistent.list import PersistentList
 from persistent.mapping import PersistentMapping
 from plone.app.testing import setRoles
@@ -9,7 +9,6 @@ from plone.dexterity.utils import createContentInContainer
 from plone.namedfile import NamedBlobFile
 from plone.tiles import PersistentTile
 from plone.tiles.interfaces import ITileDataManager
-from six import BytesIO
 from z3c.relationfield import RelationValue
 from zope.component import getUtility
 from zope.intid.interfaces import IIntIds
@@ -19,7 +18,7 @@ import unittest
 
 
 class Tile(PersistentTile):
-    __name__ = u"test.tile"
+    __name__ = "test.tile"
 
 
 class TestModifiers(unittest.TestCase):
@@ -49,16 +48,16 @@ class TestModifiers(unittest.TestCase):
         # Set tile data
         data = {
             "boolean": True,
-            "blob": NamedBlobFile("dummy test data", filename=u"test.txt"),
+            "blob": NamedBlobFile("dummy test data", filename="test.txt"),
             "iterable": PersistentList(
                 [
-                    NamedBlobFile("dummy test data", filename=u"test.txt"),
-                    NamedBlobFile("dummy test data", filename=u"test.txt"),
+                    NamedBlobFile("dummy test data", filename="test.txt"),
+                    NamedBlobFile("dummy test data", filename="test.txt"),
                 ]
             ),
             "mapping": PersistentMapping(
                 {
-                    "blob": NamedBlobFile("dummy test data", filename=u"test.txt"),
+                    "blob": NamedBlobFile("dummy test data", filename="test.txt"),
                 }
             ),
             "relation": RelationValue(getUtility(IIntIds).getId(page)),

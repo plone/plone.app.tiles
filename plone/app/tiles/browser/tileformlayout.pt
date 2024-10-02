@@ -1,9 +1,11 @@
 <metal:block use-macro="context/@@tile-form-layout/macros/master">
-    <metal:block fill-slot="main">
+  <metal:block fill-slot="main">
 
-        <h1 class="documentFirstHeading" tal:content="view/form_instance/label | nothing" />
+    <h1 class="documentFirstHeading"
+        tal:content="view/form_instance/label | nothing"
+    ></h1>
 
-        <span tal:replace="structure view/contents" />
+    <span tal:replace="structure view/contents"></span>
 
-    </metal:block>
+  </metal:block>
 </metal:block>

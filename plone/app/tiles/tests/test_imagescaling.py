@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from DateTime import DateTime
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
@@ -38,9 +37,9 @@ class TestImageScaling(unittest.TestCase):
         self.tile.id = "mytile"
         data = getFile("image.png")
         data = {
-            "message": u"foo",
-            "image": MockNamedImage(data, "image/png", u"image.png"),
-            "image2": MockNamedImage(data, "image/png", u"image.png"),
+            "message": "foo",
+            "image": MockNamedImage(data, "image/png", "image.png"),
+            "image2": MockNamedImage(data, "image/png", "image.png"),
         }
         dm = ITileDataManager(self.tile)
         dm.set(data)
@@ -51,12 +50,14 @@ class TestImageScaling(unittest.TestCase):
         self.browser.handleErrors = False
         self.browser.addHeader(
             "Authorization",
-            "Basic {0}:{1}".format(
+            "Basic {}:{}".format(
                 TEST_USER_NAME,
                 TEST_USER_PASSWORD,
             ),
         )
-        self.base_url = self.portal.absolute_url() + "/@@plone.app.tiles.demo.persistent/mytile"
+        self.base_url = (
+            self.portal.absolute_url() + "/@@plone.app.tiles.demo.persistent/mytile"
+        )
 
     def testImageScalingScaleByNameViaProperty(self):
         # The 'image' field is available as property on the demo tile.

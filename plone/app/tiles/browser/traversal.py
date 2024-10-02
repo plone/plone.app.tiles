@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from operator import attrgetter
 from plone.app.tiles import _ as _
 from plone.app.tiles.interfaces import ALLOWED_TILES_VOCABULARY
@@ -7,7 +6,7 @@ from plone.app.tiles.interfaces import ITileDeleteView
 from plone.app.tiles.interfaces import ITileEditView
 from plone.memoize.view import memoize
 from plone.tiles.interfaces import ITileType
-from six.moves.urllib.parse import urlencode
+from urllib.parse import urlencode
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 from zope.component import queryMultiAdapter
@@ -20,7 +19,7 @@ from zope.security import checkPermission
 
 
 @implementer(IPublishTraverse)
-class TileTraverser(object):
+class TileTraverser:
     """Base class for tile add/edit view traversers.
 
     Below, we register two traversal views: ``@@add-tile`` and
@@ -124,7 +123,7 @@ class AddTile(TileTraverser):
             newTileType = self.request.get("tiletype", None)
             if newTileType is None:
                 self.errors["tiletype"] = _(
-                    u"You must select the type of " + u"tile to create"
+                    "You must select the type of " + "tile to create"
                 )
 
             if len(self.errors) == 0:
@@ -140,7 +139,9 @@ class AddTile(TileTraverser):
                     )
                 else:
                     self.request.response.redirect(
-                        "%s/@@add-tile/%s" % (self.context.absolute_url(), newTileType)
+                        "{}/@@add-tile/{}".format(
+                            self.context.absolute_url(), newTileType
+                        )
                     )
                 return ""
 

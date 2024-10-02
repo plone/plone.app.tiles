@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.tiles.interfaces import ITile
 from zope.component import adapter
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent

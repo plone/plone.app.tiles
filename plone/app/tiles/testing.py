@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
@@ -63,7 +62,7 @@ class PloneAppTiles(PloneSandboxLayer):
     def testSetUp(self):
         from plone.uuid.interfaces import IUUIDGenerator
 
-        class FauxUUIDGenerator(object):
+        class FauxUUIDGenerator:
 
             counter = 0
 

@@ -1,25 +1,25 @@
-# -*- coding: utf-8 -*-
 """Image scale support for tile images."""
+
 from AccessControl.ZopeGuards import guarded_getattr
 from Acquisition import aq_base
 from DateTime import DateTime
-from plone.scale.storage import ScalesDict
-from plone.tiles.interfaces import IPersistentTile
 from plone.namedfile.interfaces import INamedImage
+from plone.namedfile.scaling import DefaultImageScalingFactory
 from plone.namedfile.scaling import ImageScale as BaseImageScale
 from plone.namedfile.scaling import ImageScaling as BaseImageScaling
-from plone.namedfile.scaling import DefaultImageScalingFactory
 from plone.namedfile.utils import set_headers
 from plone.namedfile.utils import stream_data
 from plone.protect.utils import safeWrite
+from plone.scale.interfaces import IImageScaleFactory
 from plone.scale.storage import AnnotationStorage as BaseAnnotationStorage
 from plone.scale.storage import IImageScaleStorage
-from plone.scale.interfaces import IImageScaleFactory
+from plone.scale.storage import ScalesDict
+from plone.tiles.interfaces import IPersistentTile
 from plone.tiles.interfaces import ITileDataManager
 from zExceptions import Unauthorized
 from zope.component import adapter
-from zope.interface import Interface
 from zope.interface import implementer
+from zope.interface import Interface
 from zope.interface import provider
 
 
@@ -74,8 +74,8 @@ class ImageScale(BaseImageScale):
             name = info["uid"]
         else:
             name = info["fieldname"]
-        self.__name__ = "%s.%s" % (name, extension)
-        self.url = "%s/@@images/%s" % (url, self.__name__)
+        self.__name__ = f"{name}.{extension}"
+        self.url = f"{url}/@@images/{self.__name__}"
         self.srcset = info.get("srcset", [])
 
     def index_html(self):
