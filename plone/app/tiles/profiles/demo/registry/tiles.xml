@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <registry>
-
-  <!-- Add our tile to the plone.app.tiles lists -->
-  <record name="plone.app.tiles">
-    <field type="plone.registry.field.List">
-      <title>Tiles</title>
-      <value_type type="plone.registry.field.TextLine" />
-    </field>
-    <value purge="false">
-      <element>plone.app.tiles.demo.persistent</element>
-      <element>plone.app.tiles.demo.transient</element>
-    </value>
-  </record>
-
   <records interface="plone.app.mosaic.interfaces.ITile"
            prefix="plone.app.mosaic.app_tiles.plone_app_tiles_demo_persistent"
   >
