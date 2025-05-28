@@ -1,14 +1,6 @@
 Plone's Specific Implementation of Tiles
 ========================================
 
-.. image:: https://secure.travis-ci.org/plone/plone.app.tiles.png?branch=master
-    :alt: Travis CI badge
-    :target: http://travis-ci.org/plone/plone.app.tiles
-
-.. image:: https://coveralls.io/repos/plone/plone.app.tiles/badge.png?branch=master
-    :alt: Coveralls badge
-    :target: https://coveralls.io/r/plone/plone.app.tiles
-
 ``plone.app.tiles`` is Plone's UI integration for `plone.tiles <http://pypi.python.org/pypi/plone.tiles>`_.
 
 This package contains the following things:
