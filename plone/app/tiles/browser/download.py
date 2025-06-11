@@ -74,13 +74,6 @@ class Download(NamedfileDownload):
     def _getFile(self):
         return _shared_getFile(self)
 
-    def get_canonical(self, file):
-        filename = getattr(file, "filename", None)
-        if filename is None:
-            return f"{self.context.url}/@@download/{self.fieldname}"
-        else:
-            return f"{self.context.url}/@@download/{self.fieldname}/{filename}"
-
 
 class DisplayFile(NamedfileDisplayFile):
     """Display a file, via ../context/@@display-file/fieldname/filename
@@ -94,10 +87,3 @@ class DisplayFile(NamedfileDisplayFile):
 
     def _getFile(self):
         return _shared_getFile(self)
-
-    def get_canonical(self, file):
-        filename = getattr(file, "filename", None)
-        if filename is None:
-            return f"{self.context.url}/@@display-file/{self.fieldname}"
-        else:
-            return f"{self.context.url}/@@display-file/{self.fieldname}/{filename}"
