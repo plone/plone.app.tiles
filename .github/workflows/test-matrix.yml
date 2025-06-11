@@ -46,4 +46,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install tox
     - name: Test
-      run: tox -e ${{ matrix.config[2] }}
+      run: |
+        tox -e init
+        tox -e ${{ matrix.config[2] }}
