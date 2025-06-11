@@ -223,7 +223,7 @@ class TestImageScaling(unittest.TestCase):
         orig = getFile("image.png")
         self.assertEqual(
             self.browser.headers.get("Link"),
-            '<http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@display-file/image/image.png>; rel="canonical"',
+            '<http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@download/image/image.png>; rel="canonical"',
         )
         self.assertEqual(self.browser.contents, orig)
 
@@ -232,6 +232,6 @@ class TestImageScaling(unittest.TestCase):
         orig = getFile("image.png")
         self.assertEqual(
             self.browser.headers.get("Link"),
-            '<http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@display-file/image2/image.png>; rel="canonical"',
+            '<http://nohost/plone/@@plone.app.tiles.demo.persistent/mytile/@@download/image2/image.png>; rel="canonical"',
         )
         self.assertEqual(self.browser.contents, orig)

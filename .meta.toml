@@ -6,7 +6,11 @@ template = "default"
 commit-id = "2.0.1.dev0"
 
 [tox]
-test_matrix = {"6.2" = ["3.13"], "6.1" = ["3.12"], "6.0" = ["3.10"]}
+use_mxdev = true
+test_matrix = {"6.1" = ["3.13"]}
+test_deps_additional = """
+-r requirements-mxdev.txt
+"""
 
 [github]
 jobs = [
@@ -15,3 +19,8 @@ jobs = [
    "release_ready",
    "circular",
 ]
+
+[gitignore]
+extra_lines = """
+.mxmake/
+"""
