@@ -1,6 +1,6 @@
 recursive-include plone *
 recursive-exclude news *
 include setup.py *.txt *.rst *.GPL
-exclude *.txt *.in *.nix *.sh *.ini *.toml
+exclude *.txt *.in *.nix *.sh *.ini *.toml *.yaml
 exclude .coveragerc .github Makefile
 global-exclude *.pyc
