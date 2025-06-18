@@ -8,6 +8,26 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.2 (2025-06-19)
+------------------
+
+Bug fixes:
+
+
+- Fix calculation of canonical header in namedfile views. @petschki
+
+
+Internal:
+
+
+- Configure package with plone/meta
+  [petschki] (#0)
+- Remove deprecated plone.app.tiles registry record from the demo profile.
+  [thet]
+- Update configuration files.
+  [plone devs]
+
+
 4.0.1 (2023-12-14)
 ------------------
 
