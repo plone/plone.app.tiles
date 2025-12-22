@@ -1,3 +1,4 @@
+from importlib import metadata
 from plone.app.testing import SITE_OWNER_NAME
 from plone.app.testing import SITE_OWNER_PASSWORD
 from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
@@ -6,14 +7,13 @@ from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from zExceptions import NotFound
 from zope.annotation.interfaces import IAnnotations
 
-import pkg_resources
 import re
 import unittest
 
 
 try:
-    pkg_resources.get_distribution("plone.app.drafts")
-except pkg_resources.DistributionNotFound:
+    metadata.distribution("plone.app.drafts")
+except metadata.PackageNotFoundError:
     HAS_DRAFTS = False
 else:
     HAS_DRAFTS = True

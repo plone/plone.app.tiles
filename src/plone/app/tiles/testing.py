@@ -1,3 +1,4 @@
+from importlib import metadata
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
@@ -8,15 +9,14 @@ from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 from zope.component import provideUtility
 
-import pkg_resources
 import plone.app.dexterity
 import plone.app.relationfield
 import plone.app.tiles
 
 
 try:
-    pkg_resources.get_distribution("plone.app.drafts")
-except pkg_resources.DistributionNotFound:
+    metadata.distribution("plone.app.drafts")
+except metadata.PackageNotFoundError:
     HAS_DRAFTS = False
 else:
     import plone.app.drafts
