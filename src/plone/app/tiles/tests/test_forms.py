@@ -7,6 +7,7 @@ from plone.app.testing import TEST_USER_NAME
 from plone.app.tiles.browser.base import TileForm
 from plone.app.tiles.browser.edit import DefaultEditForm
 from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
+from plone.testing.zope import Browser
 from plone.tiles.interfaces import ITileType
 from z3c.form.datamanager import DictionaryField
 from z3c.form.interfaces import NOT_CHANGED
@@ -14,16 +15,7 @@ from zope.component import getGlobalSiteManager
 from zope.component import provideAdapter
 from zope.component import queryUtility
 
-
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
-try:
-    from plone.testing.zope import Browser
-except ImportError:
-    # BBB Plone 5.1
-    from plone.testing.z2 import Browser
+import unittest
 
 
 class WrappedEditForm(DefaultEditForm):

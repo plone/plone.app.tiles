@@ -1,12 +1,14 @@
 from plone.app.testing import SITE_OWNER_NAME
 from plone.app.testing import SITE_OWNER_PASSWORD
 from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
+from plone.testing.zope import Browser
 from plone.tiles.data import ANNOTATIONS_KEY_PREFIX
 from zExceptions import NotFound
 from zope.annotation.interfaces import IAnnotations
 
 import pkg_resources
 import re
+import unittest
 
 
 try:
@@ -15,17 +17,6 @@ except pkg_resources.DistributionNotFound:
     HAS_DRAFTS = False
 else:
     HAS_DRAFTS = True
-
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
-
-try:
-    from plone.testing.zope import Browser
-except ImportError:
-    # BBB Plone 5.1
-    from plone.testing.z2 import Browser
 
 
 class TestTileLifecycle(unittest.TestCase):
