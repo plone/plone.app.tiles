@@ -1,5 +1,6 @@
 from AccessControl.class_init import InitializeClass
 from Acquisition import aq_base
+from importlib import metadata
 from persistent.list import PersistentList
 from persistent.mapping import PersistentMapping
 from plone.namedfile import NamedFile
@@ -13,8 +14,6 @@ from ZODB.blob import Blob
 from zope.annotation import IAnnotations
 from zope.interface import implementer
 
-import pkg_resources
-
 
 try:
     from plone.namedfile import NamedBlobFile
@@ -24,8 +23,8 @@ except ImportError:
     HAS_BLOBS = False
 
 try:
-    pkg_resources.get_distribution("z3c.relationfield")
-except pkg_resources.DistributionNotFound:
+    metadata.distribution("z3c.relationfield")
+except metadata.PackageNotFoundError:
 
     class RelationValue:
         pass

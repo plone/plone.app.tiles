@@ -10,11 +10,7 @@ from plone.app.tiles.testing import PLONE_APP_TILES_INTEGRATION_TESTING
 from zope.component import getUtility
 from zope.schema.interfaces import IVocabularyFactory
 
-
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
+import unittest
 
 
 class TestVocabularies(unittest.TestCase):

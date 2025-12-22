@@ -1,3 +1,4 @@
+from importlib import metadata
 from plone.app.testing import SITE_OWNER_NAME
 from plone.app.testing import SITE_OWNER_PASSWORD
 from plone.app.tiles.testing import PLONE_APP_TILES_FUNCTIONAL_TESTING
@@ -7,12 +8,12 @@ from urllib import parse as urlparse
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 
-import pkg_resources
+import unittest
 
 
 try:
-    pkg_resources.get_distribution("plone.app.drafts")
-except pkg_resources.DistributionNotFound:
+    metadata.distribution("plone.app.drafts")
+except metadata.PackageNotFoundError:
     HAS_DRAFTS = False
 else:
     HAS_DRAFTS = True
@@ -22,11 +23,6 @@ if HAS_DRAFTS:
     from plone.app.drafts.interfaces import IDraftStorage
     from plone.app.drafts.interfaces import PATH_KEY
     from plone.app.drafts.interfaces import TARGET_KEY
-
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
 
 
 class TestTileDrafting(unittest.TestCase):
