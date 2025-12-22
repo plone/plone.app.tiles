@@ -40,7 +40,6 @@ setup(
     python_requires=">=3.10",
     install_requires=[
         "setuptools",
-        "six",
         "zope.annotation",
         "zope.i18nmessageid",
         "plone.namedfile >= 6.0.0a3",
